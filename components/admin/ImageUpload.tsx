@@ -30,21 +30,29 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
             const formData = new FormData();
             formData.append('file', file);
+            formData.append('upload_preset', 'canmarkt_upload'); // Unsigned preset
 
-            const response = await fetch('/api/upload', {
+            const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+            if (!cloudName) {
+                throw new Error("Cloudinary Cloud Name not found");
+            }
+
+            const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
                 method: 'POST',
                 body: formData,
             });
 
             if (!response.ok) {
-                throw new Error("Upload failed");
+                const errorData = await response.json();
+                console.error("Cloudinary Error:", errorData);
+                throw new Error(errorData.error?.message || "Upload failed");
             }
 
             const data = await response.json();
             onChange(data.secure_url);
         } catch (error) {
-            console.error(error);
-            alert("Error uploading image");
+            console.error('[IMAGE_UPLOAD_ERROR]', error);
+            alert("Error uploading image. Please check console for details.");
         } finally {
             setLoading(false);
         }
