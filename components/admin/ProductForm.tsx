@@ -1,9 +1,6 @@
 "use client";
 
 import { useState } from 'react';
-// Actually standard state is fine for this complexity without shadcn-form overhead yet, but shadcn forms are nice. 
-// Let's use simple controlled inputs to save time and deps.
-
 import { useRouter } from 'next/navigation';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -19,27 +16,20 @@ import {
     SelectTrigger,
     SelectValue
 } from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import ImageUpload from '@/components/admin/ImageUpload';
+import { Loader2, Save } from 'lucide-react';
 
 const BRANDS = [
-    { id: 'canadam', name: 'Canadam (Our Brand)' },
+    { id: 'canadam', name: 'Canadam (House Brand)' },
     { id: 'partner', name: 'Partner Brand' }
 ];
 
-const LANGUAGES = ['de', 'tr', 'en'] as const;
-
 interface ProductFormData {
-    name_de: string;
-    name_tr: string;
-    name_en: string;
-    description_de: string;
-    description_tr: string;
-    description_en: string;
-    brand: string;
-    category: string;
-    price: string; // Optional but good for catalog
+    name_de: string; name_tr: string; name_en: string;
+    description_de: string; description_tr: string; description_en: string;
+    brand: string; category: string; price: string;
     images: string[];
 }
 
@@ -50,9 +40,7 @@ export default function ProductForm() {
     const [formData, setFormData] = useState<ProductFormData>({
         name_de: '', name_tr: '', name_en: '',
         description_de: '', description_tr: '', description_en: '',
-        brand: 'canadam',
-        category: '',
-        price: '',
+        brand: 'canadam', category: '', price: '',
         images: []
     });
 
@@ -61,33 +49,12 @@ export default function ProductForm() {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleBrandChange = (value: string) => {
-        setFormData(prev => ({ ...prev, brand: value }));
-    };
-
-    // Image handlers
-    const handleImageChange = (url: string) => {
-        setImages(prev => [...prev, url]);
-    };
-
-    const handleImageRemove = (url: string) => {
-        setImages(prev => prev.filter(current => current !== url));
-    };
-
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             setLoading(true);
-
-            // Validate
-            if (images.length === 0) {
-                alert("Please upload at least one image.");
-                return;
-            }
-            if (!formData.name_de) {
-                alert("German Name is required.");
-                return;
-            }
+            if (images.length === 0) { alert("Image required."); return; }
+            if (!formData.name_de) { alert("German Name is required."); return; }
 
             await addDoc(collection(db, "products"), {
                 ...formData,
@@ -96,176 +63,167 @@ export default function ProductForm() {
             });
 
             alert("Product created successfully!");
-            // Reset form
             setFormData({
                 name_de: '', name_tr: '', name_en: '',
                 description_de: '', description_tr: '', description_en: '',
-                brand: 'canadam',
-                category: '',
-                price: '',
-                images: []
+                brand: 'canadam', category: '', price: '', images: []
             });
             setImages([]);
             router.refresh();
-
         } catch (error) {
-            console.error("Error creating product:", error);
-            alert("Something went wrong.");
+            console.error(error);
+            alert("Error creating product.");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <form onSubmit={onSubmit} className="space-y-8 max-w-4xl">
+        <form onSubmit={onSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-            {/* Images Section */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Product Images</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <ImageUpload
-                        value={images}
-                        onChange={handleImageChange}
-                        onRemove={handleImageRemove}
-                        disabled={loading}
-                    />
-                </CardContent>
-            </Card>
+            {/* Left Column: Main Info & Images */}
+            <div className="lg:col-span-2 space-y-8">
 
-            {/* Basic Info */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Product Details</CardTitle>
-                </CardHeader>
-                <CardContent className="grid gap-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Images */}
+                <Card className="rounded-none border-t-4 border-t-stone-900 shadow-sm">
+                    <CardHeader>
+                        <CardTitle className="text-lg font-bold uppercase tracking-tight">Visual Assets</CardTitle>
+                        <CardDescription>Upload high-resolution product photography.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <ImageUpload
+                            value={images}
+                            onChange={(url) => setImages(prev => [...prev, url])}
+                            onRemove={(url) => setImages(prev => prev.filter(c => c !== url))}
+                            disabled={loading}
+                        />
+                    </CardContent>
+                </Card>
+
+                {/* Localized Content */}
+                <Card className="rounded-none shadow-sm">
+                    <CardHeader>
+                        <CardTitle className="text-lg font-bold uppercase tracking-tight">Product Information</CardTitle>
+                        <CardDescription>Enter details in all supported languages.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-8">
+                        {/* DE */}
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-2 pb-2 border-b border-stone-100">
+                                <span className="text-xl">🇩🇪</span>
+                                <h3 className="font-bold text-stone-900">German (Primary)</h3>
+                            </div>
+                            <div className="grid gap-4">
+                                <div className="space-y-2">
+                                    <Label>Product Name</Label>
+                                    <Input name="name_de" value={formData.name_de} onChange={handleInputChange} className="rounded-none focus-visible:ring-[#C8102E]" placeholder="e.g. Profiline Chefmesser" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Description</Label>
+                                    <Textarea name="description_de" value={formData.description_de} onChange={handleInputChange} className="rounded-none min-h-[100px] focus-visible:ring-[#C8102E]" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* TR */}
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-2 pb-2 border-b border-stone-100">
+                                <span className="text-xl">🇹🇷</span>
+                                <h3 className="font-bold text-stone-900">Turkish</h3>
+                            </div>
+                            <div className="grid gap-4">
+                                <div className="space-y-2">
+                                    <Label>Product Name</Label>
+                                    <Input name="name_tr" value={formData.name_tr} onChange={handleInputChange} className="rounded-none focus-visible:ring-[#C8102E]" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Description</Label>
+                                    <Textarea name="description_tr" value={formData.description_tr} onChange={handleInputChange} className="rounded-none min-h-[100px] focus-visible:ring-[#C8102E]" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* EN */}
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-2 pb-2 border-b border-stone-100">
+                                <span className="text-xl">🇬🇧</span>
+                                <h3 className="font-bold text-stone-900">English</h3>
+                            </div>
+                            <div className="grid gap-4">
+                                <div className="space-y-2">
+                                    <Label>Product Name</Label>
+                                    <Input name="name_en" value={formData.name_en} onChange={handleInputChange} className="rounded-none focus-visible:ring-[#C8102E]" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Description</Label>
+                                    <Textarea name="description_en" value={formData.description_en} onChange={handleInputChange} className="rounded-none min-h-[100px] focus-visible:ring-[#C8102E]" />
+                                </div>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* Right Column: Meta & Actions */}
+            <div className="space-y-8">
+                <Card className="rounded-none border-t-4 border-t-[#C8102E] shadow-md sticky top-24">
+                    <CardHeader>
+                        <CardTitle className="text-lg font-bold uppercase tracking-tight">Classification</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
                         <div className="space-y-2">
-                            <Label htmlFor="brand">Brand</Label>
+                            <Label>Brand Identity</Label>
                             <Select
-                                disabled={loading}
-                                onValueChange={handleBrandChange}
-                                defaultValue={formData.brand}
+                                value={formData.brand}
+                                onValueChange={(val) => setFormData(prev => ({ ...prev, brand: val }))}
                             >
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select a brand" />
+                                <SelectTrigger className="rounded-none focus:ring-[#C8102E]">
+                                    <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {BRANDS.map(brand => (
-                                        <SelectItem key={brand.id} value={brand.id}>
-                                            {brand.name}
-                                        </SelectItem>
-                                    ))}
+                                    {BRANDS.map(b => <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>)}
                                 </SelectContent>
                             </Select>
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="category">Category</Label>
+                            <Label>Category Tag</Label>
                             <Input
-                                id="category"
                                 name="category"
-                                placeholder="e.g. Chef Knife, Outdoor"
                                 value={formData.category}
                                 onChange={handleInputChange}
-                                disabled={loading}
+                                className="rounded-none focus-visible:ring-[#C8102E]"
+                                placeholder="e.g. Knives"
                             />
                         </div>
-                    </div>
-                </CardContent>
-            </Card>
 
-            {/* Multi-Language Content */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Content (Multi-Language)</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                    {/* German (Default) */}
-                    <div className="space-y-4">
-                        <h3 className="font-semibold flex items-center gap-2">🇩🇪 German (Default)</h3>
                         <div className="space-y-2">
-                            <Label>Product Name (DE)</Label>
+                            <Label>Price (Optional)</Label>
                             <Input
-                                name="name_de"
-                                value={formData.name_de}
+                                name="price"
+                                value={formData.price}
                                 onChange={handleInputChange}
-                                placeholder="Produktname"
-                                disabled={loading}
+                                className="rounded-none focus-visible:ring-[#C8102E]"
+                                placeholder="€"
                             />
                         </div>
-                        <div className="space-y-2">
-                            <Label>Description (DE)</Label>
-                            <Textarea
-                                name="description_de"
-                                value={formData.description_de}
-                                onChange={handleInputChange}
-                                placeholder="Produktbeschreibung..."
-                                disabled={loading}
-                            />
-                        </div>
-                    </div>
 
-                    <Separator />
+                        <Separator className="my-4" />
 
-                    {/* Turkish */}
-                    <div className="space-y-4">
-                        <h3 className="font-semibold flex items-center gap-2">🇹🇷 Turkish</h3>
-                        <div className="space-y-2">
-                            <Label>Product Name (TR)</Label>
-                            <Input
-                                name="name_tr"
-                                value={formData.name_tr}
-                                onChange={handleInputChange}
-                                placeholder="Ürün Adı"
-                                disabled={loading}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Description (TR)</Label>
-                            <Textarea
-                                name="description_tr"
-                                value={formData.description_tr}
-                                onChange={handleInputChange}
-                                placeholder="Ürün Açıklaması..."
-                                disabled={loading}
-                            />
-                        </div>
-                    </div>
-
-                    <Separator />
-
-                    {/* English */}
-                    <div className="space-y-4">
-                        <h3 className="font-semibold flex items-center gap-2">🇬🇧 English</h3>
-                        <div className="space-y-2">
-                            <Label>Product Name (EN)</Label>
-                            <Input
-                                name="name_en"
-                                value={formData.name_en}
-                                onChange={handleInputChange}
-                                placeholder="Product Name"
-                                disabled={loading}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Description (EN)</Label>
-                            <Textarea
-                                name="description_en"
-                                value={formData.description_en}
-                                onChange={handleInputChange}
-                                placeholder="Product Description..."
-                                disabled={loading}
-                            />
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-
-            <Button type="submit" className="w-full" size="lg" disabled={loading}>
-                {loading ? "Saving Product..." : "Create Product"}
-            </Button>
+                        <Button
+                            type="submit"
+                            className="w-full bg-[#C8102E] hover:bg-[#A00C24] text-white font-bold uppercase tracking-widest h-12 rounded-none"
+                            disabled={loading}
+                        >
+                            {loading ? <Loader2 className="animate-spin" /> : (
+                                <span className="flex items-center gap-2">
+                                    <Save className="w-4 h-4" /> Save Product
+                                </span>
+                            )}
+                        </Button>
+                    </CardContent>
+                </Card>
+            </div>
         </form>
     );
 }
