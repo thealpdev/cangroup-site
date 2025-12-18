@@ -120,5 +120,6 @@ export default function AdminSetupPage() {
                     </CardContent>
                 </Card>
             </div>
-            );
+        </div>
+    );
 }
