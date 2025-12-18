@@ -13,7 +13,7 @@ import { Loader2 } from 'lucide-react';
 export default function SettingsForm() {
     const [loading, setLoading] = useState(false);
     const [logo, setLogo] = useState<string[]>([]);
-    const [heroImage, setHeroImage] = useState<string[]>([]);
+    const [heroImage, setHeroImage] = useState<string[]>([]); // Keeping state name for simplicity, but mapping to hero_banner
 
     // Load initial data
     useEffect(() => {
@@ -24,7 +24,7 @@ export default function SettingsForm() {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     if (data.logo) setLogo([data.logo]);
-                    if (data.heroImage) setHeroImage([data.heroImage]);
+                    if (data.hero_banner) setHeroImage([data.hero_banner]);
                 }
             } catch (error) {
                 console.error("Error fetching settings:", error);
@@ -38,7 +38,7 @@ export default function SettingsForm() {
             setLoading(true);
             await setDoc(doc(db, "settings", "general"), {
                 logo: logo[0] || '',
-                heroImage: heroImage[0] || '',
+                hero_banner: heroImage[0] || '',
                 updatedAt: new Date().toISOString()
             }, { merge: true });
             alert("Settings saved successfully!");

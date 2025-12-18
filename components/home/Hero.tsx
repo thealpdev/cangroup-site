@@ -14,8 +14,8 @@ export default function Hero() {
             try {
                 const docRef = doc(db, "settings", "general");
                 const docSnap = await getDoc(docRef);
-                if (docSnap.exists() && docSnap.data().heroImage) {
-                    setHeroImage(docSnap.data().heroImage);
+                if (docSnap.exists() && docSnap.data().hero_banner) {
+                    setHeroImage(docSnap.data().hero_banner);
                 }
             } catch (error) {
                 console.error("Error fetching hero image:", error);
@@ -24,58 +24,45 @@ export default function Hero() {
         fetchSettings();
     }, []);
 
-    const bgImage = heroImage || "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=2042&auto=format&fit=crop"; // Premium placeholder (Dark Knife)
+    // Default premium image if none set
+    const bgImage = heroImage || "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=2042&auto=format&fit=crop";
 
     return (
-        <div className="relative w-full h-[85vh] overflow-hidden">
-            {/* Background  */}
-            <div className="absolute inset-0">
+        <div className="relative w-full h-[600px] md:h-[700px] overflow-hidden bg-stone-100 group">
+
+            {/* Background Image */}
+            <div className="absolute inset-0 w-full h-full">
                 <Image
                     src={bgImage}
-                    alt="Premium Knife Collection"
+                    alt="Hero Banner"
                     fill
-                    className="object-cover brightness-[0.7] scale-105" // Slight zoom and dark
+                    className="object-cover transition-transform duration-1000 md:group-hover:scale-105"
                     priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent" />
             </div>
 
-            {/* Content */}
-            <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4">
+            {/* Swiss Red Content Block */}
+            <div className="absolute top-1/2 left-0 md:left-12 lg:left-24 -translate-y-1/2 w-full md:w-[500px] z-10 px-6 md:px-0">
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                    className="max-w-4xl space-y-8"
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="bg-[#C8102E] p-8 md:p-12 text-white shadow-2xl skew-x-0"
                 >
-                    <h2 className="text-sm md:text-base tracking-[0.3em] uppercase text-stone-300 font-light">
-                        Official Wholesale Distribution
+                    <h2 className="text-xs font-bold uppercase tracking-[0.2em] mb-4 text-white/90">
+                        Official Partner
                     </h2>
-                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tight drop-shadow-2xl font-serif">
-                        Mastery in <br />
-                        <span className="italic font-light text-stone-200">Every Blade</span>
+                    <h1 className="text-4xl md:text-5xl font-black uppercase leading-tight tracking-tight mb-6">
+                        Precision <br /> Meet <br /> Passion
                     </h1>
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.5, duration: 1 }}
-                    >
-                        <button className="px-10 py-4 border border-white/30 text-white rounded-none uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-all duration-300 mt-8 backdrop-blur-sm">
-                            Explore Collection
-                        </button>
-                    </motion.div>
+                    <p className="text-white/90 text-lg font-medium leading-relaxed mb-8 max-w-sm">
+                        Discover the ultimate collection of professional cutlery. Engineered for excellence.
+                    </p>
+                    <button className="bg-white text-[#C8102E] px-8 py-4 font-bold uppercase tracking-widest text-xs hover:bg-stone-900 hover:text-white transition-colors">
+                        View Products
+                    </button>
                 </motion.div>
             </div>
-
-            {/* Scroll indicator */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.5, duration: 1 }}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2"
-            >
-                <div className="w-[1px] h-12 bg-gradient-to-b from-transparent via-white/50 to-transparent animate-pulse" />
-            </motion.div>
         </div>
     );
 }
