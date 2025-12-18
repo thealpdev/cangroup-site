@@ -3,23 +3,27 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Hero from '@/components/home/Hero';
 import Partners from '@/components/home/Partners';
+import Features from '@/components/home/Features';
+import CTASection from '@/components/home/CTASection';
 
 export default function Home() {
   return (
-    // Default background off-white for premium feel
-    <div className="min-h-screen flex flex-col bg-[#F9F9F8]">
+    <div className="min-h-screen flex flex-col bg-[#F9F9F8] overflow-x-hidden">
       <Header />
 
       <main className="flex-1 w-full">
         <Hero />
 
-        {/* Partners Section with separation */}
         <section className="border-b border-stone-100 bg-white relative z-20">
           <Partners />
         </section>
 
+        <section className="relative z-10">
+          <Features />
+        </section>
+
         {/* Catalog Section */}
-        <div className="container mx-auto px-6 py-24 md:py-32">
+        <div className="container mx-auto px-6 py-24 md:py-32 bg-transparent">
           <div className="mb-20 text-center space-y-6 max-w-3xl mx-auto">
             <div className="flex flex-col items-center gap-4">
               <span className="h-[1px] w-20 bg-stone-300"></span>
@@ -39,6 +43,10 @@ export default function Home() {
 
           <ProductGrid />
         </div>
+
+        <section>
+          <CTASection />
+        </section>
       </main>
 
       <Footer />
