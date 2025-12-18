@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Footer() {
     return (
         <footer className="bg-stone-900 text-stone-300 py-12 mt-12">
@@ -22,6 +24,10 @@ export default function Footer() {
             </div>
             <div className="container mx-auto px-4 mt-8 pt-8 border-t border-stone-800 text-center text-xs">
                 &copy; {new Date().getFullYear()} CAN GROUP. All Rights Reserved.
+                <span className="mx-2">|</span>
+                <Link href="/admin" className="hover:text-white transition-colors">
+                    Admin Login
+                </Link>
             </div>
         </footer>
     );
