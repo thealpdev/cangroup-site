@@ -28,6 +28,16 @@ export default function SteelComparison() {
                         transition={{ duration: 0.8 }}
                         className="space-y-6"
                     >
+                        {/* Visual Placeholder for German Steel */}
+                        <div className="relative h-48 w-full bg-stone-800 rounded-sm overflow-hidden mb-6 border border-stone-700">
+                            <div className="absolute inset-0 flex items-center justify-center text-stone-500 font-bold uppercase tracking-widest">
+                                [German Steel Visual]
+                            </div>
+                            {/* Uncomment when you have an image: 
+                  <Image src="/path-to-german-steel.jpg" alt="Solingen Steel" fill className="object-cover opacity-70" /> 
+                  */}
+                        </div>
+
                         <div className="h-1 w-20 bg-[#C8102E]"></div>
                         <h4 className="text-3xl font-bold uppercase">Solingen Steel</h4>
                         <p className="text-stone-300 leading-relaxed font-light text-lg">
@@ -52,6 +62,16 @@ export default function SteelComparison() {
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="space-y-6 md:text-right flex flex-col items-end"
                     >
+                        {/* Visual Placeholder for Swiss Steel */}
+                        <div className="relative h-48 w-full bg-stone-800 rounded-sm overflow-hidden mb-6 border border-stone-700">
+                            <div className="absolute inset-0 flex items-center justify-center text-stone-500 font-bold uppercase tracking-widest">
+                                [Swiss Steel Visual]
+                            </div>
+                            {/* Uncomment when you have an image: 
+                  <Image src="/path-to-swiss-steel.jpg" alt="Swiss Steel" fill className="object-cover opacity-70" /> 
+                  */}
+                        </div>
+
                         <div className="h-1 w-20 bg-white"></div>
                         <h4 className="text-3xl font-bold uppercase">Swiss Stainless</h4>
                         <p className="text-stone-300 leading-relaxed font-light text-lg">
