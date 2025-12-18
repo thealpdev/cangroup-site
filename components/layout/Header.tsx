@@ -1,31 +1,12 @@
 "use client";
 
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 import { Search, ShoppingBag, Menu } from 'lucide-react';
 
 export default function Header() {
-    const [logo, setLogo] = useState<string | null>(null);
-
-    useEffect(() => {
-        // Optional: Keep dynamic fetching if they upload a new one later, 
-        // but default to the static one we just added.
-        const fetchSettings = async () => {
-            try {
-                const docRef = doc(db, "settings", "general");
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists() && docSnap.data().logo) {
-                    setLogo(docSnap.data().logo);
-                }
-            } catch (error) {
-                console.error("Error fetching logo:", error);
-            }
-        };
-        fetchSettings();
-    }, []);
+    // Logic removed to prevent flickering (old logo overwriting new one)
+    // We are now strictly using the user-provided high-res logo.
 
     return (
         <>
@@ -34,22 +15,22 @@ export default function Header() {
                 Official Distribution Partner • Global Shipping Available
             </div>
 
-            <header className="sticky top-0 z-50 w-full bg-white border-b border-stone-200">
-                <div className="container mx-auto px-6 h-24 flex items-center justify-between">
+            <header className="sticky top-0 z-50 w-full bg-white border-b border-stone-200 shadow-sm">
+                <div className="container mx-auto px-6 h-28 flex items-center justify-between">
 
                     {/* Mobile Menu Trigger */}
                     <button className="lg:hidden p-2 text-stone-900">
                         <Menu className="w-6 h-6" />
                     </button>
 
-                    {/* Logo */}
-                    <Link href="/" className="relative h-16 w-48 md:h-20 md:w-64 transition-transform hover:opacity-90">
+                    {/* Logo - INCREASED SIZE & HARDCODED */}
+                    <Link href="/" className="relative h-24 w-80 md:h-28 md:w-96 transition-transform hover:opacity-90 -ml-4">
                         <div className="relative h-full w-full">
                             <Image
-                                src={logo || "/can-group-logo.png"}
+                                src="/can-group-logo-black.jpg"
                                 alt="CAN GROUP"
                                 fill
-                                className="object-contain object-left md:object-center"
+                                className="object-contain object-left"
                                 priority
                             />
                         </div>
