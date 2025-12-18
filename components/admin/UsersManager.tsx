@@ -4,22 +4,15 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { initializeApp, getApp, deleteApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { db } from '@/lib/firebase';
+import { db, firebaseConfig } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Loader2, Trash, UserPlus, Shield } from 'lucide-react';
 
-// Use same config but for a temporary app instance
-const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
-};
+// Removed local config definition, utilizing shared config from @/lib/firebase
+// to ensure consistency and use the same Env vars.
 
 interface AdminUser {
     id: string; // email as id or uid

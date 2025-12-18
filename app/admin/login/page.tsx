@@ -91,7 +91,10 @@ export default function LoginPage() {
                         </Button>
                     </form>
                 </CardContent>
-                <CardFooter className="justify-center border-t py-4 text-xs text-stone-400">
+                <CardFooter className="flex flex-col gap-4 justify-center border-t py-4 text-xs text-stone-400">
+                    <Link href="/admin/setup" className="text-[#C8102E] font-bold uppercase tracking-widest hover:underline">
+                        ⚡ First Time? Create Master Account
+                    </Link>
                     <Link href="/" className="hover:text-[#C8102E] transition-colors">
                         ← Return to Catalog
                     </Link>
