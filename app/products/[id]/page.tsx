@@ -7,6 +7,7 @@ import { ArrowLeft, Check, ShieldCheck, Truck, ExternalLink, Mail } from 'lucide
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import ProductGallery from '@/components/product/ProductGallery';
 
 // Helper to get currency symbol
 const getCurrencySymbol = (code?: string) => {
@@ -63,30 +64,10 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
                     {/* Left: Sticky Gallery */}
                     <div className="space-y-6">
                         <div className="sticky top-24 space-y-4">
-                            <div className="relative aspect-square rounded-3xl overflow-hidden bg-stone-50 border border-stone-100 shadow-sm cursor-zoom-in group">
-                                {product.images?.[0] ? (
-                                    <Image
-                                        src={product.images[0]}
-                                        alt={product.name_de}
-                                        fill
-                                        className="object-contain p-8 transition-transform duration-500 group-hover:scale-105"
-                                        priority
-                                    />
-                                ) : (
-                                    <div className="flex h-full items-center justify-center text-stone-300 font-bold tracking-widest uppercase">No Image</div>
-                                )}
-                            </div>
-
-                            {/* Thumbnails (Simple implementation for now) */}
-                            {product.images?.length > 1 && (
-                                <div className="grid grid-cols-4 gap-4">
-                                    {product.images.map((img: string, i: number) => (
-                                        <div key={i} className={`relative aspect-square rounded-2xl overflow-hidden border cursor-pointer transition-all ${i === 0 ? 'border-stone-900 ring-1 ring-stone-900' : 'border-stone-100 hover:border-stone-300'}`}>
-                                            <Image src={img} alt="Thumbnail" fill className="object-cover" />
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
+                            <ProductGallery
+                                images={product.images || (product.image ? [product.image] : [])}
+                                title={product.name_de || product.name_en || "Product"}
+                            />
                         </div>
                     </div>
 

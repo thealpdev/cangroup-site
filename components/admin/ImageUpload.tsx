@@ -25,31 +25,38 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     const onDrop = useCallback(async (acceptedFiles: File[]) => {
         try {
             setLoading(true);
-            const file = acceptedFiles[0];
-            if (!file) return;
 
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('upload_preset', 'canmarkt_upload');
+            // Upload all files concurrently
+            const uploadPromises = acceptedFiles.map(async (file) => {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', 'canmarkt_upload');
 
-            const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-            if (!cloudName) throw new Error("Cloudinary Cloud Name not found");
+                const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+                if (!cloudName) throw new Error("Cloudinary Cloud Name not found");
 
-            const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-                method: 'POST',
-                body: formData,
+                const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error?.message || "Upload failed");
+                }
+
+                const data = await response.json();
+                return data.secure_url;
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error?.message || "Upload failed");
-            }
+            const uploadedUrls = await Promise.all(uploadPromises);
 
-            const data = await response.json();
-            onChange(data.secure_url);
+            // Pass each new URL to parent
+            uploadedUrls.forEach((url) => onChange(url));
+
         } catch (error) {
             console.error('[IMAGE_UPLOAD_ERROR]', error);
-            alert("Upload failed. Check console.");
+            alert("Upload failed. Some images may have failed.");
         } finally {
             setLoading(false);
         }
@@ -59,7 +66,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         onDrop,
         accept: { 'image/*': ['.jpeg', '.png', '.webp', '.jpg'] },
         disabled: disabled || loading,
-        maxFiles: 1
+        // Removed maxFiles: 1 to allow multiple
     });
 
     return (
@@ -117,7 +124,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                         </div>
                         <div className="text-center space-y-1">
                             <p className="text-sm font-bold uppercase tracking-widest text-stone-700">
-                                {isDragActive ? "Drop to upload" : "Click or Drag Image"}
+                                {isDragActive ? "Drop images here" : "Click or Drag Images"}
                             </p>
                             <p className="text-xs text-stone-500 font-medium">
                                 SVG, PNG, JPG or WEBP (MAX. 5MB)
