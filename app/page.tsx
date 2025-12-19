@@ -4,6 +4,7 @@ import HeroV2 from '@/components/home/HeroV2';
 import CollectionShowcase from '@/components/home/CollectionShowcase';
 import Legacy from '@/components/home/Legacy';
 import Spotlight from '@/components/home/Spotlight';
+import Partners from '@/components/home/Partners';
 import CTASection from '@/components/home/CTASection';
 
 export default function Home() {
@@ -20,6 +21,9 @@ export default function Home() {
 
         {/* 3. Story / Legacy (Parallax) */}
         <Legacy />
+
+        {/* 3.5 Partners */}
+        <Partners />
 
         {/* 4. Featured / Spotlight (Dark Mode) */}
         <Spotlight />

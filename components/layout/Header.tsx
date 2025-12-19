@@ -34,42 +34,27 @@ export default function Header() {
 
     return (
         <>
-            {/* Top Bar - Ultra Premium */}
-            <div className="bg-[#1a1a1a] text-white py-2.5">
-                <div className="container mx-auto px-6 flex justify-between items-center text-[10px] md:text-xs font-medium tracking-widest uppercase">
-                    <span className="hidden md:block text-white/80">Premium Cutlery Solutions</span>
-                    <div className="flex items-center gap-6">
-                        <a href="tel:+49123456789" className="hover:text-[#C8102E] transition-colors flex items-center gap-2">
-                            <Phone className="w-3 h-3" /> Support
-                        </a>
-                        <a href="mailto:info@cangroup.de" className="hover:text-[#C8102E] transition-colors flex items-center gap-2">
-                            <Mail className="w-3 h-3" /> Contact
-                        </a>
-                    </div>
-                </div>
-            </div>
-
             {/* Main Header */}
             <header
                 className={cn(
-                    "sticky top-0 z-50 w-full transition-all duration-500 border-b",
+                    "fixed top-0 z-50 w-full transition-all duration-500",
                     scrolled
-                        ? "bg-white/90 backdrop-blur-md h-20 border-stone-200 shadow-sm"
-                        : "bg-white h-24 md:h-28 border-transparent"
+                        ? "bg-white/95 backdrop-blur-md h-24 border-b border-stone-100 shadow-sm"
+                        : "bg-transparent h-32 md:h-40 border-transparent"
                 )}
             >
                 <div className="container mx-auto px-6 h-full flex items-center justify-between">
 
                     {/* Mobile Menu */}
                     <button className="lg:hidden p-2 text-stone-900 hover:bg-stone-100 rounded-full transition-colors">
-                        <Menu className="w-6 h-6" />
+                        <Menu className="w-8 h-8" />
                     </button>
 
                     {/* Logo - Centered on Mobile, Left on Desktop */}
-                    <Link href="/" className="relative h-full w-40 md:w-64 flex items-center justify-center md:justify-start group">
+                    <Link href="/" className="relative h-full flex items-center justify-center md:justify-start group">
                         <div className={cn(
                             "relative transition-all duration-500",
-                            scrolled ? "h-12 w-48" : "h-16 w-64"
+                            scrolled ? "h-16 w-48" : "h-24 w-72 md:w-96"
                         )}>
                             <Image
                                 src={logo}
@@ -82,12 +67,15 @@ export default function Header() {
                     </Link>
 
                     {/* Desktop Navigation - Centered & Premium */}
-                    <nav className="hidden lg:flex items-center gap-12">
+                    <nav className="hidden lg:flex items-center gap-16">
                         {['Catalog', 'Brands', 'About Us', 'Contact'].map((item) => (
                             <Link
                                 key={item}
                                 href={item === 'Catalog' ? '/' : `/${item.toLowerCase().replace(' ', '-')}`}
-                                className="text-sm font-bold uppercase tracking-[0.15em] text-stone-900 hover:text-[#C8102E] transition-colors relative group py-2"
+                                className={cn(
+                                    "text-sm font-bold uppercase tracking-[0.2em] transition-colors relative group py-2",
+                                    scrolled ? "text-stone-900 hover:text-[#C8102E]" : "text-white hover:text-[#C8102E] drop-shadow-md"
+                                )}
                             >
                                 {item}
                                 <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#C8102E] transition-all duration-300 group-hover:w-full"></span>
@@ -96,14 +84,27 @@ export default function Header() {
                     </nav>
 
                     {/* Actions */}
-                    <div className="flex items-center gap-2 md:gap-6">
-                        <button className="p-2 text-stone-900 hover:text-[#C8102E] hover:bg-stone-50 rounded-full transition-colors">
-                            <Search className="w-5 h-5" />
+                    <div className="flex items-center gap-4 md:gap-8">
+                        <button className={cn(
+                            "p-2 rounded-full transition-colors",
+                            scrolled ? "text-stone-900 hover:bg-stone-50" : "text-white hover:bg-white/10"
+                        )}>
+                            <Search className="w-6 h-6" />
                         </button>
-                        <div className="h-6 w-[1px] bg-stone-200 hidden md:block"></div>
-                        <button className="flex items-center gap-3 px-4 py-2 bg-stone-900 text-white rounded-full hover:bg-[#C8102E] transition-all duration-300 shadow-lg shadow-stone-900/10 hover:shadow-red-900/20 group">
-                            <ShoppingBag className="w-4 h-4" />
-                            <span className="hidden md:block text-xs font-bold uppercase tracking-wider">Inquiry</span>
+
+                        <div className={cn(
+                            "h-8 w-[1px] hidden md:block",
+                            scrolled ? "bg-stone-200" : "bg-white/30"
+                        )}></div>
+
+                        <button className={cn(
+                            "flex items-center gap-3 px-6 py-3 rounded-full transition-all duration-300 shadow-lg group",
+                            scrolled
+                                ? "bg-[#0a0a0a] text-white hover:bg-[#C8102E] hover:shadow-red-900/20"
+                                : "bg-white text-[#0a0a0a] hover:bg-[#C8102E] hover:text-white hover:shadow-xl"
+                        )}>
+                            <ShoppingBag className="w-5 h-5" />
+                            <span className="hidden md:block text-xs font-bold uppercase tracking-widest">Inquiry</span>
                         </button>
                     </div>
 
