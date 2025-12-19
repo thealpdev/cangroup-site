@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ShieldCheck, Lock } from 'lucide-react';
 import Link from 'next/link';
 
 export default function LoginPage() {
@@ -28,75 +28,93 @@ export default function LoginPage() {
             router.push('/admin');
         } catch (err: any) {
             console.error("Login failed:", err);
-            setError("Invalid credentials. Please try again.");
+            setError("Giriş bilgileri hatalı. Lütfen tekrar deneyin.");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-stone-50 px-4">
-            <Card className="w-full max-w-md border-t-4 border-t-[#C8102E] shadow-xl">
-                <CardHeader className="text-center space-y-4">
-                    <div className="flex justify-center">
-                        <div className="bg-[#C8102E] text-white font-bold px-3 py-1 text-xs uppercase tracking-widest">
-                            Admin Panel
-                        </div>
+        <div className="min-h-screen flex items-center justify-center bg-stone-100 px-4">
+            <Card className="w-full max-w-md border-0 rounded-none shadow-2xl overflow-hidden">
+                {/* Header Section */}
+                <div className="bg-[#C8102E] p-8 text-center text-white">
+                    <div className="mx-auto w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mb-4">
+                        <ShieldCheck className="w-6 h-6 text-white" />
                     </div>
-                    <CardTitle className="text-2xl font-bold uppercase tracking-tight text-stone-900">
-                        System Access
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
+                    <div className="text-sm font-bold tracking-[0.2em] uppercase opacity-90 mb-1">
+                        Yönetici Paneli
+                    </div>
+                    <h1 className="text-3xl font-bold tracking-tight">
+                        GÜVENLİ GİRİŞ
+                    </h1>
+                </div>
+
+                <CardContent className="p-8 bg-white">
                     <form onSubmit={handleLogin} className="space-y-6">
                         <div className="space-y-2">
-                            <Label htmlFor="email">Email Address</Label>
+                            <Label htmlFor="email" className="text-xs font-bold uppercase tracking-wide text-stone-500">
+                                Kullanıcı Adı (E-posta)
+                            </Label>
                             <Input
                                 id="email"
                                 type="email"
-                                placeholder="admin@canmarkt.de"
+                                placeholder="ornek@canmarkt.de"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
                                 disabled={loading}
-                                className="rounded-none focus-visible:ring-[#C8102E]"
+                                className="h-12 border-stone-300 rounded-none focus-visible:ring-2 focus-visible:ring-[#C8102E] focus-visible:border-[#C8102E] text-base"
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="password">Password</Label>
-                            <Input
-                                id="password"
-                                type="password"
-                                placeholder="••••••••"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                                disabled={loading}
-                                className="rounded-none focus-visible:ring-[#C8102E]"
-                            />
+                            <Label htmlFor="password" className="text-xs font-bold uppercase tracking-wide text-stone-500">
+                                Şifre
+                            </Label>
+                            <div className="relative">
+                                <Input
+                                    id="password"
+                                    type="password"
+                                    placeholder="••••••••"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                    disabled={loading}
+                                    className="h-12 border-stone-300 rounded-none focus-visible:ring-2 focus-visible:ring-[#C8102E] focus-visible:border-[#C8102E] text-base"
+                                />
+                                <Lock className="absolute right-3 top-3.5 h-5 w-5 text-stone-300" />
+                            </div>
                         </div>
 
                         {error && (
-                            <div className="text-sm text-red-600 font-medium bg-red-50 p-3 border border-red-100">
-                                {error}
+                            <div className="bg-red-50 border-l-4 border-[#C8102E] p-4">
+                                <p className="text-sm text-red-700 font-medium">{error}</p>
                             </div>
                         )}
 
                         <Button
                             type="submit"
-                            className="w-full bg-[#C8102E] hover:bg-[#A00C24] text-white uppercase tracking-widest font-bold rounded-none h-12"
+                            className="w-full h-14 bg-stone-900 hover:bg-[#C8102E] text-white uppercase tracking-widest font-bold text-sm rounded-none transition-colors duration-300"
                             disabled={loading}
                         >
-                            {loading ? <Loader2 className="animate-spin w-4 h-4" /> : "Secure Login"}
+                            {loading ? (
+                                <div className="flex items-center gap-2">
+                                    <Loader2 className="animate-spin w-5 h-5" />
+                                    <span>Giriş Yapılıyor...</span>
+                                </div>
+                            ) : (
+                                "GİRİŞ YAP"
+                            )}
                         </Button>
                     </form>
                 </CardContent>
-                <CardFooter className="flex flex-col gap-4 justify-center border-t py-4 text-xs text-stone-400">
-                    <Link href="/admin/setup" className="text-[#C8102E] font-bold uppercase tracking-widest hover:underline">
-                        ⚡ First Time? Create Master Account
+
+                <CardFooter className="bg-stone-50 border-t border-stone-100 p-6 flex flex-col items-center gap-3">
+                    <Link href="/admin/setup" className="text-xs font-bold text-[#C8102E] uppercase tracking-widest hover:underline opacity-80 hover:opacity-100">
+                        ⚡ İlk Kurulum? Hesap Oluştur
                     </Link>
-                    <Link href="/" className="hover:text-[#C8102E] transition-colors">
-                        ← Return to Catalog
+                    <Link href="/" className="text-xs text-stone-400 hover:text-stone-600 transition-colors">
+                        ← Mağazaya Dön
                     </Link>
                 </CardFooter>
             </Card>

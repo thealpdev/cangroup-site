@@ -11,11 +11,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Loader2, Trash, UserPlus, Shield } from 'lucide-react';
 
-// Removed local config definition, utilizing shared config from @/lib/firebase
-// to ensure consistency and use the same Env vars.
-
 interface AdminUser {
-    id: string; // email as id or uid
+    id: string;
     email: string;
     role: string;
     createdAt?: any;
@@ -28,8 +25,6 @@ export default function UsersManager() {
     const [newPassword, setNewPassword] = useState('');
     const [creating, setCreating] = useState(false);
 
-    // Fetch users list (We maintain a redundant 'admins' collection for listing purposes)
-    // because Client SDK cannot list all users from Auth directly.
     const fetchUsers = async () => {
         try {
             const querySnapshot = await getDocs(collection(db, "admins"));
@@ -39,7 +34,7 @@ export default function UsersManager() {
             });
             setUsers(fetchedUsers);
         } catch (error) {
-            console.error("Error fetching users:", error);
+            console.error("Kullanıcılar getirilemedi:", error);
         } finally {
             setLoading(false);
         }
@@ -71,16 +66,16 @@ export default function UsersManager() {
                 createdAt: new Date().toISOString()
             });
 
-            alert("New Admin User Created Successfully");
+            alert("Yeni Yönetici Başarıyla Eklendi ✅");
             setNewEmail('');
             setNewPassword('');
             fetchUsers();
 
             // Cleanup
-            await secondaryAuth.signOut(); // Just in case
+            await secondaryAuth.signOut();
         } catch (error: any) {
-            console.error("Error creating user:", error);
-            alert("Error: " + error.message);
+            console.error("Kullanıcı ekleme hatası:", error);
+            alert("Hata: " + error.message);
         } finally {
             if (secondaryApp) {
                 await deleteApp(secondaryApp);
@@ -90,47 +85,46 @@ export default function UsersManager() {
     };
 
     const handleDeleteUser = async (userId: string) => {
-        if (!confirm("Are you sure? This removes their dashboard access listing (User invalidation requires admin SDK, they might still be able to login until you disable them in console).")) return;
+        if (!confirm("Emin misiniz? Bu kişiyi listeden silmek, panele erişimini engellemez. Firebase Console üzerinden de silmeniz gerekir.")) return;
 
         try {
             await deleteDoc(doc(db, "admins", userId));
-            // Note: We cannot delete from Auth via Client SDK. 
-            alert("User removed from list. IMPORTANT: Manually disable/delete this user in Firebase Console Authentication tab to prevent login.");
+            alert("Kullanıcı listeden silindi. ÖNEMLİ: Bu kişinin giriş yapmasını engellemek için Firebase Console > Authentication kısmından da silmelisiniz.");
             fetchUsers();
         } catch (error) {
-            console.error("Error deleting user:", error);
+            console.error("Silme hatası:", error);
         }
     };
 
     return (
         <div className="grid gap-8 md:grid-cols-2">
             {/* Create User Form */}
-            <Card className="border-t-4 border-t-[#C8102E] h-fit">
+            <Card className="border-t-4 border-t-[#C8102E] h-fit rounded-none shadow-sm">
                 <CardHeader>
                     <div className="flex items-center gap-2 mb-2">
                         <UserPlus className="h-5 w-5 text-[#C8102E]" />
-                        <span className="text-xs font-bold uppercase tracking-widest text-[#C8102E]">Access Control</span>
+                        <span className="text-xs font-bold uppercase tracking-widest text-[#C8102E]">Erişim Yönetimi</span>
                     </div>
-                    <CardTitle className="text-xl font-bold uppercase tracking-tight">Add New Admin</CardTitle>
+                    <CardTitle className="text-xl font-bold uppercase tracking-tight">Yeni Yönetici Ekle</CardTitle>
                     <CardDescription>
-                        Create a new user with full access to this dashboard.
+                        Panele tam yetkili yeni bir kullanıcı ekleyin.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleCreateUser} className="space-y-4">
                         <div className="space-y-2">
-                            <Label>Email Address</Label>
+                            <Label>Kullanıcı E-Posta</Label>
                             <Input
                                 type="email"
                                 value={newEmail}
                                 onChange={e => setNewEmail(e.target.value)}
-                                placeholder="new.admin@canmarkt.de"
+                                placeholder="yeni.admin@canmarkt.de"
                                 className="rounded-none focus-visible:ring-[#C8102E]"
                                 required
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label>Temporary Password</Label>
+                            <Label>Geçici Şifre</Label>
                             <Input
                                 type="password"
                                 value={newPassword}
@@ -146,20 +140,20 @@ export default function UsersManager() {
                             disabled={creating}
                             className="w-full bg-[#C8102E] hover:bg-[#A00C24] text-white font-bold uppercase tracking-widest rounded-none"
                         >
-                            {creating ? <Loader2 className="animate-spin" /> : "Create Account"}
+                            {creating ? <Loader2 className="animate-spin" /> : "Hesabı Oluştur"}
                         </Button>
                     </form>
                 </CardContent>
             </Card>
 
             {/* User List */}
-            <Card className="h-fit">
+            <Card className="h-fit rounded-none shadow-sm">
                 <CardHeader>
                     <div className="flex items-center gap-2 mb-2">
                         <Shield className="h-5 w-5 text-stone-900" />
-                        <span className="text-xs font-bold uppercase tracking-widest text-stone-500">Authorized Personnel</span>
+                        <span className="text-xs font-bold uppercase tracking-widest text-stone-500">Yetkili Personel</span>
                     </div>
-                    <CardTitle className="text-xl font-bold uppercase tracking-tight">Active Admins</CardTitle>
+                    <CardTitle className="text-xl font-bold uppercase tracking-tight">Aktif Yöneticiler</CardTitle>
                 </CardHeader>
                 <CardContent>
                     {loading ? (
@@ -168,7 +162,7 @@ export default function UsersManager() {
                         </div>
                     ) : (
                         <div className="space-y-4">
-                            {users.length === 0 && <p className="text-stone-500 italic">No other admins found.</p>}
+                            {users.length === 0 && <p className="text-stone-500 italic">Başka yönetici bulunamadı.</p>}
                             {users.map(user => (
                                 <div key={user.id} className="flex items-center justify-between p-4 bg-stone-50 border border-stone-200">
                                     <div>
