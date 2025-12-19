@@ -11,6 +11,7 @@ interface Product {
     description_de: string;
     category: string;
     brand: string;
+    productCode?: string;
     price?: string;
     images: string[];
 }
