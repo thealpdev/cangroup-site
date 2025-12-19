@@ -110,9 +110,6 @@ export default function LoginPage() {
                 </CardContent>
 
                 <CardFooter className="bg-stone-50 border-t border-stone-100 p-6 flex flex-col items-center gap-3">
-                    <Link href="/admin/setup" className="text-xs font-bold text-[#C8102E] uppercase tracking-widest hover:underline opacity-80 hover:opacity-100">
-                        ⚡ İlk Kurulum? Hesap Oluştur
-                    </Link>
                     <Link href="/" className="text-xs text-stone-400 hover:text-stone-600 transition-colors">
                         ← Mağazaya Dön
                     </Link>
