@@ -4,16 +4,15 @@ import { useState, useEffect } from 'react';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import ImageUpload from '@/components/admin/ImageUpload';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Save, LayoutTemplate, Image as ImageIcon } from 'lucide-react';
 
 export default function SettingsForm() {
     const [loading, setLoading] = useState(false);
     const [logo, setLogo] = useState<string[]>([]);
-    const [heroImage, setHeroImage] = useState<string[]>([]); // Keeping state name for simplicity, but mapping to hero_banner
+    const [heroImage, setHeroImage] = useState<string[]>([]);
 
     // Load initial data
     useEffect(() => {
@@ -27,7 +26,7 @@ export default function SettingsForm() {
                     if (data.hero_banner) setHeroImage([data.hero_banner]);
                 }
             } catch (error) {
-                console.error("Error fetching settings:", error);
+                console.error("Ayarlar yüklenemedi:", error);
             }
         };
         fetchSettings();
@@ -41,10 +40,10 @@ export default function SettingsForm() {
                 hero_banner: heroImage[0] || '',
                 updatedAt: new Date().toISOString()
             }, { merge: true });
-            alert("Settings saved successfully!");
+            alert("Ayarlar başarıyla kaydedildi! ✅");
         } catch (error) {
-            console.error("Error saving settings:", error);
-            alert("Failed to save settings.");
+            console.error("Kaydetme hatası:", error);
+            alert("Ayarlar kaydedilemedi.");
         } finally {
             setLoading(false);
         }
@@ -52,38 +51,54 @@ export default function SettingsForm() {
 
     return (
         <div className="space-y-6 max-w-4xl">
-            <Card>
+            <Card className="rounded-2xl border-none shadow-sm">
                 <CardHeader>
-                    <CardTitle>General Site Settings</CardTitle>
+                    <div className="flex items-center gap-2 mb-2">
+                        <LayoutTemplate className="h-5 w-5 text-[#C8102E]" />
+                        <span className="text-xs font-bold uppercase tracking-widest text-[#C8102E]">Görsel Kimlik</span>
+                    </div>
+                    <CardTitle className="text-xl font-bold tracking-tight">Genel Site Görselleri</CardTitle>
+                    <CardDescription>Logo ve Banner gibi ana bileşenleri düzenleyin.</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-8">
 
                     <div className="space-y-4">
-                        <Label>Site Logo</Label>
-                        <p className="text-sm text-gray-500">Upload your brand logo (PNG/SVG recommended).</p>
-                        <ImageUpload
-                            value={logo}
-                            onChange={(url) => setLogo([url])}
-                            onRemove={() => setLogo([])}
-                            disabled={loading}
-                        />
+                        <Label className="text-base font-bold text-stone-900">Site Logosu</Label>
+                        <p className="text-sm text-stone-500">Header kısmında görünen marka logosu. (Şeffaf PNG veya SVG önerilir).</p>
+                        <div className="bg-stone-50 p-4 rounded-xl border border-dashed border-stone-200">
+                            <ImageUpload
+                                value={logo}
+                                onChange={(url) => setLogo([url])}
+                                onRemove={() => setLogo([])}
+                                disabled={loading}
+                            />
+                        </div>
                     </div>
 
                     <div className="space-y-4">
-                        <Label>Hero Banner Image</Label>
-                        <p className="text-sm text-gray-500">Main image displayed at the top of the homepage.</p>
-                        <ImageUpload
-                            value={heroImage}
-                            onChange={(url) => setHeroImage([url])}
-                            onRemove={() => setHeroImage([])}
-                            disabled={loading}
-                        />
+                        <Label className="text-base font-bold text-stone-900">Ana Banner (Hero Image)</Label>
+                        <p className="text-sm text-stone-500">Anasayfanın en üstünde yer alan büyük görsel.</p>
+                        <div className="bg-stone-50 p-4 rounded-xl border border-dashed border-stone-200">
+                            <ImageUpload
+                                value={heroImage}
+                                onChange={(url) => setHeroImage([url])}
+                                onRemove={() => setHeroImage([])}
+                                disabled={loading}
+                            />
+                        </div>
                     </div>
 
-                    <Button onClick={handleSave} disabled={loading} size="lg">
-                        {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Save Changes
-                    </Button>
+                    <div className="pt-4 border-t border-stone-100">
+                        <Button
+                            onClick={handleSave}
+                            disabled={loading}
+                            size="lg"
+                            className="w-full md:w-auto rounded-xl bg-[#C8102E] hover:bg-[#A00C24] font-bold tracking-wide transition-colors"
+                        >
+                            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                            Değişiklikleri Kaydet
+                        </Button>
+                    </div>
 
                 </CardContent>
             </Card>
