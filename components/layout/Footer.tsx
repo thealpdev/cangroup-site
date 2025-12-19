@@ -83,13 +83,7 @@ export default function Footer() {
                             </button>
                         </div>
 
-                        <div className="flex gap-4 mt-8">
-                            {[Facebook, Instagram, Linkedin, Twitter].map((Icon, i) => (
-                                <a key={i} href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-stone-400 hover:bg-white hover:text-[#0a0a0a] transition-all duration-300">
-                                    <Icon className="w-4 h-4" />
-                                </a>
-                            ))}
-                        </div>
+                        {/* Social Media Removed as per request */}
                     </div>
                 </div>
 
