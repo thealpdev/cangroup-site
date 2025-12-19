@@ -38,61 +38,59 @@ const FEATURED = [
 ];
 
 export default function Spotlight() {
-    const containerRef = useRef(null);
-
     return (
-        <section className="py-24 bg-[#111] text-white overflow-hidden">
-            <div className="container mx-auto px-4 mb-12 flex items-end justify-between">
+        <section className="py-32 bg-[#fff] text-[#1c1c1c] overflow-hidden">
+            <div className="container mx-auto px-4 mb-20 flex items-end justify-center text-center">
                 <div>
-                    <span className="text-[#C8102E] font-bold uppercase tracking-widest text-xs">In the Spotlight</span>
-                    <h2 className="text-4xl font-serif mt-4">Curator's <span className="italic text-stone-500">Pick</span></h2>
-                </div>
-
-                <div className="flex gap-2">
-                    <button className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-colors">
-                        ←
-                    </button>
-                    <button className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-colors">
-                        →
-                    </button>
+                    <span className="text-stone-400 font-medium uppercase tracking-[0.2em] text-xs">In the Spotlight</span>
+                    <h2 className="text-5xl md:text-6xl font-serif mt-6 text-[#0a0a0a]">Curator's <span className="italic text-stone-300">Choice</span></h2>
                 </div>
             </div>
 
             {/* Horizontal Scroll Area */}
-            <div className="flex gap-6 overflow-x-auto pb-12 px-4 container mx-auto scrollbar-hide snap-x">
+            <div className="flex gap-8 md:gap-12 overflow-x-auto pb-12 px-4 md:px-12 scrollbar-hide snap-x items-center">
                 {FEATURED.map((item, i) => (
                     <motion.div
                         key={i}
-                        className="min-w-[300px] md:min-w-[400px] snap-center"
-                        whileHover={{ y: -10 }}
-                        transition={{ duration: 0.3 }}
+                        className="min-w-[280px] md:min-w-[350px] snap-center flex-shrink-0 group cursor-pointer"
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: i * 0.1 }}
                     >
-                        <div className="relative aspect-[3/4] bg-[#1a1a1a] rounded-xl overflow-hidden mb-6 group cursor-pointer">
-                            <div className="absolute top-4 left-4 z-10">
-                                <span className="bg-white/10 backdrop-blur text-white text-[10px] uppercase font-bold px-3 py-1 rounded-full">
-                                    {item.tag}
-                                </span>
-                            </div>
-                            <Image
-                                src={item.image}
-                                alt={item.name}
-                                fill
-                                className="object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105"
-                            />
-                            {/* Overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-8">
-                                <span className="text-white uppercase text-xs font-bold tracking-widest flex items-center gap-2">
-                                    View Product <ArrowRight className="w-4 h-4" />
-                                </span>
-                            </div>
-                        </div>
+                        <Link href={`/products/${item.id}`} className="block">
+                            <div className="relative aspect-[3/4] bg-stone-50 overflow-hidden mb-8">
+                                <Image
+                                    src={item.image}
+                                    alt={item.name}
+                                    fill
+                                    className="object-cover object-center grayscale-[20%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                                />
 
-                        <div>
-                            <h3 className="text-2xl font-serif italic mb-1">{item.name}</h3>
-                            <p className="text-stone-500 font-mono text-sm">{item.price}</p>
-                        </div>
+                                {/* Minimal Tag */}
+                                <div className="absolute top-0 left-0 p-6">
+                                    <span className="text-[10px] uppercase tracking-widest text-[#0a0a0a] font-bold mix-blend-multiply opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                        {item.tag}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="text-center space-y-2">
+                                <h3 className="text-2xl font-serif italic text-[#0a0a0a] group-hover:text-[#C8102E] transition-colors duration-300">{item.name}</h3>
+                                <p className="text-stone-400 font-mono text-sm tracking-widest">{item.price}</p>
+                            </div>
+                        </Link>
                     </motion.div>
                 ))}
+
+                {/* View All Ends Card */}
+                <div className="min-w-[200px] flex items-center justify-center snap-center">
+                    <Link href="/catalog" className="group flex flex-col items-center gap-4 p-8">
+                        <div className="w-16 h-16 rounded-full border border-stone-200 flex items-center justify-center group-hover:bg-[#0a0a0a] group-hover:border-[#0a0a0a] group-hover:text-white transition-all duration-300">
+                            <ArrowRight className="w-5 h-5" />
+                        </div>
+                        <span className="text-xs font-bold uppercase tracking-widest text-stone-400 group-hover:text-[#0a0a0a] transition-colors">View All</span>
+                    </Link>
+                </div>
             </div>
         </section>
     );

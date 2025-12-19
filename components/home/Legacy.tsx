@@ -33,7 +33,7 @@ export default function Legacy() {
     }, []);
 
     return (
-        <section ref={ref} className="relative h-[80vh] overflow-hidden flex items-center justify-center">
+        <section ref={ref} className="relative h-screen overflow-hidden flex items-center justify-center bg-[#0a0a0a]">
             {/* Parallax Background */}
             <motion.div
                 style={{ y }}
@@ -41,35 +41,29 @@ export default function Legacy() {
             >
                 {/* Using a darker, more industrial/craftsmanship focused image */}
                 <div
-                    className="w-full h-full bg-cover bg-center"
+                    className="w-full h-full bg-cover bg-center opacity-40 grayscale-[20%]"
                     style={{ backgroundImage: `url("${content.bgImage}")` }}
                 />
-                <div className="absolute inset-0 bg-black/60" />
+                <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] via-transparent to-[#0a0a0a]" />
             </motion.div>
 
             {/* Content */}
             <div className="relative z-10 container mx-auto px-4 text-center">
-                <motion.div style={{ opacity }} className="max-w-4xl mx-auto space-y-8">
-                    <h2 className="text-[#C8102E] font-bold uppercase tracking-[0.5em] text-sm md:text-base">{content.title}</h2>
+                <motion.div style={{ opacity }} className="max-w-5xl mx-auto flex flex-col items-center gap-12">
 
-                    <p className="text-3xl md:text-5xl lg:text-6xl text-white font-serif leading-tight">
-                        {content.quote}
+                    <div className="flex flex-col items-center gap-4">
+                        <span className="h-[1px] w-24 bg-[#C8102E]" />
+                        <h2 className="text-white/60 font-medium uppercase tracking-[0.4em] text-xs md:text-sm">{content.title}</h2>
+                    </div>
+
+                    <p className="text-4xl md:text-7xl text-white font-serif leading-tight italic">
+                        "{content.quote}"
                     </p>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-12 text-white/80">
-                        <div className="space-y-2">
-                            <div className="text-3xl font-bold font-serif text-white">100+</div>
-                            <div className="text-xs uppercase tracking-widest text-[#C8102E]">Years of History</div>
-                        </div>
-                        <div className="space-y-2">
-                            <div className="text-3xl font-bold font-serif text-white">58</div>
-                            <div className="text-xs uppercase tracking-widest text-[#C8102E]">HRC Hardness</div>
-                        </div>
-                        <div className="space-y-2">
-                            <div className="text-3xl font-bold font-serif text-white">Lifetime</div>
-                            <div className="text-xs uppercase tracking-widest text-[#C8102E]">Warranty</div>
-                        </div>
-                    </div>
+                    <p className="max-w-xl text-stone-400 font-light leading-relaxed text-lg">
+                        Forged in fire, finished by hand. A tradition of excellence that has defined German craftsmanship for over a century.
+                    </p>
+
                 </motion.div>
             </div>
         </section>

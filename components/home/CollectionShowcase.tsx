@@ -53,65 +53,70 @@ export default function CollectionShowcase() {
             <div className="container mx-auto px-4">
 
                 {/* Header */}
-                <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-6">
-                    <div className="space-y-4">
-                        <span className="text-[#C8102E] font-bold uppercase tracking-widest text-xs">Curated Collections</span>
-                        <h2 className="text-4xl md:text-5xl font-serif text-[#1c1c1c]">Designed for <span className="italic text-stone-400">Purpose</span></h2>
+                <div className="flex flex-col md:flex-row items-end justify-between mb-24 gap-6">
+                    <div className="space-y-6">
+                        <span className="text-stone-500 font-medium uppercase tracking-[0.2em] text-xs">Curated Collections</span>
+                        <h2 className="text-5xl md:text-7xl font-serif text-[#0a0a0a] leading-[0.9]">
+                            Designed for <br /> <span className="italic text-stone-300">Purpose</span>
+                        </h2>
                     </div>
-                    <Link href="/catalog" className="hidden md:flex items-center gap-2 text-stone-900 border-b border-stone-900 pb-1 hover:text-[#C8102E] hover:border-[#C8102E] transition-all uppercase text-xs font-bold tracking-widest">
-                        View All Collections <ArrowUpRight className="w-4 h-4" />
-                    </Link>
                 </div>
 
-                {/* Masonry Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 h-auto lg:h-[600px]">
+                {/* Minimalist Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8 min-h-[80vh]">
 
-                    {/* Item 1: Large (Left) */}
-                    <Link href={displayCols[0].link} className="group relative overflow-hidden rounded-xl md:col-span-2 lg:col-span-2 h-[300px] lg:h-full cursor-pointer">
-                        <Image
-                            src={displayCols[0].image}
-                            alt={displayCols[0].title}
-                            fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors" />
-                        <div className="absolute bottom-0 left-0 p-8 text-white translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                            <span className="block text-xs font-bold uppercase tracking-widest mb-2 opacity-80">{displayCols[0].subtitle}</span>
-                            <h3 className="text-3xl font-serif italic">{displayCols[0].title}</h3>
+                    {/* Left: Dominant Item */}
+                    <div className="md:col-span-2 relative group overflow-hidden cursor-pointer">
+                        <Link href={displayCols[0].link} className="block w-full h-full min-h-[400px]">
+                            <Image
+                                src={displayCols[0].image}
+                                alt={displayCols[0].title}
+                                fill
+                                className="object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-700" />
+                            <div className="absolute bottom-8 left-8 md:bottom-12 md:left-12 text-white transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700">
+                                <span className="text-xs uppercase tracking-[0.2em] mb-2 block">{displayCols[0].subtitle}</span>
+                                <h3 className="text-4xl md:text-5xl font-serif italic">{displayCols[0].title}</h3>
+                            </div>
+                        </Link>
+                    </div>
+
+                    {/* Right: Stacked Items */}
+                    <div className="flex flex-col gap-4 lg:gap-8">
+                        {/* Top Right */}
+                        <div className="flex-1 relative group overflow-hidden cursor-pointer min-h-[300px]">
+                            <Link href={displayCols[1].link} className="block w-full h-full">
+                                <Image
+                                    src={displayCols[1].image}
+                                    alt={displayCols[1].title}
+                                    fill
+                                    className="object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
+                                />
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-700" />
+                                <div className="absolute bottom-8 left-8 text-white transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700">
+                                    <span className="text-xs uppercase tracking-[0.2em] mb-2 block">{displayCols[1].subtitle}</span>
+                                    <h3 className="text-3xl font-serif italic">{displayCols[1].title}</h3>
+                                </div>
+                            </Link>
                         </div>
-                    </Link>
 
-                    {/* Right Column Stack */}
-                    <div className="grid grid-rows-2 gap-6 h-[600px] lg:h-full md:col-span-2 lg:col-span-1">
-                        {/* Item 2 */}
-                        <Link href={displayCols[1].link} className="group relative overflow-hidden rounded-xl h-full cursor-pointer row-span-1">
-                            <Image
-                                src={displayCols[1].image}
-                                alt={displayCols[1].title}
-                                fill
-                                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                            />
-                            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors" />
-                            <div className="absolute bottom-0 left-0 p-6 text-white translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                <span className="block text-[10px] font-bold uppercase tracking-widest mb-1 opacity-80">{displayCols[1].subtitle}</span>
-                                <h3 className="text-2xl font-serif italic">{displayCols[1].title}</h3>
-                            </div>
-                        </Link>
-
-                        {/* Item 3 */}
-                        <Link href={displayCols[2].link} className="group relative overflow-hidden rounded-xl h-full cursor-pointer row-span-1">
-                            <Image
-                                src={displayCols[2].image}
-                                alt={displayCols[2].title}
-                                fill
-                                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                            />
-                            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors" />
-                            <div className="absolute bottom-0 left-0 p-6 text-white translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                <span className="block text-[10px] font-bold uppercase tracking-widest mb-1 opacity-80">{displayCols[2].subtitle}</span>
-                                <h3 className="text-2xl font-serif italic">{displayCols[2].title}</h3>
-                            </div>
-                        </Link>
+                        {/* Bottom Right */}
+                        <div className="flex-1 relative group overflow-hidden cursor-pointer min-h-[300px]">
+                            <Link href={displayCols[2].link} className="block w-full h-full">
+                                <Image
+                                    src={displayCols[2].image}
+                                    alt={displayCols[2].title}
+                                    fill
+                                    className="object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
+                                />
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-700" />
+                                <div className="absolute bottom-8 left-8 text-white transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700">
+                                    <span className="text-xs uppercase tracking-[0.2em] mb-2 block">{displayCols[2].subtitle}</span>
+                                    <h3 className="text-3xl font-serif italic">{displayCols[2].title}</h3>
+                                </div>
+                            </Link>
+                        </div>
                     </div>
                 </div>
 
