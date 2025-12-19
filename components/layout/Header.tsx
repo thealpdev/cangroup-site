@@ -68,10 +68,10 @@ export default function Header() {
 
                     {/* Desktop Navigation - Centered & Premium */}
                     <nav className="hidden lg:flex items-center gap-16">
-                        {['Ürünler', 'About Us', 'Contact'].map((item) => (
+                        {['Products', 'About Us', 'Contact'].map((item) => (
                             <Link
                                 key={item}
-                                href={item === 'Ürünler' ? '/' : `/${item.toLowerCase().replace(' ', '-')}`}
+                                href={item === 'Products' ? '/products' : `/${item.toLowerCase().replace(' ', '-')}`}
                                 className={cn(
                                     "text-sm font-bold uppercase tracking-[0.2em] transition-colors relative group py-2",
                                     scrolled ? "text-stone-900 hover:text-[#C8102E]" : "text-white hover:text-[#C8102E] drop-shadow-md"
@@ -99,7 +99,7 @@ export default function Header() {
                                 : "bg-white text-[#0a0a0a] hover:bg-[#C8102E] hover:text-white hover:shadow-xl"
                         )}>
                             <Heart className="w-5 h-5" />
-                            <span className="hidden md:block text-xs font-bold uppercase tracking-widest">Favori</span>
+                            <span className="hidden md:block text-xs font-bold uppercase tracking-widest">Favorites</span>
                         </Link>
                     </div>
 
