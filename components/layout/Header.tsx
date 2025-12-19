@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, ShoppingBag, Menu, Phone, Mail, Heart } from 'lucide-react';
+import { Search, ShoppingBag, Menu, Phone, Mail } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 
 export default function Header() {
     const [scrolled, setScrolled] = useState(false);
-    const [logo, setLogo] = useState("/can-group-logo-black.jpg");
+    const [logo, setLogo] = useState("");
 
     useEffect(() => {
         const handleScroll = () => {
@@ -90,21 +90,7 @@ export default function Header() {
                     {/* Actions */}
                     <div className="flex items-center gap-4 md:gap-8">
                         {/* Search Removed */}
-
-                        <div className={cn(
-                            "h-8 w-[1px] hidden md:block",
-                            scrolled ? "bg-stone-200" : "bg-white/30"
-                        )}></div>
-
-                        <Link href="/favorites" className={cn(
-                            "flex items-center gap-3 px-6 py-3 rounded-full transition-all duration-300 shadow-lg group",
-                            scrolled
-                                ? "bg-[#0a0a0a] text-white hover:bg-[#C8102E] hover:shadow-red-900/20"
-                                : "bg-white text-[#0a0a0a] hover:bg-[#C8102E] hover:text-white hover:shadow-xl"
-                        )}>
-                            <Heart className="w-5 h-5" />
-                            <span className="hidden md:block text-xs font-bold uppercase tracking-widest">Favorites</span>
-                        </Link>
+                        {/* Favorites Removed */}
                     </div>
 
                 </div>

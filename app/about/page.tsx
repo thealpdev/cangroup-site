@@ -19,7 +19,7 @@ export default function AboutPage() {
                             animate={{ opacity: 1, y: 0 }}
                             className="text-[#C8102E] font-bold tracking-[0.2em] uppercase text-sm block"
                         >
-                            Established 2024
+                            Established Brand
                         </motion.span>
                         <motion.h1
                             initial={{ opacity: 0, y: 30 }}
@@ -27,8 +27,8 @@ export default function AboutPage() {
                             transition={{ delay: 0.1 }}
                             className="text-5xl md:text-7xl font-serif text-[#0a0a0a] leading-tight"
                         >
-                            Crafting Legacy, <br />
-                            <span className="italic text-stone-400">Forging Trust.</span>
+                            Quality, Trust, and <br />
+                            <span className="italic text-stone-400">Sustainable Partnerships.</span>
                         </motion.h1>
                         <motion.p
                             initial={{ opacity: 0, y: 40 }}
@@ -36,7 +36,7 @@ export default function AboutPage() {
                             transition={{ delay: 0.2 }}
                             className="text-xl text-stone-600 leading-relaxed max-w-2xl mx-auto"
                         >
-                            Can Group is more than a distributor; we are curators of the world's finest culinary tools. Bridging the gap between Swiss precision and global kitchens.
+                            CANGROUP is a brand specializing in wholesale, distinguishing itself through quality, trust, and strong partnerships.
                         </motion.p>
                     </div>
 
@@ -61,10 +61,10 @@ export default function AboutPage() {
                 <section className="container mx-auto px-4 mb-32">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {[
-                            { icon: ShieldCheck, title: "Authenticity", desc: "100% Guaranteed original products securely sourced from Solingen & Swiss manufacturers." },
-                            { icon: Users, title: "Family Operated", desc: "A family-run business that treats every client like a partner, not just a number." },
-                            { icon: Globe, title: "Global Reach", desc: "Exporting premium cutlery to kitchens and retailers across Europe and beyond." },
-                            { icon: Award, title: "Excellence", desc: "Curating only the highest-rated tools used by professional chefs worldwide." }
+                            { icon: ShieldCheck, title: "Quality", desc: "We ensure rigorous control processes and high quality standards for every product." },
+                            { icon: Users, title: "Trust", desc: "Building long-term, reliable relationships with our business partners." },
+                            { icon: Globe, title: "Efficiency", desc: "Strong supply chain management and competitive pricing for global markets." },
+                            { icon: Award, title: "Innovation", desc: "Leading with innovative solutions and sustainable growth strategies." }
                         ].map((item, i) => (
                             <div key={i} className="p-8 bg-stone-50 rounded-2xl hover:bg-[#0a0a0a] hover:text-white group transition-colors duration-500 cursor-default">
                                 <item.icon className="w-10 h-10 text-[#C8102E] mb-6" />
@@ -89,16 +89,16 @@ export default function AboutPage() {
                             />
                         </div>
                         <div className="space-y-8">
-                            <h2 className="text-4xl font-serif text-[#0a0a0a]">From Solingen to the World</h2>
+                            <h2 className="text-4xl font-serif text-[#0a0a0a]">Mission & Vision</h2>
                             <div className="space-y-6 text-stone-600 text-lg leading-relaxed">
                                 <p>
-                                    Founded with a passion for durability and design, Can Group began as a small initiative to bring high-quality German and Swiss steel to discerning local markets.
+                                    <strong>Our Mission:</strong> To be a reliable business partner in the wholesale sector across both national and international markets, ensuring quality, efficiency, and customer satisfaction at the highest level.
                                 </p>
                                 <p>
-                                    Today, we stand as a premier partner for brands like <strong className="text-[#0a0a0a]">Victorinox, Zwilling, and Solingen</strong>. Our warehouse ensures that whether you are a home cook or a Michelin-star chef, the perfect tool is just a shipment away.
+                                    <strong>Our Vision:</strong> To achieve a leading position in the industry through innovative solutions and sustainable growth strategies, becoming a brand that offers real added value to its partners.
                                 </p>
                                 <p>
-                                    We believe that a knife's quality defines the cooking experience. That's why we never compromise on our catalog.
+                                    With our professional team, strong supply chain management, and competitive pricing policy, CANGROUP promises not just products, but a trusted and long-term collaboration.
                                 </p>
                             </div>
                         </div>
