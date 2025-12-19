@@ -19,6 +19,11 @@ export function middleware(request: NextRequest) {
     // Check if the path starts with any allowed path
     const isAllowed = publicPaths.some(p => path.startsWith(p));
 
+    // Allow local development to bypass maintenance mode
+    if (process.env.NODE_ENV === 'development') {
+        return NextResponse.next();
+    }
+
     // If not allowed, rewrite to maintenance page
     if (!isAllowed) {
         return NextResponse.rewrite(new URL('/maintenance', request.url));
