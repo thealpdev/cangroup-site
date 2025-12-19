@@ -7,7 +7,8 @@ import {
     Users,
     UserPlus,
     LogOut,
-    Menu
+    Menu,
+    List
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -33,6 +34,7 @@ export default function AdminSidebar({
     const menuItems = [
         { id: 'overview', label: 'Genel Bakış', icon: LayoutDashboard },
         { id: 'products', label: 'Ürün Yönetimi', icon: Package },
+        { id: 'categories', label: 'Kategoriler', icon: List },
         { id: 'partners', label: 'Marka Ortakları', icon: Users },
         { id: 'users', label: 'Erişim / Yetki', icon: UserPlus },
         { id: 'settings', label: 'Site Ayarları', icon: Settings },

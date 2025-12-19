@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 import { Button } from '@/components/ui/button';
@@ -19,17 +19,27 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import ImageUpload from '@/components/admin/ImageUpload';
-import { Loader2, Save } from 'lucide-react';
+import { Loader2, Save, Plus, Tag } from 'lucide-react';
 
 const BRANDS = [
-    { id: 'canadam', name: 'Canadam (House Brand)' },
-    { id: 'partner', name: 'Partner Brand' }
+    { id: 'canadam', name: 'Canadam' },
+    { id: 'dick', name: 'Dick' },
+    { id: 'victorinox', name: 'Victorinox' },
+    { id: 'zwilling', name: 'Zwilling' },
+    { id: 'solingen', name: 'Solingen' },
+    { id: 'euroflex', name: 'Euroflex' },
+    { id: 'other', name: 'Diğer' }
 ];
 
 interface ProductFormData {
+    productCode: string;
+    productNumber: string;
     name_de: string; name_tr: string; name_en: string;
     description_de: string; description_tr: string; description_en: string;
-    brand: string; category: string; price: string;
+    specs_de: string; specs_tr: string; specs_en: string; // New: Features list
+    brand: string;
+    category: string;
+    price: string;
     images: string[];
 }
 
@@ -37,12 +47,25 @@ export default function ProductForm() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [images, setImages] = useState<string[]>([]);
+    const [categories, setCategories] = useState<{ id: string, name: string }[]>([]);
+
     const [formData, setFormData] = useState<ProductFormData>({
+        productCode: '', productNumber: '',
         name_de: '', name_tr: '', name_en: '',
         description_de: '', description_tr: '', description_en: '',
+        specs_de: '', specs_tr: '', specs_en: '',
         brand: 'canadam', category: '', price: '',
         images: []
     });
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            const q = query(collection(db, "categories"), orderBy("name", "asc"));
+            const snapshot = await getDocs(q);
+            setCategories(snapshot.docs.map(d => ({ id: d.id, name: d.data().name })));
+        };
+        fetchCategories();
+    }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -53,8 +76,8 @@ export default function ProductForm() {
         e.preventDefault();
         try {
             setLoading(true);
-            if (images.length === 0) { alert("Image required."); return; }
-            if (!formData.name_de) { alert("German Name is required."); return; }
+            if (images.length === 0) { alert("En az bir görsel yüklemelisiniz."); return; }
+            if (!formData.name_tr) { alert("Türkçe ürün adı zorunludur."); return; }
 
             await addDoc(collection(db, "products"), {
                 ...formData,
@@ -62,17 +85,23 @@ export default function ProductForm() {
                 createdAt: serverTimestamp(),
             });
 
-            alert("Product created successfully!");
+            alert("Ürün başarıyla oluşturuldu! ✅");
+
+            // Reset form
             setFormData({
+                productCode: '', productNumber: '',
                 name_de: '', name_tr: '', name_en: '',
                 description_de: '', description_tr: '', description_en: '',
-                brand: 'canadam', category: '', price: '', images: []
+                specs_de: '', specs_tr: '', specs_en: '',
+                brand: 'canadam', category: '', price: '',
+                images: []
             });
             setImages([]);
             router.refresh();
+
         } catch (error) {
             console.error(error);
-            alert("Error creating product.");
+            alert("Ürün oluşturulurken hata oluştu.");
         } finally {
             setLoading(false);
         }
@@ -85,10 +114,10 @@ export default function ProductForm() {
             <div className="lg:col-span-2 space-y-8">
 
                 {/* Images */}
-                <Card className="rounded-none border-t-4 border-t-stone-900 shadow-sm">
+                <Card className="rounded-2xl border-none shadow-sm">
                     <CardHeader>
-                        <CardTitle className="text-lg font-bold uppercase tracking-tight">Visual Assets</CardTitle>
-                        <CardDescription>Upload high-resolution product photography.</CardDescription>
+                        <CardTitle className="text-lg font-bold uppercase tracking-tight">Ürün Görselleri</CardTitle>
+                        <CardDescription>Yüksek çözünürlüklü fotoğraflar yükleyin.</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <ImageUpload
@@ -100,28 +129,40 @@ export default function ProductForm() {
                     </CardContent>
                 </Card>
 
-                {/* Localized Content */}
-                <Card className="rounded-none shadow-sm">
+                {/* Identity */}
+                <Card className="rounded-2xl border-none shadow-sm">
                     <CardHeader>
-                        <CardTitle className="text-lg font-bold uppercase tracking-tight">Product Information</CardTitle>
-                        <CardDescription>Enter details in all supported languages.</CardDescription>
+                        <CardTitle className="text-lg font-bold uppercase tracking-tight">Kimlik Bilgileri</CardTitle>
+                    </CardHeader>
+                    <CardContent className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label>Ürün Kodu</Label>
+                            <Input name="productCode" value={formData.productCode} onChange={handleInputChange} className="rounded-xl focus-visible:ring-[#C8102E]" placeholder="Örn: CN-102" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label>Ürün Numarası</Label>
+                            <Input name="productNumber" value={formData.productNumber} onChange={handleInputChange} className="rounded-xl focus-visible:ring-[#C8102E]" placeholder="Örn: #5542" />
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Localized Content */}
+                <Card className="rounded-2xl border-none shadow-sm">
+                    <CardHeader>
+                        <CardTitle className="text-lg font-bold uppercase tracking-tight">Ürün Detayları</CardTitle>
+                        <CardDescription>Açıklama ve Özellikleri dillerde girin.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-8">
                         {/* DE */}
                         <div className="space-y-4">
                             <div className="flex items-center gap-2 pb-2 border-b border-stone-100">
                                 <span className="text-xl">🇩🇪</span>
-                                <h3 className="font-bold text-stone-900">German (Primary)</h3>
+                                <h3 className="font-bold text-stone-900">Almanca</h3>
                             </div>
                             <div className="grid gap-4">
-                                <div className="space-y-2">
-                                    <Label>Product Name</Label>
-                                    <Input name="name_de" value={formData.name_de} onChange={handleInputChange} className="rounded-none focus-visible:ring-[#C8102E]" placeholder="e.g. Profiline Chefmesser" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label>Description</Label>
-                                    <Textarea name="description_de" value={formData.description_de} onChange={handleInputChange} className="rounded-none min-h-[100px] focus-visible:ring-[#C8102E]" />
-                                </div>
+                                <Input name="name_de" value={formData.name_de} onChange={handleInputChange} className="rounded-xl" placeholder="Ürün Adı" />
+                                <Textarea name="description_de" value={formData.description_de} onChange={handleInputChange} className="rounded-xl min-h-[80px]" placeholder="Açıklama" />
+                                <Textarea name="specs_de" value={formData.specs_de} onChange={handleInputChange} className="rounded-xl min-h-[60px]" placeholder="Özellikler (Her satıra bir tane)" />
                             </div>
                         </div>
 
@@ -129,17 +170,12 @@ export default function ProductForm() {
                         <div className="space-y-4">
                             <div className="flex items-center gap-2 pb-2 border-b border-stone-100">
                                 <span className="text-xl">🇹🇷</span>
-                                <h3 className="font-bold text-stone-900">Turkish</h3>
+                                <h3 className="font-bold text-stone-900">Türkçe (Zorunlu)</h3>
                             </div>
                             <div className="grid gap-4">
-                                <div className="space-y-2">
-                                    <Label>Product Name</Label>
-                                    <Input name="name_tr" value={formData.name_tr} onChange={handleInputChange} className="rounded-none focus-visible:ring-[#C8102E]" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label>Description</Label>
-                                    <Textarea name="description_tr" value={formData.description_tr} onChange={handleInputChange} className="rounded-none min-h-[100px] focus-visible:ring-[#C8102E]" />
-                                </div>
+                                <Input name="name_tr" value={formData.name_tr} onChange={handleInputChange} className="rounded-xl focus-visible:ring-[#C8102E]" placeholder="Ürün Adı" required />
+                                <Textarea name="description_tr" value={formData.description_tr} onChange={handleInputChange} className="rounded-xl min-h-[80px] focus-visible:ring-[#C8102E]" placeholder="Açıklama" />
+                                <Textarea name="specs_tr" value={formData.specs_tr} onChange={handleInputChange} className="rounded-xl min-h-[60px] focus-visible:ring-[#C8102E]" placeholder="Özellikler (Her satıra bir tane)" />
                             </div>
                         </div>
 
@@ -147,17 +183,12 @@ export default function ProductForm() {
                         <div className="space-y-4">
                             <div className="flex items-center gap-2 pb-2 border-b border-stone-100">
                                 <span className="text-xl">🇬🇧</span>
-                                <h3 className="font-bold text-stone-900">English</h3>
+                                <h3 className="font-bold text-stone-900">İngilizce</h3>
                             </div>
                             <div className="grid gap-4">
-                                <div className="space-y-2">
-                                    <Label>Product Name</Label>
-                                    <Input name="name_en" value={formData.name_en} onChange={handleInputChange} className="rounded-none focus-visible:ring-[#C8102E]" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label>Description</Label>
-                                    <Textarea name="description_en" value={formData.description_en} onChange={handleInputChange} className="rounded-none min-h-[100px] focus-visible:ring-[#C8102E]" />
-                                </div>
+                                <Input name="name_en" value={formData.name_en} onChange={handleInputChange} className="rounded-xl" placeholder="Product Name" />
+                                <Textarea name="description_en" value={formData.description_en} onChange={handleInputChange} className="rounded-xl min-h-[80px]" placeholder="Description" />
+                                <Textarea name="specs_en" value={formData.specs_en} onChange={handleInputChange} className="rounded-xl min-h-[60px]" placeholder="Features (One per line)" />
                             </div>
                         </div>
                     </CardContent>
@@ -166,18 +197,18 @@ export default function ProductForm() {
 
             {/* Right Column: Meta & Actions */}
             <div className="space-y-8">
-                <Card className="rounded-none border-t-4 border-t-[#C8102E] shadow-md sticky top-24">
+                <Card className="rounded-2xl border-none shadow-md sticky top-24">
                     <CardHeader>
-                        <CardTitle className="text-lg font-bold uppercase tracking-tight">Classification</CardTitle>
+                        <CardTitle className="text-lg font-bold uppercase tracking-tight">Sınıflandırma</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-6">
                         <div className="space-y-2">
-                            <Label>Brand Identity</Label>
+                            <Label>Marka</Label>
                             <Select
                                 value={formData.brand}
                                 onValueChange={(val) => setFormData(prev => ({ ...prev, brand: val }))}
                             >
-                                <SelectTrigger className="rounded-none focus:ring-[#C8102E]">
+                                <SelectTrigger className="rounded-xl focus:ring-[#C8102E]">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -187,24 +218,33 @@ export default function ProductForm() {
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Category Tag</Label>
-                            <Input
-                                name="category"
+                            <Label>Kategori</Label>
+                            <Select
                                 value={formData.category}
-                                onChange={handleInputChange}
-                                className="rounded-none focus-visible:ring-[#C8102E]"
-                                placeholder="e.g. Knives"
-                            />
+                                onValueChange={(val) => setFormData(prev => ({ ...prev, category: val }))}
+                            >
+                                <SelectTrigger className="rounded-xl focus:ring-[#C8102E]">
+                                    <SelectValue placeholder="Seçiniz..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {categories.map(c => <SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>)}
+                                    {categories.length === 0 && <div className="p-2 text-xs text-stone-400">Kategori ekleyin</div>}
+                                </SelectContent>
+                            </Select>
+                            <div className="flex items-center gap-2 mt-1">
+                                <Tag className="w-3 h-3 text-stone-400" />
+                                <span className="text-xs text-stone-500">Listede yoksa "Kategoriler" menüsünden ekleyin.</span>
+                            </div>
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Price (Optional)</Label>
+                            <Label>Fiyat (€)</Label>
                             <Input
                                 name="price"
                                 value={formData.price}
                                 onChange={handleInputChange}
-                                className="rounded-none focus-visible:ring-[#C8102E]"
-                                placeholder="€"
+                                className="rounded-xl focus-visible:ring-[#C8102E]"
+                                placeholder="0.00"
                             />
                         </div>
 
@@ -212,12 +252,12 @@ export default function ProductForm() {
 
                         <Button
                             type="submit"
-                            className="w-full bg-[#C8102E] hover:bg-[#A00C24] text-white font-bold uppercase tracking-widest h-12 rounded-none"
+                            className="w-full bg-[#C8102E] hover:bg-[#A00C24] text-white font-bold uppercase tracking-widest h-12 rounded-xl transition-all shadow-red-900/20 shadow-lg"
                             disabled={loading}
                         >
                             {loading ? <Loader2 className="animate-spin" /> : (
                                 <span className="flex items-center gap-2">
-                                    <Save className="w-4 h-4" /> Save Product
+                                    <Save className="w-4 h-4" /> Kaydet
                                 </span>
                             )}
                         </Button>

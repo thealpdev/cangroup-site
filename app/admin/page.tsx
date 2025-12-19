@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import DashboardOverview from '@/components/admin/DashboardOverview';
 import ProductForm from '@/components/admin/ProductForm';
+import CategoriesManager from '@/components/admin/CategoriesManager';
 import SettingsForm from '@/components/admin/SettingsForm';
 import PartnersManager from '@/components/admin/PartnersManager';
 import UsersManager from '@/components/admin/UsersManager';
@@ -78,6 +79,19 @@ export default function AdminPage() {
                                 </div>
                                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
                                     <ProductForm />
+                                </div>
+                            </div>
+                        )}
+
+                        {/* VIEW: CATEGORIES */}
+                        {activeTab === 'categories' && (
+                            <div className="space-y-4">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-stone-900">Kategori Yönetimi</h2>
+                                    <p className="text-stone-500">Ürün kategorilerini düzenleyin.</p>
+                                </div>
+                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                                    <CategoriesManager />
                                 </div>
                             </div>
                         )}
