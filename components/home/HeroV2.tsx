@@ -46,10 +46,11 @@ export default function HeroV2() {
                     <Image
                         src={content.bgImage}
                         alt="Luxury Cutlery Background"
-                    fill
-                    className="object-cover transition-transform duration-[30s] ease-in-out hover:scale-110"
-                    priority
-                />
+                        fill
+                        className="object-cover transition-transform duration-[30s] ease-in-out hover:scale-110"
+                        priority
+                    />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/30 via-transparent to-[#0a0a0a]" />
                 <div className="absolute inset-0 bg-black/20" /> {/* Fine grain or consistent dim */}
             </div>
