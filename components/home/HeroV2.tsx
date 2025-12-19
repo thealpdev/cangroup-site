@@ -42,9 +42,10 @@ export default function HeroV2() {
 
             {/* Cinematic Background */}
             <div className="absolute inset-0 w-full h-full opacity-80">
-                <Image
-                    src="https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=2042&auto=format&fit=crop"
-                    alt="Luxury Cutlery Background"
+                {content.bgImage && (
+                    <Image
+                        src={content.bgImage}
+                        alt="Luxury Cutlery Background"
                     fill
                     className="object-cover transition-transform duration-[30s] ease-in-out hover:scale-110"
                     priority
