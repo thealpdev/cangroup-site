@@ -6,36 +6,9 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
-const FEATURED = [
-    {
-        id: "demo-1",
-        name: "Santoku Damascus",
-        price: "€249",
-        image: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=2042&auto=format&fit=crop", // Placeholder
-        tag: "Best Seller"
-    },
-    {
-        id: "demo-2",
-        name: "Chef's Classic 20cm",
-        price: "€89",
-        image: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=2042&auto=format&fit=crop",
-        tag: "Essential"
-    },
-    {
-        id: "demo-3",
-        name: "Boning Knife Flex",
-        price: "€45",
-        image: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=2042&auto=format&fit=crop",
-        tag: "Pro Choice"
-    },
-    {
-        id: "demo-4",
-        name: "Slicing Knife 30cm",
-        price: "€110",
-        image: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=2042&auto=format&fit=crop",
-        tag: "New Arrival"
-    }
-];
+import { useState, useEffect } from 'react';
+import { collection, query, orderBy, limit, onSnapshot } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 export default function Spotlight() {
     return (

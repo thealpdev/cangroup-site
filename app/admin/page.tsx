@@ -10,10 +10,40 @@ import { Button } from '@/components/ui/button';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import DashboardOverview from '@/components/admin/DashboardOverview';
 import ProductForm from '@/components/admin/ProductForm';
+import ProductList from '@/components/admin/ProductList';
 import CategoriesManager from '@/components/admin/CategoriesManager';
 import SettingsForm from '@/components/admin/SettingsForm';
 import PartnersManager from '@/components/admin/PartnersManager';
 import UsersManager from '@/components/admin/UsersManager';
+
+// Sub-view for Products to handle List vs Add state
+function ProductsView() {
+    const [view, setView] = useState<'list' | 'add'>('list');
+
+    return (
+        <div className="space-y-4">
+            <div>
+                <h2 className="text-2xl font-bold text-stone-900">Ürün Yönetimi</h2>
+                <p className="text-stone-500">
+                    {view === 'list' ? 'Kataloğunuzdaki mevcut ürünleri yönetin.' : 'Yeni bir ürün ekleyin.'}
+                </p>
+            </div>
+
+            {view === 'list' ? (
+                <ProductList onAddNew={() => setView('add')} />
+            ) : (
+                <div className="space-y-4 animate-in fade-in slide-in-from-right-4">
+                    <Button variant="outline" onClick={() => setView('list')} className="mb-4">
+                        ← Listeye Dön
+                    </Button>
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                        <ProductForm />
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
 
 export default function AdminPage() {
     const { user, loading, logout } = useAuth();
@@ -72,15 +102,7 @@ export default function AdminPage() {
 
                         {/* VIEW: PRODUCTS */}
                         {activeTab === 'products' && (
-                            <div className="space-y-4">
-                                <div>
-                                    <h2 className="text-2xl font-bold text-stone-900">Ürün Yönetimi</h2>
-                                    <p className="text-stone-500">Kataloğa yeni ürünler ekleyin veya düzenleyin.</p>
-                                </div>
-                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
-                                    <ProductForm />
-                                </div>
-                            </div>
+                            <ProductsView />
                         )}
 
                         {/* VIEW: CATEGORIES */}
