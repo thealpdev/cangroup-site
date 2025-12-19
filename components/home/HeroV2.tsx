@@ -12,9 +12,9 @@ export default function HeroV2() {
     const { scrollY } = useScroll();
 
     const [content, setContent] = useState({
-        title: "Veni Cutlery", // Tracer: Changed from Masterpiece to verify new deploy
+        title: "Veni Cutlery",
         subtitle: "Where German engineering meets culinary artistry.",
-        bgImage: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=2042&auto=format&fit=crop"
+        bgImage: "" // Default is empty to verify if DB update arrives
     });
 
     useEffect(() => {
@@ -55,6 +55,11 @@ export default function HeroV2() {
 
             {/* Floating Content */}
             <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4">
+
+                {/* DEBUG: Remove this after fixing */}
+                <div className="absolute top-24 left-4 bg-black/50 text-white text-[10px] p-2 rounded z-50">
+                    DEBUG BG: {content.bgImage || "EMPTY"}
+                </div>
 
                 <motion.div
                     style={{ y: y1, opacity }}
