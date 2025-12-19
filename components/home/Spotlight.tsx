@@ -11,6 +11,19 @@ import { collection, query, orderBy, limit, onSnapshot } from 'firebase/firestor
 import { db } from '@/lib/firebase';
 
 export default function Spotlight() {
+    const [products, setProducts] = useState<any[]>([]);
+
+    useEffect(() => {
+        const q = query(collection(db, "products"), orderBy("createdAt", "desc"), limit(10));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setProducts(items);
+        });
+        return () => unsubscribe();
+    }, []);
+
+    if (products.length === 0) return null;
+
     return (
         <section className="py-32 bg-[#fff] text-[#1c1c1c] overflow-hidden">
             <div className="container mx-auto px-4 mb-20 flex items-end justify-center text-center">
@@ -22,9 +35,9 @@ export default function Spotlight() {
 
             {/* Horizontal Scroll Area */}
             <div className="flex gap-8 md:gap-12 overflow-x-auto pb-12 px-4 md:px-12 scrollbar-hide snap-x items-center">
-                {FEATURED.map((item, i) => (
+                {products.map((item, i) => (
                     <motion.div
-                        key={i}
+                        key={item.id}
                         className="min-w-[280px] md:min-w-[350px] snap-center flex-shrink-0 group cursor-pointer"
                         initial={{ opacity: 0, y: 50 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -33,23 +46,32 @@ export default function Spotlight() {
                         <Link href={`/products/${item.id}`} className="block">
                             <div className="relative aspect-[3/4] bg-stone-50 overflow-hidden mb-8">
                                 <Image
-                                    src={item.image}
-                                    alt={item.name}
+                                    src={item.images?.[0] || item.image}
+                                    alt={item.name_de || item.name_en || 'Product'}
                                     fill
                                     className="object-cover object-center grayscale-[20%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
                                 />
 
                                 {/* Minimal Tag */}
-                                <div className="absolute top-0 left-0 p-6">
-                                    <span className="text-[10px] uppercase tracking-widest text-[#0a0a0a] font-bold mix-blend-multiply opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                        {item.tag}
-                                    </span>
-                                </div>
+                                {item.brand && (
+                                    <div className="absolute top-0 left-0 p-6">
+                                        <span className="text-[10px] uppercase tracking-widest text-[#0a0a0a] font-bold mix-blend-multiply opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                            {item.brand}
+                                        </span>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="text-center space-y-2">
-                                <h3 className="text-2xl font-serif italic text-[#0a0a0a] group-hover:text-[#C8102E] transition-colors duration-300">{item.name}</h3>
-                                <p className="text-stone-400 font-mono text-sm tracking-widest">{item.price}</p>
+                                <h3 className="text-2xl font-serif italic text-[#0a0a0a] group-hover:text-[#C8102E] transition-colors duration-300">
+                                    {item.name_de || item.name_en}
+                                </h3>
+                                {item.price && (
+                                    <p className="text-stone-400 font-mono text-sm tracking-widest">
+                                        {item.currency === 'USD' ? '$' : item.currency === 'TRY' ? '₺' : item.currency === 'GBP' ? '£' : '€'}
+                                        {item.price}
+                                    </p>
+                                )}
                             </div>
                         </Link>
                     </motion.div>
