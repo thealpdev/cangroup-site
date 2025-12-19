@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, ShoppingBag, Menu, Phone, Mail } from 'lucide-react';
+import { Search, ShoppingBag, Menu, Phone, Mail, Heart } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -54,7 +54,7 @@ export default function Header() {
                     <Link href="/" className="relative h-full flex items-center justify-center md:justify-start group">
                         <div className={cn(
                             "relative transition-all duration-500",
-                            scrolled ? "h-20 w-64" : "h-24 w-72 md:w-96"
+                            scrolled ? "h-20 w-72" : "h-32 w-80 md:w-[450px]"
                         )}>
                             <Image
                                 src={logo}
@@ -68,10 +68,10 @@ export default function Header() {
 
                     {/* Desktop Navigation - Centered & Premium */}
                     <nav className="hidden lg:flex items-center gap-16">
-                        {['Catalog', 'Brands', 'About Us', 'Contact'].map((item) => (
+                        {['Ürünler', 'About Us', 'Contact'].map((item) => (
                             <Link
                                 key={item}
-                                href={item === 'Catalog' ? '/' : `/${item.toLowerCase().replace(' ', '-')}`}
+                                href={item === 'Ürünler' ? '/' : `/${item.toLowerCase().replace(' ', '-')}`}
                                 className={cn(
                                     "text-sm font-bold uppercase tracking-[0.2em] transition-colors relative group py-2",
                                     scrolled ? "text-stone-900 hover:text-[#C8102E]" : "text-white hover:text-[#C8102E] drop-shadow-md"
@@ -85,27 +85,22 @@ export default function Header() {
 
                     {/* Actions */}
                     <div className="flex items-center gap-4 md:gap-8">
-                        <button className={cn(
-                            "p-2 rounded-full transition-colors",
-                            scrolled ? "text-stone-900 hover:bg-stone-50" : "text-white hover:bg-white/10"
-                        )}>
-                            <Search className="w-6 h-6" />
-                        </button>
+                        {/* Search Removed */}
 
                         <div className={cn(
                             "h-8 w-[1px] hidden md:block",
                             scrolled ? "bg-stone-200" : "bg-white/30"
                         )}></div>
 
-                        <button className={cn(
+                        <Link href="/favorites" className={cn(
                             "flex items-center gap-3 px-6 py-3 rounded-full transition-all duration-300 shadow-lg group",
                             scrolled
                                 ? "bg-[#0a0a0a] text-white hover:bg-[#C8102E] hover:shadow-red-900/20"
                                 : "bg-white text-[#0a0a0a] hover:bg-[#C8102E] hover:text-white hover:shadow-xl"
                         )}>
-                            <ShoppingBag className="w-5 h-5" />
-                            <span className="hidden md:block text-xs font-bold uppercase tracking-widest">Inquiry</span>
-                        </button>
+                            <Heart className="w-5 h-5" />
+                            <span className="hidden md:block text-xs font-bold uppercase tracking-widest">Favori</span>
+                        </Link>
                     </div>
 
                 </div>
