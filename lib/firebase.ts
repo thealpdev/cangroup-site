@@ -13,6 +13,15 @@ export const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
+// Debugging for Production (Check console)
+if (typeof window !== 'undefined') {
+    if (!firebaseConfig.apiKey) {
+        console.error("🔥 FIREBASE ERROR: API Key is missing! Check Vercel Environment Variables.");
+    } else {
+        console.log("✅ Firebase Config Loaded:", firebaseConfig.projectId);
+    }
+}
+
 // Initialize Firebase (singleton pattern)
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore(app);
