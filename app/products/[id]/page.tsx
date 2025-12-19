@@ -19,13 +19,18 @@ const getCurrencySymbol = (code?: string) => {
     }
 };
 
+// Force dynamic rendering to ensure new products appear immediately
+export const dynamic = "force-dynamic";
+
 async function getProduct(id: string) {
+    console.log("Fetching product with ID:", id); // Debug log
     try {
         const docRef = doc(db, "products", id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
             return { id: docSnap.id, ...docSnap.data() } as any;
         }
+        console.warn("Product not found in Firestore:", id);
         return null;
     } catch (error) {
         console.error("Error fetching product:", error);
@@ -33,7 +38,9 @@ async function getProduct(id: string) {
     }
 }
 
-export default async function ProductDetailPage({ params }: { params: { id: string } }) {
+export default async function ProductDetailPage(props: { params: Promise<{ id: string }> }) {
+    // Next.js 15+ requires awaiting params
+    const params = await props.params;
     const product = await getProduct(params.id);
 
     if (!product) {
