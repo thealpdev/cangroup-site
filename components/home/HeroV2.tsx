@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -18,19 +18,18 @@ export default function HeroV2() {
     });
 
     useEffect(() => {
-        const fetchSettings = async () => {
-            try {
-                const docRef = doc(db, "settings", "home");
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists() && docSnap.data().hero) {
-                    const data = docSnap.data().hero;
-                    if (data.bgImage) setContent(prev => ({ ...prev, ...data }));
-                }
-            } catch (error) {
-                console.error("Hero content fetch error:", error);
+        const docRef = doc(db, "settings", "home");
+        const unsubscribe = onSnapshot(docRef, (docSnap) => {
+            if (docSnap.exists() && docSnap.data().hero) {
+                const data = docSnap.data().hero;
+                // Merge properly to allow updates even if some fields are empty strings
+                setContent(prev => ({ ...prev, ...data }));
             }
-        };
-        fetchSettings();
+        }, (error) => {
+            console.error("Hero content fetch error:", error);
+        });
+
+        return () => unsubscribe();
     }, []);
 
     // Parallax Effects

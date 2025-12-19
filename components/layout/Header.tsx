@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Search, ShoppingBag, Menu, Phone, Mail } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { cn } from '@/lib/utils';
 
@@ -18,21 +18,18 @@ export default function Header() {
         };
         window.addEventListener('scroll', handleScroll);
 
-        // Fetch Dynamic Logo
-        const fetchLogo = async () => {
-            try {
-                const docRef = doc(db, "settings", "general");
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists() && docSnap.data().logo) {
-                    setLogo(docSnap.data().logo);
-                }
-            } catch (error) {
-                console.error("Error fetching logo:", error);
+        // Real-time Dynamic Logo
+        const docRef = doc(db, "settings", "general");
+        const unsubscribe = onSnapshot(docRef, (docSnap) => {
+            if (docSnap.exists() && docSnap.data().logo) {
+                setLogo(docSnap.data().logo);
             }
-        };
-        fetchLogo();
+        }, (error) => console.error("Logo fetch error:", error));
 
-        return () => window.removeEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            unsubscribe();
+        };
     }, []);
 
     return (

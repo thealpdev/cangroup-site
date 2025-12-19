@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -32,19 +32,17 @@ export default function CollectionShowcase() {
     const [collections, setCollections] = useState(DEFAULT_COLLECTIONS);
 
     useEffect(() => {
-        const fetchSettings = async () => {
-            try {
-                const docRef = doc(db, "settings", "home");
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists() && docSnap.data().collections) {
-                    const data = docSnap.data().collections;
-                    if (data.length === 3) setCollections(data);
+        const docRef = doc(db, "settings", "home");
+        const unsubscribe = onSnapshot(docRef, (docSnap) => {
+            if (docSnap.exists() && docSnap.data().collections) {
+                const data = docSnap.data().collections;
+                if (Array.isArray(data) && data.length === 3) {
+                    setCollections(data);
                 }
-            } catch (error) {
-                console.error("Error fetching collections:", error);
             }
-        };
-        fetchSettings();
+        }, (error) => console.error("Collections fetch error:", error));
+
+        return () => unsubscribe();
     }, []);
 
     // Ensure we have 3 items even if fetch fails/returns partial
