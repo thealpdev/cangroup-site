@@ -54,7 +54,7 @@ export default function Header() {
                     <Link href="/" className="relative h-full flex items-center justify-center md:justify-start group">
                         <div className={cn(
                             "relative transition-all duration-500",
-                            scrolled ? "h-16 w-48" : "h-24 w-72 md:w-96"
+                            scrolled ? "h-20 w-64" : "h-24 w-72 md:w-96"
                         )}>
                             <Image
                                 src={logo}
