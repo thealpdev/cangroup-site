@@ -12,8 +12,8 @@ export default function HeroV2() {
     const { scrollY } = useScroll();
 
     const [content, setContent] = useState({
-        title: "Quality, Trust, and Sustainable Partnerships",
-        subtitle: "More than just selling products—we deliver tradition and build lasting relationships.",
+        title: "Qualität & Vertrauen",
+        subtitle: "Ihr verlässlicher Partner für Großhandel mit Solinger Tradition.",
         bgImage: "" // Default is empty to verify if DB update arrives
     });
 

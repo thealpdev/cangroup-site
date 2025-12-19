@@ -19,24 +19,24 @@ export default function AboutPage() {
                             animate={{ opacity: 1, y: 0 }}
                             className="text-[#C8102E] font-bold tracking-[0.2em] uppercase text-sm block"
                         >
-                            Established Brand
+                            Über uns
                         </motion.span>
                         <motion.h1
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 }}
-                            className="text-5xl md:text-7xl font-serif text-[#0a0a0a] leading-tight"
+                            className="text-4xl md:text-6xl font-serif text-[#0a0a0a] leading-tight"
                         >
-                            Quality, Trust, and <br />
-                            <span className="italic text-stone-400">Sustainable Partnerships.</span>
+                            Qualität, Vertrauen und <br />
+                            <span className="italic text-stone-400">Nachhaltige Partnerschaften.</span>
                         </motion.h1>
                         <motion.p
                             initial={{ opacity: 0, y: 40 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
-                            className="text-xl text-stone-600 leading-relaxed max-w-2xl mx-auto"
+                            className="text-xl text-stone-600 leading-relaxed max-w-3xl mx-auto"
                         >
-                            CANGROUP is a brand specializing in wholesale, distinguishing itself through quality, trust, and strong partnerships.
+                            CANGROUP ist eine Marke, die sich auf den Großhandel von Produkten spezialisiert hat und in der Branche durch Qualität, Vertrauen und nachhaltige Partnerschaften hervorsticht. Seit unserer Gründung handeln wir mit der Mission, unseren Kunden hochwertige Produkte anzubieten.
                         </motion.p>
                     </div>
 
@@ -49,7 +49,7 @@ export default function AboutPage() {
                         {/* Using a reliable placeholder if local assets are missing */}
                         <Image
                             src="https://images.unsplash.com/photo-1588510886022-df37340d0460?q=80&w=2670&auto=format&fit=crop"
-                            alt="Craftsmanship"
+                            alt="Qualität und Handwerk"
                             fill
                             className="object-cover"
                         />
@@ -61,10 +61,10 @@ export default function AboutPage() {
                 <section className="container mx-auto px-4 mb-32">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {[
-                            { icon: ShieldCheck, title: "Quality", desc: "We ensure rigorous control processes and high quality standards for every product." },
-                            { icon: Users, title: "Trust", desc: "Building long-term, reliable relationships with our business partners." },
-                            { icon: Globe, title: "Efficiency", desc: "Strong supply chain management and competitive pricing for global markets." },
-                            { icon: Award, title: "Innovation", desc: "Leading with innovative solutions and sustainable growth strategies." }
+                            { icon: ShieldCheck, title: "Qualität", desc: "Produkte, die nach hohen Qualitätsstandards hergestellt werden und strenge Kontrollprozesse durchlaufen." },
+                            { icon: Users, title: "Vertrauen", desc: "Wir versprechen unseren Geschäftspartnern eine vertrauensvolle und langfristige Zusammenarbeit." },
+                            { icon: Globe, title: "Effizienz", desc: "Starkes Lieferkettenmanagement und termingerechte Lieferung für globale Märkte." },
+                            { icon: Award, title: "Innovation", desc: "Innovative Lösungen und nachhaltige Wachstumsstrategien für eine führende Position." }
                         ].map((item, i) => (
                             <div key={i} className="p-8 bg-stone-50 rounded-2xl hover:bg-[#0a0a0a] hover:text-white group transition-colors duration-500 cursor-default">
                                 <item.icon className="w-10 h-10 text-[#C8102E] mb-6" />
@@ -83,7 +83,7 @@ export default function AboutPage() {
                         <div className="relative aspect-square bg-stone-100 rounded-3xl overflow-hidden shadow-xl">
                             <Image
                                 src="https://images.unsplash.com/photo-1590422749897-424a1da51717?q=80&w=2574&auto=format&fit=crop"
-                                alt="The Workshop"
+                                alt="Unsere Vision"
                                 fill
                                 className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
                             />
@@ -92,13 +92,13 @@ export default function AboutPage() {
                             <h2 className="text-4xl font-serif text-[#0a0a0a]">Mission & Vision</h2>
                             <div className="space-y-6 text-stone-600 text-lg leading-relaxed">
                                 <p>
-                                    <strong>Our Mission:</strong> To be a reliable business partner in the wholesale sector across both national and international markets, ensuring quality, efficiency, and customer satisfaction at the highest level.
+                                    <strong>Unsere Mission:</strong> Es ist unsere Mission, ein zuverlässiger Geschäftspartner im Bereich des Großhandels sowohl auf nationalen als auch internationalen Märkten zu sein und dabei Qualität, Effizienz und Kundenzufriedenheit auf höchstem Niveau zu gewährleisten.
                                 </p>
                                 <p>
-                                    <strong>Our Vision:</strong> To achieve a leading position in the industry through innovative solutions and sustainable growth strategies, becoming a brand that offers real added value to its partners.
+                                    <strong>Unsere Vision:</strong> Wir streben danach, mit innovativen Lösungen eine führende Position in der Branche zu erreichen und eine Marke zu sein, die ihren Geschäftspartnern einen echten Mehrwert bietet.
                                 </p>
                                 <p>
-                                    With our professional team, strong supply chain management, and competitive pricing policy, CANGROUP promises not just products, but a trusted and long-term collaboration.
+                                    Mit unserem professionellen Team versprechen wir unseren Geschäftspartnern nicht nur Produkte, sondern auch eine vertrauensvolle und langfristige Zusammenarbeit.
                                 </p>
                             </div>
                         </div>

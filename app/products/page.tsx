@@ -59,8 +59,8 @@ export default function ProductsPage() {
                 <div className="container mx-auto px-4">
                     <div className="flex flex-col md:flex-row items-end justify-between gap-8 mb-12">
                         <div>
-                            <span className="text-[#C8102E] font-bold tracking-[0.2em] uppercase text-xs">Our Collection</span>
-                            <h1 className="text-4xl md:text-5xl font-serif text-[#0a0a0a] mt-2">Premium Cutlery</h1>
+                            <span className="text-[#C8102E] font-bold tracking-[0.2em] uppercase text-xs">Unsere Kollektion</span>
+                            <h1 className="text-4xl md:text-5xl font-serif text-[#0a0a0a] mt-2">Produktkatalog</h1>
                         </div>
 
                         {/* Filter Pills */}
@@ -70,11 +70,11 @@ export default function ProductsPage() {
                                     key={b}
                                     onClick={() => setFilter(b || 'All')}
                                     className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${filter === (b || 'All')
-                                            ? "bg-[#0a0a0a] text-white shadow-lg"
-                                            : "bg-stone-100 text-stone-500 hover:bg-stone-200"
+                                        ? "bg-[#0a0a0a] text-white shadow-lg"
+                                        : "bg-stone-100 text-stone-500 hover:bg-stone-200"
                                         }`}
                                 >
-                                    {b || 'Other'}
+                                    {b || 'Alle'}
                                 </button>
                             ))}
                         </div>
@@ -99,7 +99,7 @@ export default function ProductsPage() {
                 {!loading && filteredProducts.length === 0 && (
                     <div className="text-center py-24 text-stone-400">
                         <Sparkles className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                        <p className="tracking-widest uppercase text-sm">No products found</p>
+                        <p className="tracking-widest uppercase text-sm">Keine Produkte gefunden</p>
                     </div>
                 )}
             </div>

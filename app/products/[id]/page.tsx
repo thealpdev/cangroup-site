@@ -50,17 +50,18 @@ export default async function ProductDetailPage(props: { params: Promise<{ id: s
     const currencySymbol = getCurrencySymbol(product.currency);
 
     return (
+    return (
         <div className="min-h-screen bg-white">
             {/* Top Navigation Bar */}
             <div className="border-b border-stone-100 bg-white sticky top-0 z-40 bg-white/80 backdrop-blur-md">
                 <div className="container mx-auto px-4 h-16 flex items-center gap-4">
-                    <Link href="/" className="flex items-center gap-2 text-stone-500 hover:text-stone-900 transition-colors text-sm font-medium">
+                    <Link href="/products" className="flex items-center gap-2 text-stone-500 hover:text-stone-900 transition-colors text-sm font-medium">
                         <ArrowLeft className="w-4 h-4" />
-                        Back to Catalog
+                        Zurück
                     </Link>
                     <Separator orientation="vertical" className="h-6" />
                     <span className="text-sm text-stone-900 font-medium truncate max-w-[200px] md:max-w-none">
-                        {product.name_de || product.name_tr || product.name_en}
+                        {product.name_de || product.name_en || product.name_tr}
                     </span>
                 </div>
             </div>
@@ -73,7 +74,7 @@ export default async function ProductDetailPage(props: { params: Promise<{ id: s
                         <div className="sticky top-24 space-y-4">
                             <ProductGallery
                                 images={product.images || (product.image ? [product.image] : [])}
-                                title={product.name_de || product.name_en || "Product"}
+                                title={product.name_de || product.name_en || "Produkt"}
                             />
                         </div>
                     </div>
@@ -98,7 +99,7 @@ export default async function ProductDetailPage(props: { params: Promise<{ id: s
                             </h1>
                             {product.productCode && (
                                 <p className="text-stone-400 font-mono text-sm uppercase tracking-widest">
-                                    Code: <span className="text-stone-600">{product.productCode}</span>
+                                    Artikelnummer: <span className="text-stone-600">{product.productCode}</span>
                                 </p>
                             )}
                         </div>
@@ -112,23 +113,23 @@ export default async function ProductDetailPage(props: { params: Promise<{ id: s
                                     <span className="text-5xl font-bold text-stone-900 tracking-tighter">
                                         {currencySymbol}{product.price}
                                     </span>
-                                    <span className="text-stone-400 font-medium">excl. VAT</span>
+                                    <span className="text-stone-400 font-medium">zzgl. MwSt.</span>
                                 </div>
                             ) : (
-                                <div className="text-2xl font-bold text-stone-900">Price on Request</div>
+                                <div className="text-2xl font-bold text-stone-900">Preis auf Anfrage</div>
                             )}
 
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Button size="lg" className="h-14 rounded-full bg-[#25D366] hover:bg-[#128C7E] text-white font-bold text-lg px-8 flex-1 shadow-lg hover:shadow-xl transition-all relative overflow-hidden group">
                                     <span className="relative z-10 flex items-center justify-center gap-2">
                                         <ExternalLink className="w-5 h-5" />
-                                        WhatsApp Sipariş
+                                        WhatsApp Bestellung
                                     </span>
                                 </Button>
                                 <Button size="lg" variant="outline" className="h-14 rounded-full border-stone-200 text-stone-900 font-bold text-lg px-8 flex-1 hover:bg-stone-50 transition-all">
                                     <span className="flex items-center justify-center gap-2">
                                         <Mail className="w-5 h-5" />
-                                        Teklif Al
+                                        Angebot anfordern
                                     </span>
                                 </Button>
                             </div>
@@ -137,15 +138,15 @@ export default async function ProductDetailPage(props: { params: Promise<{ id: s
                         {/* Features & Specs */}
                         <div className="bg-stone-50 rounded-3xl p-8 space-y-6">
                             <div>
-                                <h3 className="text-lg font-bold text-stone-900 uppercase tracking-widest mb-4">Ürün Özellikleri</h3>
+                                <h3 className="text-lg font-bold text-stone-900 uppercase tracking-widest mb-4">Produktmerkmale</h3>
                                 <div className="prose prose-stone max-w-none text-stone-600">
-                                    {(product.specs_de || product.specs_tr || product.specs_en || '').split('\n').filter((s: string) => s.trim()).map((spec: string, i: number) => (
+                                    {(product.specs_de || product.specs_en || product.specs_tr || '').split('\n').filter((s: string) => s.trim()).map((spec: string, i: number) => (
                                         <div key={i} className="flex items-start gap-3 mb-2 last:mb-0">
                                             <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#C8102E] shrink-0" />
                                             <span>{spec}</span>
                                         </div>
                                     ))}
-                                    {(!product.specs_de && !product.specs_tr && !product.specs_en) && <p className="text-stone-400 italic">No specific features listed.</p>}
+                                    {(!product.specs_de && !product.specs_en && !product.specs_tr) && <p className="text-stone-400 italic">Keine Merkmale aufgelistet.</p>}
                                 </div>
                             </div>
 
@@ -157,29 +158,29 @@ export default async function ProductDetailPage(props: { params: Promise<{ id: s
 
                                         {/* Dimensions Column */}
                                         <div>
-                                            <h4 className="font-bold text-stone-900 uppercase tracking-widest text-xs mb-4">Dimensions</h4>
+                                            <h4 className="font-bold text-stone-900 uppercase tracking-widest text-xs mb-4">Abmessungen</h4>
                                             <dl className="space-y-2">
                                                 {product.height && (
                                                     <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
-                                                        <dt className="text-stone-500 font-medium">Height</dt>
+                                                        <dt className="text-stone-500 font-medium">Höhe</dt>
                                                         <dd className="text-stone-900">{product.height}</dd>
                                                     </div>
                                                 )}
                                                 {product.length && (
                                                     <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
-                                                        <dt className="text-stone-500 font-medium">Length</dt>
+                                                        <dt className="text-stone-500 font-medium">Länge</dt>
                                                         <dd className="text-stone-900">{product.length}</dd>
                                                     </div>
                                                 )}
                                                 {product.width && (
                                                     <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
-                                                        <dt className="text-stone-500 font-medium">Width</dt>
+                                                        <dt className="text-stone-500 font-medium">Breite</dt>
                                                         <dd className="text-stone-900">{product.width}</dd>
                                                     </div>
                                                 )}
                                                 {product.weight && (
                                                     <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
-                                                        <dt className="text-stone-500 font-medium">Weight</dt>
+                                                        <dt className="text-stone-500 font-medium">Gewicht</dt>
                                                         <dd className="text-stone-900">{product.weight}</dd>
                                                     </div>
                                                 )}
@@ -192,13 +193,13 @@ export default async function ProductDetailPage(props: { params: Promise<{ id: s
                                             <dl className="space-y-2">
                                                 {product.productCode && (
                                                     <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
-                                                        <dt className="text-stone-500 font-medium">Item Number</dt>
+                                                        <dt className="text-stone-500 font-medium">Artikelnummer</dt>
                                                         <dd className="text-stone-900">{product.productCode}</dd>
                                                     </div>
                                                 )}
                                                 {product.origin && (
                                                     <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
-                                                        <dt className="text-stone-500 font-medium">Origin</dt>
+                                                        <dt className="text-stone-500 font-medium">Herkunft</dt>
                                                         <dd className="text-stone-900">{product.origin}</dd>
                                                     </div>
                                                 )}
@@ -210,31 +211,31 @@ export default async function ProductDetailPage(props: { params: Promise<{ id: s
                                                 )}
                                                 {product.bladeLength && (
                                                     <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
-                                                        <dt className="text-stone-500 font-medium">Blade Length</dt>
+                                                        <dt className="text-stone-500 font-medium">Klingenlänge</dt>
                                                         <dd className="text-stone-900">{product.bladeLength}</dd>
                                                     </div>
                                                 )}
                                                 {product.edgeType && (
                                                     <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
-                                                        <dt className="text-stone-500 font-medium">Edge</dt>
+                                                        <dt className="text-stone-500 font-medium">Schliff</dt>
                                                         <dd className="text-stone-900">{product.edgeType}</dd>
                                                     </div>
                                                 )}
                                                 {product.color && (
                                                     <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
-                                                        <dt className="text-stone-500 font-medium">Color</dt>
+                                                        <dt className="text-stone-500 font-medium">Farbe</dt>
                                                         <dd className="text-stone-900">{product.color}</dd>
                                                     </div>
                                                 )}
                                                 {product.dishwasherSafe && (
                                                     <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
-                                                        <dt className="text-stone-500 font-medium">Dishwasher Safe</dt>
-                                                        <dd className="text-stone-900">{product.dishwasherSafe === 'yes' ? 'Yes' : 'No'}</dd>
+                                                        <dt className="text-stone-500 font-medium">Spülmaschinenfest</dt>
+                                                        <dd className="text-stone-900">{product.dishwasherSafe === 'yes' ? 'Ja' : 'Nein'}</dd>
                                                     </div>
                                                 )}
                                                 {product.warranty && (
                                                     <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
-                                                        <dt className="text-stone-500 font-medium">Warranty</dt>
+                                                        <dt className="text-stone-500 font-medium">Garantie</dt>
                                                         <dd className="text-stone-900">{product.warranty}</dd>
                                                     </div>
                                                 )}
@@ -247,7 +248,7 @@ export default async function ProductDetailPage(props: { params: Promise<{ id: s
                             <Separator className="bg-stone-200" />
 
                             <div>
-                                <h3 className="text-lg font-bold text-stone-900 uppercase tracking-widest mb-4">Açıklama</h3>
+                                <h3 className="text-lg font-bold text-stone-900 uppercase tracking-widest mb-4">Beschreibung</h3>
                                 <p className="text-stone-600 leading-relaxed">
                                     {product.description_de || product.description_tr || product.description_en}
                                 </p>
@@ -259,15 +260,15 @@ export default async function ProductDetailPage(props: { params: Promise<{ id: s
                             <div className="flex items-center gap-3 p-4 rounded-xl border border-stone-100 bg-white">
                                 <ShieldCheck className="w-8 h-8 text-stone-300" />
                                 <div>
-                                    <div className="font-bold text-stone-900 text-sm">Orijinal Ürün</div>
-                                    <div className="text-xs text-stone-400">Yetkili Satıcı Garantisi</div>
+                                    <div className="font-bold text-stone-900 text-sm">Originalprodukt</div>
+                                    <div className="text-xs text-stone-400">Händlergarantie</div>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3 p-4 rounded-xl border border-stone-100 bg-white">
                                 <Truck className="w-8 h-8 text-stone-300" />
                                 <div>
-                                    <div className="font-bold text-stone-900 text-sm">Hızlı Teslimat</div>
-                                    <div className="text-xs text-stone-400">Tüm Avrupa'ya Kargo</div>
+                                    <div className="font-bold text-stone-900 text-sm">Schneller Versand</div>
+                                    <div className="text-xs text-stone-400">Versand in ganz Europa</div>
                                 </div>
                             </div>
                         </div>

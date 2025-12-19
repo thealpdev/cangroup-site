@@ -68,13 +68,14 @@ export default function Header() {
 
                     {/* Desktop Navigation - Centered & Premium */}
                     <nav className="hidden lg:flex items-center gap-16">
-                        {['Products', 'About Us', 'Contact'].map((item) => (
+                        {['Produkte', 'Über uns', 'Kontakt'].map((item) => (
                             <Link
                                 key={item}
                                 href={
-                                    item === 'Products' ? '/products' :
-                                        item === 'About Us' ? '/about' :
-                                            `/${item.toLowerCase().replace(' ', '-')}`
+                                    item === 'Produkte' ? '/products' :
+                                        item === 'Über uns' ? '/about' :
+                                            item === 'Kontakt' ? '/contact' :
+                                                '/'
                                 }
                                 className={cn(
                                     "text-sm font-bold uppercase tracking-[0.2em] transition-colors relative group py-2",
