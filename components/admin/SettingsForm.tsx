@@ -186,7 +186,7 @@ export default function SettingsForm() {
                             </div>
                             <div className="space-y-2">
                                 <Label>Büyük Söz (Quote)</Label>
-                                <Textarea className="min-h-[100px]" value={legacy.quote} onChange={e => setLegacy({ ...legacy, quote: e.target.value })} placeholder='"We don' t just sell knives..."' />
+                                <Textarea className="min-h-[100px]" value={legacy.quote} onChange={e => setLegacy({ ...legacy, quote: e.target.value })} placeholder='"We don&apos;t just sell knives..."' />
                             </div>
                             <div className="space-y-2">
                                 <Label>Arkaplan Fotoğrafı</Label>
