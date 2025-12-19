@@ -12,20 +12,20 @@ export default function HeroV2() {
     const { scrollY } = useScroll();
 
     const [content, setContent] = useState({
-        title: "Masterpiece",
+        title: "Veni Cutlery", // Tracer: Changed from Masterpiece to verify new deploy
         subtitle: "Where German engineering meets culinary artistry.",
         bgImage: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=2042&auto=format&fit=crop"
     });
 
     useEffect(() => {
         const docRef = doc(db, "settings", "home");
-        const unsubscribe = onSnapshot(docRef, (docSnap) => {
+        const unsubscribe = onSnapshot(docRef, (docSnap: any) => {
             if (docSnap.exists() && docSnap.data().hero) {
                 const data = docSnap.data().hero;
                 // Merge properly to allow updates even if some fields are empty strings
                 setContent(prev => ({ ...prev, ...data }));
             }
-        }, (error) => {
+        }, (error: any) => {
             console.error("Hero content fetch error:", error);
         });
 

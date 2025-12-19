@@ -20,11 +20,11 @@ export default function Header() {
 
         // Real-time Dynamic Logo
         const docRef = doc(db, "settings", "home"); // Changed to 'home' where SettingsForm saves
-        const unsubscribe = onSnapshot(docRef, (docSnap) => {
+        const unsubscribe = onSnapshot(docRef, (docSnap: any) => {
             if (docSnap.exists() && docSnap.data().general?.logo) {
                 setLogo(docSnap.data().general.logo);
             }
-        }, (error) => console.error("Logo fetch error:", error));
+        }, (error: any) => console.error("Logo fetch error:", error));
 
         return () => {
             window.removeEventListener('scroll', handleScroll);

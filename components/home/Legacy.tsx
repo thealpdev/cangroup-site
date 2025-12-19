@@ -23,7 +23,7 @@ export default function Legacy() {
 
     useEffect(() => {
         const docRef = doc(db, "settings", "home");
-        const unsubscribe = onSnapshot(docRef, (docSnap) => {
+        const unsubscribe = onSnapshot(docRef, (docSnap: any) => {
             if (docSnap.exists() && docSnap.data().legacy) {
                 const data = docSnap.data().legacy;
                 setContent(prev => ({ ...prev, ...data }));
