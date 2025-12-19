@@ -139,15 +139,110 @@ export default async function ProductDetailPage(props: { params: Promise<{ id: s
                             <div>
                                 <h3 className="text-lg font-bold text-stone-900 uppercase tracking-widest mb-4">Ürün Özellikleri</h3>
                                 <div className="prose prose-stone max-w-none text-stone-600">
-                                    {(product.specs_de || product.specs_tr || product.specs_en || '').split('\n').map((spec: string, i: number) => (
+                                    {(product.specs_de || product.specs_tr || product.specs_en || '').split('\n').filter((s: string) => s.trim()).map((spec: string, i: number) => (
                                         <div key={i} className="flex items-start gap-3 mb-2 last:mb-0">
                                             <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#C8102E] shrink-0" />
                                             <span>{spec}</span>
                                         </div>
                                     ))}
-                                    {(!product.specs_de && !product.specs_tr) && <p className="text-stone-400 italic">No specific features listed.</p>}
+                                    {(!product.specs_de && !product.specs_tr && !product.specs_en) && <p className="text-stone-400 italic">No specific features listed.</p>}
                                 </div>
                             </div>
+
+                            {/* New Technical Details Section */}
+                            {(product.height || product.length || product.width || product.weight || product.material) && (
+                                <>
+                                    <Separator className="bg-stone-200" />
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
+
+                                        {/* Dimensions Column */}
+                                        <div>
+                                            <h4 className="font-bold text-stone-900 uppercase tracking-widest text-xs mb-4">Dimensions</h4>
+                                            <dl className="space-y-2">
+                                                {product.height && (
+                                                    <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
+                                                        <dt className="text-stone-500 font-medium">Height</dt>
+                                                        <dd className="text-stone-900">{product.height}</dd>
+                                                    </div>
+                                                )}
+                                                {product.length && (
+                                                    <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
+                                                        <dt className="text-stone-500 font-medium">Length</dt>
+                                                        <dd className="text-stone-900">{product.length}</dd>
+                                                    </div>
+                                                )}
+                                                {product.width && (
+                                                    <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
+                                                        <dt className="text-stone-500 font-medium">Width</dt>
+                                                        <dd className="text-stone-900">{product.width}</dd>
+                                                    </div>
+                                                )}
+                                                {product.weight && (
+                                                    <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
+                                                        <dt className="text-stone-500 font-medium">Weight</dt>
+                                                        <dd className="text-stone-900">{product.weight}</dd>
+                                                    </div>
+                                                )}
+                                            </dl>
+                                        </div>
+
+                                        {/* Details Column */}
+                                        <div>
+                                            <h4 className="font-bold text-stone-900 uppercase tracking-widest text-xs mb-4">Details</h4>
+                                            <dl className="space-y-2">
+                                                {product.productCode && (
+                                                    <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
+                                                        <dt className="text-stone-500 font-medium">Item Number</dt>
+                                                        <dd className="text-stone-900">{product.productCode}</dd>
+                                                    </div>
+                                                )}
+                                                {product.origin && (
+                                                    <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
+                                                        <dt className="text-stone-500 font-medium">Origin</dt>
+                                                        <dd className="text-stone-900">{product.origin}</dd>
+                                                    </div>
+                                                )}
+                                                {product.material && (
+                                                    <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
+                                                        <dt className="text-stone-500 font-medium">Material</dt>
+                                                        <dd className="text-stone-900">{product.material}</dd>
+                                                    </div>
+                                                )}
+                                                {product.bladeLength && (
+                                                    <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
+                                                        <dt className="text-stone-500 font-medium">Blade Length</dt>
+                                                        <dd className="text-stone-900">{product.bladeLength}</dd>
+                                                    </div>
+                                                )}
+                                                {product.edgeType && (
+                                                    <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
+                                                        <dt className="text-stone-500 font-medium">Edge</dt>
+                                                        <dd className="text-stone-900">{product.edgeType}</dd>
+                                                    </div>
+                                                )}
+                                                {product.color && (
+                                                    <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
+                                                        <dt className="text-stone-500 font-medium">Color</dt>
+                                                        <dd className="text-stone-900">{product.color}</dd>
+                                                    </div>
+                                                )}
+                                                {product.dishwasherSafe && (
+                                                    <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
+                                                        <dt className="text-stone-500 font-medium">Dishwasher Safe</dt>
+                                                        <dd className="text-stone-900">{product.dishwasherSafe === 'yes' ? 'Yes' : 'No'}</dd>
+                                                    </div>
+                                                )}
+                                                {product.warranty && (
+                                                    <div className="flex justify-between border-b border-dashed border-stone-200 pb-1">
+                                                        <dt className="text-stone-500 font-medium">Warranty</dt>
+                                                        <dd className="text-stone-900">{product.warranty}</dd>
+                                                    </div>
+                                                )}
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
 
                             <Separator className="bg-stone-200" />
 

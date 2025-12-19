@@ -19,7 +19,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import ImageUpload from '@/components/admin/ImageUpload';
-import { Loader2, Save, Tag, Coins, Hash } from 'lucide-react';
+import { Loader2, Save, Tag, Coins, Hash, Ruler } from 'lucide-react';
 
 const BRANDS = [
     { id: 'canadam', name: 'Canadam' },
@@ -174,7 +174,7 @@ export default function ProductForm() {
                     </Card>
                 </div>
 
-                {/* 2. Localized Content */}
+                {/* 2. Localized Content & Technical Details */}
                 <Card className="rounded-2xl border-none shadow-sm">
                     <CardHeader>
                         <CardTitle className="text-lg font-bold uppercase tracking-tight">Ürün İçeriği</CardTitle>
