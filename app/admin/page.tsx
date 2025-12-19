@@ -1,19 +1,24 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Menu } from "lucide-react";
+import { Button } from '@/components/ui/button';
+
+// Components
+import AdminSidebar from '@/components/admin/AdminSidebar';
+import DashboardOverview from '@/components/admin/DashboardOverview';
 import ProductForm from '@/components/admin/ProductForm';
 import SettingsForm from '@/components/admin/SettingsForm';
 import PartnersManager from '@/components/admin/PartnersManager';
-import UsersManager from '@/components/admin/UsersManager'; // NEW
-import { Package, Settings, Users, UserPlus, LogOut } from "lucide-react";
-import { Button } from '@/components/ui/button';
+import UsersManager from '@/components/admin/UsersManager';
 
 export default function AdminPage() {
     const { user, loading, logout } = useAuth();
     const router = useRouter();
+    const [activeTab, setActiveTab] = useState('overview');
+    const [isMobileOpen, setIsMobileOpen] = useState(false);
 
     useEffect(() => {
         if (!loading && !user) {
@@ -22,94 +27,103 @@ export default function AdminPage() {
     }, [user, loading, router]);
 
     if (loading) {
-        return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-stone-50">
+                <div className="text-[#C8102E] font-bold animate-pulse">Yükleniyor...</div>
+            </div>
+        );
     }
 
-    if (!user) return null; // Prevent flicker
+    if (!user) return null;
 
     return (
-        <div className="min-h-screen bg-stone-50/50">
-            {/* Top Bar */}
-            <header className="bg-white border-b border-stone-200 sticky top-0 z-10 px-6 py-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <div className="bg-[#C8102E] text-white font-bold px-2 py-1 text-[10px] uppercase tracking-widest rounded-sm">
-                        Admin
-                    </div>
-                    <span className="font-bold text-stone-900">Dashboard</span>
-                </div>
-                <div className="flex items-center gap-4">
-                    <span className="text-xs text-stone-500 font-medium hidden md:block">
-                        {user.email}
-                    </span>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => logout()}
-                        className="text-stone-600 hover:text-red-600 border-stone-200"
-                    >
-                        <LogOut className="h-4 w-4 mr-2" />
-                        Logout
+        <div className="min-h-screen bg-stone-50/50 flex flex-col md:flex-row">
+
+            {/* Sidebar Navigation */}
+            <AdminSidebar
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                userEmail={user.email}
+                logout={logout}
+                isMobileOpen={isMobileOpen}
+                setIsMobileOpen={setIsMobileOpen}
+            />
+
+            {/* Main Content Area */}
+            <div className="flex-1 flex flex-col min-h-screen transition-all duration-300">
+
+                {/* Mobile Header Toggle */}
+                <div className="md:hidden bg-white border-b p-4 flex items-center justify-between sticky top-0 z-30">
+                    <span className="font-bold text-stone-900">CanMarkt Admin</span>
+                    <Button variant="ghost" size="icon" onClick={() => setIsMobileOpen(true)}>
+                        <Menu className="w-6 h-6 text-stone-900" />
                     </Button>
                 </div>
-            </header>
 
-            <main className="container mx-auto py-10 px-4 md:px-0">
-                <Tabs defaultValue="products" className="space-y-8">
-                    <TabsList className="bg-white border border-stone-200 p-1 rounded-none inline-flex h-auto gap-1">
-                        <TabsTrigger
-                            value="products"
-                            className="data-[state=active]:bg-[#C8102E] data-[state=active]:text-white rounded-none px-6 py-2 uppercase tracking-tight text-xs font-bold"
-                        >
-                            <Package className="mr-2 h-4 w-4" />
-                            Products
-                        </TabsTrigger>
-                        <TabsTrigger
-                            value="settings"
-                            className="data-[state=active]:bg-[#C8102E] data-[state=active]:text-white rounded-none px-6 py-2 uppercase tracking-tight text-xs font-bold"
-                        >
-                            <Settings className="mr-2 h-4 w-4" />
-                            Settings
-                        </TabsTrigger>
-                        <TabsTrigger
-                            value="partners"
-                            className="data-[state=active]:bg-[#C8102E] data-[state=active]:text-white rounded-none px-6 py-2 uppercase tracking-tight text-xs font-bold"
-                        >
-                            <Users className="mr-2 h-4 w-4" />
-                            Partners
-                        </TabsTrigger>
-                        <TabsTrigger
-                            value="users"
-                            className="data-[state=active]:bg-[#C8102E] data-[state=active]:text-white rounded-none px-6 py-2 uppercase tracking-tight text-xs font-bold"
-                        >
-                            <UserPlus className="mr-2 h-4 w-4" />
-                            Access
-                        </TabsTrigger>
-                    </TabsList>
+                {/* Content Container */}
+                <main className="flex-1 p-4 md:p-8 overflow-y-auto max-h-screen">
+                    <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-500 slide-in-from-bottom-2">
 
-                    <TabsContent value="products" className="space-y-4">
-                        <div className="flex items-center justify-between">
-                            <h2 className="text-xl font-bold uppercase tracking-tight">Product Catalog</h2>
-                        </div>
-                        <ProductForm />
-                    </TabsContent>
+                        {/* VIEW: OVERVIEW */}
+                        {activeTab === 'overview' && (
+                            <DashboardOverview userEmail={user.email} />
+                        )}
 
-                    <TabsContent value="settings" className="space-y-4">
-                        <h2 className="text-xl font-bold uppercase tracking-tight">Site Configuration</h2>
-                        <SettingsForm />
-                    </TabsContent>
+                        {/* VIEW: PRODUCTS */}
+                        {activeTab === 'products' && (
+                            <div className="space-y-4">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-stone-900">Ürün Yönetimi</h2>
+                                    <p className="text-stone-500">Kataloğa yeni ürünler ekleyin veya düzenleyin.</p>
+                                </div>
+                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                                    <ProductForm />
+                                </div>
+                            </div>
+                        )}
 
-                    <TabsContent value="partners" className="space-y-4">
-                        <h2 className="text-xl font-bold uppercase tracking-tight">Brand Partnerships</h2>
-                        <PartnersManager />
-                    </TabsContent>
+                        {/* VIEW: PARTNERS */}
+                        {activeTab === 'partners' && (
+                            <div className="space-y-4">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-stone-900">Marka Ortakları</h2>
+                                    <p className="text-stone-500">İş birliği yapılan markaları yönetin.</p>
+                                </div>
+                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                                    <PartnersManager />
+                                </div>
+                            </div>
+                        )}
 
-                    {/* NEW USERS TAB */}
-                    <TabsContent value="users" className="space-y-4">
-                        <h2 className="text-xl font-bold uppercase tracking-tight">User Management</h2>
-                        <UsersManager />
-                    </TabsContent>
-                </Tabs>
-            </main>
+                        {/* VIEW: USERS */}
+                        {activeTab === 'users' && (
+                            <div className="space-y-4">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-stone-900">Erişim Yönetimi</h2>
+                                    <p className="text-stone-500">Panel yetkilerini düzenleyin.</p>
+                                </div>
+                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                                    <UsersManager />
+                                </div>
+                            </div>
+                        )}
+
+                        {/* VIEW: SETTINGS */}
+                        {activeTab === 'settings' && (
+                            <div className="space-y-4">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-stone-900">Site Ayarları</h2>
+                                    <p className="text-stone-500">Genel konfigürasyon.</p>
+                                </div>
+                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                                    <SettingsForm />
+                                </div>
+                            </div>
+                        )}
+
+                    </div>
+                </main>
+            </div>
         </div>
     );
 }
