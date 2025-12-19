@@ -10,15 +10,15 @@ export default function Partners() {
     // Defines the shape of a Partner object
     interface Partner {
         id: string;
-        name: string;
-        logo: string;
+        imageUrl: string; // Admin saves as 'imageUrl'
+        name?: string;    // Name might be undefined
     }
 
     const [partners, setPartners] = useState<Partner[]>([]);
 
     useEffect(() => {
         // Dynamic fetch from 'partners' collection
-        const q = query(collection(db, "partners"), orderBy("name", "asc"));
+        const q = query(collection(db, "partners"), orderBy("createdAt", "desc")); // Order by newest
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const items = snapshot.docs.map(doc => ({
@@ -30,6 +30,9 @@ export default function Partners() {
 
         return () => unsubscribe();
     }, []);
+
+    // Fallback to static if no dynamic partners (optional, or just return null)
+    // For now, if user added data, we show it.
 
     if (partners.length === 0) return null;
 
@@ -51,8 +54,8 @@ export default function Partners() {
                             className="relative w-32 h-16 md:w-40 md:h-20"
                         >
                             <Image
-                                src={partner.logo}
-                                alt={partner.name}
+                                src={partner.imageUrl}
+                                alt={partner.name || 'Partner'}
                                 fill
                                 className="object-contain"
                             />
