@@ -58,11 +58,6 @@ export default function HeroV2() {
             {/* Floating Content */}
             <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4">
 
-                {/* DEBUG: Remove this after fixing */}
-                <div className="absolute top-24 left-4 bg-black/50 text-white text-[10px] p-2 rounded z-50">
-                    DEBUG BG: {content.bgImage || "EMPTY"}
-                </div>
-
                 <motion.div
                     style={{ y: y1, opacity }}
                     className="flex flex-col items-center gap-6"
