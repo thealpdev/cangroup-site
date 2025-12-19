@@ -4,16 +4,34 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Search, ShoppingBag, Menu, Phone, Mail } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 import { cn } from '@/lib/utils';
 
 export default function Header() {
     const [scrolled, setScrolled] = useState(false);
+    const [logo, setLogo] = useState("/can-group-logo-black.jpg");
 
     useEffect(() => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 50);
         };
         window.addEventListener('scroll', handleScroll);
+
+        // Fetch Dynamic Logo
+        const fetchLogo = async () => {
+            try {
+                const docRef = doc(db, "settings", "general");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists() && docSnap.data().logo) {
+                    setLogo(docSnap.data().logo);
+                }
+            } catch (error) {
+                console.error("Error fetching logo:", error);
+            }
+        };
+        fetchLogo();
+
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
@@ -57,7 +75,7 @@ export default function Header() {
                             scrolled ? "h-12 w-48" : "h-16 w-64"
                         )}>
                             <Image
-                                src="/can-group-logo-black.jpg"
+                                src={logo}
                                 alt="CAN GROUP"
                                 fill
                                 className="object-contain object-left"

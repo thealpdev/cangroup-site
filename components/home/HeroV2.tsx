@@ -11,6 +11,28 @@ export default function HeroV2() {
     const containerRef = useRef(null);
     const { scrollY } = useScroll();
 
+    const [content, setContent] = useState({
+        title: "Masterpiece",
+        subtitle: "Where German engineering meets culinary artistry.",
+        bgImage: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=2042&auto=format&fit=crop"
+    });
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const docRef = doc(db, "settings", "home");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists() && docSnap.data().hero) {
+                    const data = docSnap.data().hero;
+                    if (data.bgImage) setContent(prev => ({ ...prev, ...data }));
+                }
+            } catch (error) {
+                console.error("Hero content fetch error:", error);
+            }
+        };
+        fetchSettings();
+    }, []);
+
     // Parallax Effects
     const y1 = useTransform(scrollY, [0, 500], [0, 200]);
     const y2 = useTransform(scrollY, [0, 500], [0, -150]);
