@@ -54,7 +54,7 @@ export default function Header() {
                     <Link href="/" className="relative h-full flex items-center justify-center md:justify-start group">
                         <div className={cn(
                             "relative transition-all duration-500",
-                            scrolled ? "h-20 w-72" : "h-32 w-80 md:w-[450px]"
+                            scrolled ? "h-24 w-80" : "h-40 w-[500px] md:w-[600px]"
                         )}>
                             <Image
                                 src={logo}
@@ -71,7 +71,11 @@ export default function Header() {
                         {['Products', 'About Us', 'Contact'].map((item) => (
                             <Link
                                 key={item}
-                                href={item === 'Products' ? '/products' : `/${item.toLowerCase().replace(' ', '-')}`}
+                                href={
+                                    item === 'Products' ? '/products' :
+                                        item === 'About Us' ? '/about' :
+                                            `/${item.toLowerCase().replace(' ', '-')}`
+                                }
                                 className={cn(
                                     "text-sm font-bold uppercase tracking-[0.2em] transition-colors relative group py-2",
                                     scrolled ? "text-stone-900 hover:text-[#C8102E]" : "text-white hover:text-[#C8102E] drop-shadow-md"
