@@ -32,36 +32,50 @@ export default function ProductCard({ product, index }: ProductCardProps) {
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
             viewport={{ once: true }}
             className="group"
         >
-            <Link href={`/products/${product.id}`} className="block">
-                <div className="relative aspect-[3/4] overflow-hidden mb-6 bg-white border border-stone-100 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+            <Link href={`/products/${product.id}`} className="block h-full">
+                <div className="relative aspect-[3/4] mb-4 bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] group-hover:shadow-[0_20px_40px_rgb(200,16,46,0.08)] transition-all duration-500 overflow-hidden border border-transparent group-hover:border-[#C8102E]/10">
+                    <div className="absolute inset-0 bg-gradient-to-tr from-stone-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
                     <Image
                         src={displayImage}
                         alt={displayName}
                         fill
-                        className="object-contain p-4 group-hover:scale-105 transition-transform duration-700"
+                        className="object-contain p-8 group-hover:scale-110 group-hover:-translate-y-2 transition-transform duration-700 ease-out drop-shadow-sm"
                     />
+
                     {product.brand && (
-                        <div className="absolute top-4 left-4">
-                            <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400 border border-stone-200 px-2 py-1 rounded bg-white/80 backdrop-blur-sm">
+                        <div className="absolute top-4 left-4 z-10">
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-stone-500 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-stone-100 group-hover:border-[#C8102E]/20 group-hover:text-[#C8102E] transition-colors">
                                 {product.brand}
                             </span>
                         </div>
                     )}
+
+                    {/* Quick Action Hint */}
+                    <div className="absolute bottom-0 inset-x-0 p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 flex justify-center">
+                        <span className="bg-[#C8102E] text-white text-xs font-bold uppercase tracking-widest py-2 px-6 rounded-full shadow-lg">
+                            Ansehen
+                        </span>
+                    </div>
                 </div>
 
-                <div className="space-y-2">
-                    <h3 className="font-serif text-lg text-stone-900 group-hover:text-[#C8102E] transition-colors line-clamp-2">
+                <div className="space-y-1 px-2 text-center">
+                    <h3 className="font-serif text-lg text-stone-900 group-hover:text-[#C8102E] transition-colors line-clamp-1">
                         {displayName}
                     </h3>
-                    {product.price && (
-                        <p className="font-mono text-sm text-stone-500 tracking-wider">
+                    {product.price ? (
+                        <p className="font-medium text-stone-500 text-sm">
                             {currencySymbol}{product.price}
+                        </p>
+                    ) : (
+                        <p className="font-medium text-stone-400 text-sm italic">
+                            Details ansehen
                         </p>
                     )}
                 </div>

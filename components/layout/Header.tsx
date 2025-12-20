@@ -60,7 +60,10 @@ export default function Header() {
                                 src={logo}
                                 alt="CAN GROUP"
                                 fill
-                                className="object-contain object-left"
+                                className={cn(
+                                    "object-contain object-left transition-all duration-300",
+                                    scrolled && "brightness-0 opacity-80" // Force black logo on scroll
+                                )}
                                 priority
                             />
                         </div>
@@ -83,7 +86,10 @@ export default function Header() {
                                 )}
                             >
                                 {item}
-                                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#C8102E] transition-all duration-300 group-hover:w-full"></span>
+                                <span className={cn(
+                                    "absolute bottom-0 left-0 h-[2px] transition-all duration-300 group-hover:w-full w-0",
+                                    scrolled ? "bg-[#C8102E]" : "bg-[#C8102E]"
+                                )}></span>
                             </Link>
                         ))}
                     </nav>
