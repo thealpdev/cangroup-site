@@ -33,7 +33,7 @@ export default function ImportPartnerProducts() {
             }
 
             let count = 0;
-            const productsToImport = [];
+            const productsToImport: any[] = [];
 
             // Generate Combinations (Series x Types)
             brandData.series.forEach(series => {
