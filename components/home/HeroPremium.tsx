@@ -1,127 +1,88 @@
+```javascript
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from 'next/link';
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const SLIDES = [
-    {
-        id: 1,
-        title: "Profesyonel\nMükemmellik",
-        subtitle: "Dick Premier Plus Serisi",
-        image: "https://images.unsplash.com/photo-1556910103-1c02745a30bf?q=80&w=2070",
-        cta: "Koleksiyonu İncele",
-        link: "/products"
-    },
-    {
-        id: 2,
-        title: "İsviçre\nHassasiyeti",
-        subtitle: "Victorinox Fibrox Koleksiyonu",
-        image: "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?q=80&w=2070",
-        cta: "Keşfet",
-        link: "/products?brand=Victorinox"
-    },
-    {
-        id: 3,
-        title: "Modern\nTeknoloji",
-        subtitle: "Zwilling Enfinity Lüks Seri",
-        image: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=2070",
-        cta: "Detayları Gör",
-        link: "/products?brand=Zwilling"
-    }
-];
+import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 export default function HeroPremium() {
     const [current, setCurrent] = useState(0);
+    const [slides, setSlides] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    // Auto-advance
     useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrent(prev => (prev + 1) % SLIDES.length);
-        }, 6000);
-        return () => clearInterval(timer);
+        const q = query(collection(db, "hero"), orderBy("order", "asc"));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            if (items.length > 0) {
+                setSlides(items);
+            } else {
+                // Fallback demo slide if admin is empty
+                setSlides([
+                    {
+                        id: 'demo',
+                        title: "Profesyonel Mutfak",
+                        subtitle: "CanMarkt Kalitesiyle",
+                        image: "https://images.unsplash.com/photo-1556910103-1c02745a30bf?q=80&w=2070",
+                        link: "/products",
+                        cta: "Alışverişe Başla"
+                    }
+                ]);
+            }
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
     }, []);
 
-    const nextSlide = () => setCurrent(prev => (prev + 1) % SLIDES.length);
-    const prevSlide = () => setCurrent(prev => (prev - 1 + SLIDES.length) % SLIDES.length);
+    useEffect(() => {
+        if (slides.length <= 1) return;
+        const timer = setInterval(() => {
+            setCurrent((prev) => (prev + 1) % slides.length);
+        }, 6000);
+        return () => clearInterval(timer);
+    }, [slides.length]);
+
+    if (loading) return <div className="h-screen bg-black" />;
+    
+    // Safety check
+    if (slides.length === 0) return null;
+    const slide = slides[current] || slides[0];
 
     return (
-        <section className="relative h-screen min-h-[800px] w-full overflow-hidden bg-[#0a0a0a]">
-
+        <div className="relative h-screen w-full overflow-hidden bg-black">
+            {/* Background Image Slider */}
             <AnimatePresence mode="wait">
                 <motion.div
-                    key={current}
+                    key={slide.id + current} // Force re-render key
                     initial={{ opacity: 0, scale: 1.05 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 1 }}
                     className="absolute inset-0 z-0"
                 >
-                    <Image
-                        src={SLIDES[current].image}
-                        alt={SLIDES[current].title}
-                        fill
-                        className="object-cover opacity-60"
-                        priority
+                    <Image 
+                         src={slide.image}
+                         alt={slide.title || "Hero"}
+                         fill
+                         className="object-cover opacity-60"
+                         priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-[#0a0a0a]/60" />
                 </motion.div>
             </AnimatePresence>
 
-            {/* Content Container */}
-            <div className="relative z-10 h-full container mx-auto px-6 flex flex-col justify-center items-center text-center text-white space-y-8">
-
-                {/* Decorative Line (Changes with slide) */}
+            {/* Content Content - Centered */}
+            <div className="relative z-10 h-full container mx-auto px-6 flex flex-col justify-center items-center text-center">
                 <motion.div
-                    key={`line-${current}`}
-                    initial={{ scaleY: 0 }}
-                    animate={{ scaleY: 1 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    className="h-24 w-px bg-white/30"
-                />
-
-                {/* Text Content */}
-                <div className="space-y-6 max-w-4xl mx-auto">
-                    <motion.span
-                        key={`sub-${current}`}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.4 }}
-                        className="block text-sm md:text-base font-bold tracking-[0.3em] uppercase text-[#C8102E]"
-                    >
-                        {SLIDES[current].subtitle}
-                    </motion.span>
-
-                    <motion.h1
-                        key={`title-${current}`}
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.6 }}
-                        className="font-serif text-5xl md:text-7xl lg:text-9xl leading-tight whitespace-pre-line"
-                    >
-                        {SLIDES[current].title}
-                    </motion.h1>
-                </div>
-
-                {/* Main CTA */}
-                <motion.div
-                    key={`cta-${current}`}
+                    key={`text - ${ current } `}
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.8 }}
-                >
-                    <Link
-                        href={SLIDES[current].link}
-                        className="group relative inline-flex items-center gap-4 px-10 py-5 bg-white text-[#0a0a0a] text-sm font-bold uppercase tracking-widest overflow-hidden transition-all hover:bg-[#C8102E] hover:text-white"
-                    >
-                        <span className="relative z-10">{SLIDES[current].cta}</span>
-                        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
-                    </Link>
-                </motion.div>
-
             </div>
 
             {/* Slider Navigation (Dots) */}

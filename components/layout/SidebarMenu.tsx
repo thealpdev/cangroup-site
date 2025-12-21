@@ -1,28 +1,18 @@
 "use client";
 
-import { X, ChevronRight, Heart, User, HelpCircle, MapPin } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
+import { X, ChevronRight, ShoppingBag } from 'lucide-react';
+import { useCart } from "@/lib/cart-context";
 
 interface SidebarMenuProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
-const MENU_ITEMS = [
-    { label: "MARKALAR", href: "/products" },
-    { label: "ÜRÜN", href: "/products" },
-    { label: "HİZMETLER", href: "/services" },
-];
-
-const SECONDARY_LINKS = [
-    { label: "İNDİRİM", href: "/products?filter=sale" },
-    { label: "Blog", href: "/blog" },
-    { label: "Tarifler", href: "/recipes" },
-    { label: "Mağazalar", href: "/stores" },
-    { label: "Hakkımızda", href: "/about" },
+{ label: "Tarifler", href: "/recipes" },
+{ label: "Mağazalar", href: "/stores" },
+{ label: "Hakkımızda", href: "/about" },
 ];
 
 export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {

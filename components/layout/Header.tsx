@@ -64,7 +64,7 @@ export default function Header() {
 
                     {/* Center: Logo */}
                     <Link href="/" className="relative h-full flex items-center justify-center group flex-1">
-                        <div className="relative h-16 w-64 transition-transform duration-300 hover:scale-105">
+                        <div className="relative h-24 w-80 transition-transform duration-300 hover:scale-105">
                             {/* Logo logic: Always display original logo */}
                             <Image
                                 src={logo || "/placeholder-logo.png"}
