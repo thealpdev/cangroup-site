@@ -38,7 +38,6 @@ export default function AdminSidebar({
         { id: 'categories', label: 'Kategoriler', icon: List },
         { id: 'partners', label: 'Marka Ortakları', icon: Users },
         { id: 'users', label: 'Erişim / Yetki', icon: UserPlus },
-        { id: 'tools', label: 'Araçlar', icon: Database },
         { id: 'settings', label: 'Site Ayarları', icon: Settings },
     ];
 

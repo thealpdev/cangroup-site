@@ -1,12 +1,19 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { collection, query, orderBy, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import Image from 'next/image';
-import { Trash2, Edit, Plus, Search } from 'lucide-react';
+import { Trash2, Edit, Plus, Search, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue
+} from '@/components/ui/select';
 import { format } from 'date-fns';
 
 interface Product {
@@ -29,10 +36,13 @@ export default function ProductList({ onAddNew, onEdit }: ProductListProps) {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState<string>('all');
+    const [categories, setCategories] = useState<{ id: string, name: string }[]>([]);
 
     useEffect(() => {
-        const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
+        // Fetch Products
+        const qProd = query(collection(db, "products"), orderBy("createdAt", "desc"));
+        const unsubscribe = onSnapshot(qProd, (snapshot) => {
             const items = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
@@ -40,6 +50,14 @@ export default function ProductList({ onAddNew, onEdit }: ProductListProps) {
             setProducts(items);
             setLoading(false);
         });
+
+        // Fetch Categories
+        const fetchCategories = async () => {
+            const qCat = query(collection(db, "categories"), orderBy("name", "asc"));
+            const snap = await getDocs(qCat);
+            setCategories(snap.docs.map(d => ({ id: d.id, name: d.data().name })));
+        };
+        fetchCategories();
 
         return () => unsubscribe();
     }, []);
@@ -50,9 +68,11 @@ export default function ProductList({ onAddNew, onEdit }: ProductListProps) {
         }
     };
 
-    const filteredProducts = products.filter(p =>
-        p.name_de?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredProducts = products.filter(p => {
+        const matchesSearch = p.name_de?.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
+        return matchesSearch && matchesCategory;
+    });
 
     if (loading) return <div className="text-center p-12 text-stone-500">Yükleniyor...</div>;
 
@@ -61,14 +81,30 @@ export default function ProductList({ onAddNew, onEdit }: ProductListProps) {
 
             {/* Header / Actions */}
             <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-                <div className="relative w-full md:w-96">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
-                    <Input
-                        placeholder="Ürün Ara..."
-                        className="pl-10 bg-white border-stone-200"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
+                <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+                    <div className="relative w-full md:w-80">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                        <Input
+                            placeholder="Ürün Ara..."
+                            className="pl-10 bg-white border-stone-200"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                    <div className="w-full md:w-48">
+                        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                            <SelectTrigger className="bg-white border-stone-200">
+                                <Filter className="w-4 h-4 mr-2 text-stone-400" />
+                                <SelectValue placeholder="Kategori" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">Tüm Kategoriler</SelectItem>
+                                {categories.map(c => (
+                                    <SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
                 </div>
                 <Button onClick={onAddNew} className="w-full md:w-auto bg-[#C8102E] hover:bg-[#A00C24] text-white">
                     <Plus className="w-4 h-4 mr-2" /> Yeni Ürün Ekle

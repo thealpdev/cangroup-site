@@ -8,9 +8,14 @@ import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { cn } from '@/lib/utils';
 
+import { ChevronDown } from 'lucide-react';
+import { collection, query, orderBy, getDocs } from 'firebase/firestore';
+
 export default function Header() {
     const [scrolled, setScrolled] = useState(false);
     const [logo, setLogo] = useState("");
+    const [categories, setCategories] = useState<{ id: string, name: string }[]>([]);
+    const [isProductHovered, setIsProductHovered] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -18,13 +23,21 @@ export default function Header() {
         };
         window.addEventListener('scroll', handleScroll);
 
-        // Real-time Dynamic Logo
-        const docRef = doc(db, "settings", "home"); // Changed to 'home' where SettingsForm saves
-        const unsubscribe = onSnapshot(docRef, (docSnap: any) => {
+        // Fetch Logo
+        const docRef = doc(db, "settings", "home");
+        const unsubscribe = onSnapshot(docRef, (docSnap) => {
             if (docSnap.exists() && docSnap.data().general?.logo) {
                 setLogo(docSnap.data().general.logo);
             }
-        }, (error: any) => console.error("Logo fetch error:", error));
+        });
+
+        // Fetch Categories
+        const fetchCategories = async () => {
+            const q = query(collection(db, "categories"), orderBy("name", "asc"));
+            const snap = await getDocs(q);
+            setCategories(snap.docs.map(d => ({ id: d.id, name: d.data().name })));
+        };
+        fetchCategories();
 
         return () => {
             window.removeEventListener('scroll', handleScroll);
@@ -34,7 +47,6 @@ export default function Header() {
 
     return (
         <>
-            {/* Main Header */}
             <header
                 className={cn(
                     "fixed top-0 z-50 w-full transition-all duration-500",
@@ -50,36 +62,72 @@ export default function Header() {
                         <Menu className="w-8 h-8" />
                     </button>
 
-                    {/* Logo - Centered on Mobile, Left on Desktop */}
+                    {/* Logo */}
                     <Link href="/" className="relative h-full flex items-center justify-center md:justify-start group">
                         <div className={cn(
                             "relative transition-all duration-500",
-                            scrolled ? "h-20 w-64" : "h-24 md:h-32 w-64 md:w-80" // Increased scrolled size
+                            scrolled ? "h-20 w-64" : "h-24 md:h-32 w-64 md:w-80"
                         )}>
                             <Image
                                 src={logo}
                                 alt="CAN GROUP"
                                 fill
-                                className={cn(
-                                    "object-contain object-left transition-all duration-300"
-                                    // Removed brightness-0 to keep logo colors (Red) correct on dark bg
-                                )}
+                                className="object-contain object-left transition-all duration-300"
                                 priority
                             />
                         </div>
                     </Link>
 
-                    {/* Desktop Navigation - Centered & Premium */}
-                    <nav className="hidden lg:flex items-center gap-16">
-                        {['Produkte', 'Über uns', 'Kontakt'].map((item) => (
+                    {/* Desktop Navigation */}
+                    <nav className="hidden lg:flex items-center gap-12">
+
+                        {/* Products Dropdown */}
+                        <div
+                            className="relative group"
+                            onMouseEnter={() => setIsProductHovered(true)}
+                            onMouseLeave={() => setIsProductHovered(false)}
+                        >
+                            <Link
+                                href="/products"
+                                className={cn(
+                                    "flex items-center gap-1 text-sm font-bold uppercase tracking-[0.2em] transition-colors py-4",
+                                    scrolled ? "text-white hover:text-[#C8102E]" : "text-white hover:text-[#C8102E] drop-shadow-md"
+                                )}
+                            >
+                                Produkte <ChevronDown className="w-4 h-4" />
+                            </Link>
+
+                            {/* Mega Menu / Dropdown */}
+                            <div className={cn(
+                                "absolute top-full left-0 w-64 bg-[#0a0a0a] border border-white/10 rounded-xl shadow-2xl p-4 transition-all duration-300 origin-top transform",
+                                isProductHovered ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
+                            )}>
+                                <div className="flex flex-col gap-2">
+                                    <Link href="/products" className="text-white hover:text-[#C8102E] text-sm py-2 px-2 rounded hover:bg-white/5 transition-colors">
+                                        Alle Produkte
+                                    </Link>
+                                    <div className="h-px bg-white/10 my-1" />
+                                    {categories.map(cat => (
+                                        <Link
+                                            key={cat.id}
+                                            href={`/products?category=${cat.name}`}
+                                            className="text-stone-300 hover:text-white hover:bg-white/5 py-2 px-2 rounded text-sm transition-colors"
+                                        >
+                                            {cat.name}
+                                        </Link>
+                                    ))}
+                                    {categories.length === 0 && (
+                                        <span className="text-stone-500 text-xs px-2">Kategori bulunamadı</span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Other Links */}
+                        {['Über uns', 'Kontakt'].map((item) => (
                             <Link
                                 key={item}
-                                href={
-                                    item === 'Produkte' ? '/products' :
-                                        item === 'Über uns' ? '/about' :
-                                            item === 'Kontakt' ? '/contact' :
-                                                '/'
-                                }
+                                href={item === 'Kontakt' ? '/contact' : '/about'}
                                 className={cn(
                                     "text-sm font-bold uppercase tracking-[0.2em] transition-colors relative group py-2",
                                     scrolled ? "text-white hover:text-[#C8102E]" : "text-white hover:text-[#C8102E] drop-shadow-md"
@@ -94,11 +142,8 @@ export default function Header() {
                         ))}
                     </nav>
 
-                    {/* Actions */}
-                    <div className="flex items-center gap-4 md:gap-8">
-                        {/* Search Removed */}
-                        {/* Favorites Removed */}
-                    </div>
+                    {/* Actions Spacer */}
+                    <div className="w-10"></div>
 
                 </div>
             </header>

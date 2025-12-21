@@ -15,8 +15,6 @@ import CategoriesManager from '@/components/admin/CategoriesManager';
 import SettingsForm from '@/components/admin/SettingsForm';
 import PartnersManager from '@/components/admin/PartnersManager';
 import UsersManager from '@/components/admin/UsersManager';
-import ImportVictorinox from '@/components/admin/tools/ImportVictorinox'; // Added import
-import ImportPartnerProducts from '@/components/admin/tools/ImportPartnerProducts';
 
 // Sub-view for Products to handle List vs Add state
 function ProductsView() {
@@ -121,8 +119,7 @@ export default function AdminPage() {
                                 <DashboardOverview userEmail={user.email} />
 
                                 <div className="pt-8 border-t border-stone-100">
-                                    <h2 className="text-xl font-bold mb-6 text-stone-900">Hızlı İşlemler</h2>
-                                    <ImportVictorinox />
+                                    {/* Quick Actions Removed */}
                                 </div>
                             </div>
                         )}
@@ -168,18 +165,6 @@ export default function AdminPage() {
                                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
                                     <UsersManager />
                                 </div>
-                            </div>
-                        )}
-
-                        {/* VIEW: TOOLS */}
-                        {activeTab === 'tools' && (
-                            <div className="space-y-6">
-                                <div>
-                                    <h2 className="text-2xl font-bold text-stone-900">Araçlar & İçe Aktarma</h2>
-                                    <p className="text-stone-500">Veri tabanı işlemleri ve toplu ürün ekleme.</p>
-                                </div>
-                                <ImportVictorinox />
-                                <ImportPartnerProducts />
                             </div>
                         )}
 

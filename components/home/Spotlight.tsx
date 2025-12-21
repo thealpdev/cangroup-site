@@ -7,29 +7,69 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 import { useState, useEffect } from 'react';
-import { collection, query, orderBy, limit, onSnapshot } from 'firebase/firestore';
+import { collection, query, orderBy, limit, onSnapshot, where, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 export default function Spotlight() {
     const [products, setProducts] = useState<any[]>([]);
+    const [categories, setCategories] = useState<{ id: string, name: string }[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<string>('all');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        const q = query(collection(db, "products"), orderBy("createdAt", "desc"), limit(10));
+        // Fetch Categories
+        const fetchCategories = async () => {
+            const q = query(collection(db, "categories"), orderBy("name", "asc"));
+            const snap = await getDocs(q);
+            setCategories(snap.docs.map(d => ({ id: d.id, name: d.data().name })));
+        };
+        fetchCategories();
+    }, []);
+
+    useEffect(() => {
+        setLoading(true);
+        let q;
+        if (selectedCategory === 'all') {
+            q = query(collection(db, "products"), orderBy("createdAt", "desc"), limit(12));
+        } else {
+            q = query(collection(db, "products"), where("category", "==", selectedCategory), limit(12));
+        }
+
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             setProducts(items);
+            setLoading(false);
         });
         return () => unsubscribe();
-    }, []);
+    }, [selectedCategory]);
 
     if (products.length === 0) return null;
 
     return (
         <section className="py-32 bg-[#fff] text-[#1c1c1c] overflow-hidden">
-            <div className="container mx-auto px-4 mb-20 flex items-end justify-center text-center">
+            <div className="container mx-auto px-4 mb-12 flex flex-col items-center justify-center text-center">
                 <div>
                     <span className="text-stone-400 font-medium uppercase tracking-[0.2em] text-xs">Im Rampenlicht</span>
                     <h2 className="text-5xl md:text-6xl font-serif mt-6 text-[#0a0a0a]">Unsere <span className="italic text-stone-300">Auswahl</span></h2>
+                </div>
+
+                {/* Category Tabs */}
+                <div className="flex flex-wrap items-center justify-center gap-2 mt-8 max-w-2xl">
+                    <button
+                        onClick={() => setSelectedCategory('all')}
+                        className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 ${selectedCategory === 'all' ? 'bg-[#C8102E] text-white shadow-lg' : 'bg-stone-100 text-stone-500 hover:bg-stone-200'}`}
+                    >
+                        Tümü
+                    </button>
+                    {categories.map(cat => (
+                        <button
+                            key={cat.id}
+                            onClick={() => setSelectedCategory(cat.name)}
+                            className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 ${selectedCategory === cat.name ? 'bg-[#C8102E] text-white shadow-lg' : 'bg-stone-100 text-stone-500 hover:bg-stone-200'}`}
+                        >
+                            {cat.name}
+                        </button>
+                    ))}
                 </div>
             </div>
 
