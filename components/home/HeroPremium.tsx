@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from 'next/link';
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -46,6 +46,16 @@ export default function HeroPremium() {
         }, 6000);
         return () => clearInterval(timer);
     }, [slides.length]);
+
+    const nextSlide = () => {
+        if (slides.length <= 1) return;
+        setCurrent((prev) => (prev + 1) % slides.length);
+    };
+
+    const prevSlide = () => {
+        if (slides.length <= 1) return;
+        setCurrent((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+    };
 
     if (loading) return <div className="h-screen bg-black" />;
 
@@ -110,26 +120,32 @@ export default function HeroPremium() {
             </div>
 
             {/* Slider Navigation (Dots) */}
-            <div className="absolute bottom-12 left-0 w-full z-20 flex justify-center gap-4">
-                {SLIDES.map((_, idx) => (
-                    <button
-                        key={idx}
-                        onClick={() => setCurrent(idx)}
-                        className={cn(
-                            "w-12 h-1 transition-all duration-300",
-                            idx === current ? "bg-white" : "bg-white/20 hover:bg-white/40"
-                        )}
-                    />
-                ))}
-            </div>
+            {slides.length > 1 && (
+                <div className="absolute bottom-12 left-0 w-full z-20 flex justify-center gap-4">
+                    {slides.map((_, idx) => (
+                        <button
+                            key={idx}
+                            onClick={() => setCurrent(idx)}
+                            className={cn(
+                                "w-12 h-1 transition-all duration-300",
+                                idx === current ? "bg-white" : "bg-white/20 hover:bg-white/40"
+                            )}
+                        />
+                    ))}
+                </div>
+            )}
 
             {/* Slider Arrows */}
-            <button onClick={prevSlide} className="absolute left-4 top-1/2 -translate-y-1/2 p-4 text-white/50 hover:text-white transition-colors z-20 hidden md:block">
-                <ChevronLeft className="w-10 h-10" />
-            </button>
-            <button onClick={nextSlide} className="absolute right-4 top-1/2 -translate-y-1/2 p-4 text-white/50 hover:text-white transition-colors z-20 hidden md:block">
-                <ChevronRight className="w-10 h-10" />
-            </button>
+            {slides.length > 1 && (
+                <>
+                    <button onClick={prevSlide} className="absolute left-4 top-1/2 -translate-y-1/2 p-4 text-white/50 hover:text-white transition-colors z-20 hidden md:block">
+                        <ChevronLeft className="w-10 h-10" />
+                    </button>
+                    <button onClick={nextSlide} className="absolute right-4 top-1/2 -translate-y-1/2 p-4 text-white/50 hover:text-white transition-colors z-20 hidden md:block">
+                        <ChevronRight className="w-10 h-10" />
+                    </button>
+                </>
+            )}
         </section>
     );
 }
