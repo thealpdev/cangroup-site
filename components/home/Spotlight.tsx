@@ -49,8 +49,8 @@ export default function Spotlight() {
         <section className="py-32 bg-[#fff] text-[#1c1c1c] overflow-hidden">
             <div className="container mx-auto px-4 mb-12 flex flex-col items-center justify-center text-center">
                 <div>
-                    <span className="text-stone-400 font-medium uppercase tracking-[0.2em] text-xs">Im Rampenlicht</span>
-                    <h2 className="text-5xl md:text-6xl font-serif mt-6 text-[#0a0a0a]">Unsere <span className="italic text-stone-300">Auswahl</span></h2>
+                    <span className="text-stone-400 font-medium uppercase tracking-[0.2em] text-xs">Öne Çıkanlar</span>
+                    <h2 className="text-5xl md:text-6xl font-serif mt-6 text-[#0a0a0a]">Özel <span className="italic text-stone-300">Koleksiyon</span></h2>
                 </div>
 
                 {/* Category Tabs */}
@@ -138,7 +138,7 @@ export default function Spotlight() {
                         <div className="w-16 h-16 rounded-full border border-stone-200 flex items-center justify-center group-hover:bg-[#0a0a0a] group-hover:border-[#0a0a0a] group-hover:text-white transition-all duration-300">
                             <ArrowRight className="w-5 h-5" />
                         </div>
-                        <span className="text-xs font-bold uppercase tracking-widest text-stone-400 group-hover:text-[#0a0a0a] transition-colors">Alle Ansehen</span>
+                        <span className="text-xs font-bold uppercase tracking-widest text-stone-400 group-hover:text-[#0a0a0a] transition-colors">Tümünü Gör</span>
                     </Link>
                 </div>
             </div>

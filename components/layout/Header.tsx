@@ -87,8 +87,7 @@ export default function Header() {
                                 alt="CAN GROUP"
                                 fill
                                 className={cn(
-                                    "object-contain object-center transition-all duration-300",
-                                    scrolled ? "brightness-0" : "brightness-0 invert"
+                                    "object-contain object-center transition-all duration-300"
                                 )}
                                 priority
                             />
