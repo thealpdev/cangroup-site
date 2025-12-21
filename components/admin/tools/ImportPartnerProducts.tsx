@@ -13,65 +13,7 @@ import {
     SelectValue
 } from '@/components/ui/select';
 
-// Simulated Product Data Generators
-const GENERATORS: Record<string, (index: number) => any> = {
-    'dick': (i) => ({
-        name_de: `F. Dick Premier Plus Chef's Knife ${20 + (i % 5)}cm`,
-        name_tr: `F. Dick Premier Plus Şef Bıçağı ${20 + (i % 5)}cm`,
-        name_en: `F. Dick Premier Plus Chef's Knife ${20 + (i % 5)}cm`,
-        description_de: "Geschmiedetes Messer von höchster Qualität. Perfekt ausbalanciert und extrem scharf.",
-        description_tr: "En yüksek kalitede dövme bıçak. Mükemmel dengeli ve son derece keskin.",
-        description_en: "Forged knife of the highest quality. Perfectly balanced and extremely sharp.",
-        price: (80 + (i * 2)).toFixed(2),
-        currency: "EUR",
-        category: "Knives",
-        brand: "dick",
-        productCode: `DICK-PP-${20 + i}`,
-        image: `https://placehold.co/1080x1080/png?text=F.Dick+Premier+${20 + i}cm`
-    }),
-    'zwilling': (i) => ({
-        name_de: `Zwilling Pro Kochmesser ${20 + i}cm`,
-        name_tr: `Zwilling Pro Şef Bıçağı ${20 + i}cm`,
-        name_en: `Zwilling Pro Chef's Knife ${20 + i}cm`,
-        description_de: "Der Klassiker für die Profiküche. Eisgehärtete FRIODUR Klinge.",
-        description_tr: "Profesyonel mutfak klasikleri. Buzla sertleştirilmiş FRIODUR bıçak.",
-        description_en: "The classic for the professional kitchen. Ice-hardened FRIODUR blade.",
-        price: (90 + (i * 3)).toFixed(2),
-        currency: "EUR",
-        category: "Knives",
-        brand: "zwilling",
-        productCode: `ZWILLING-PRO-${38400 + i}`,
-        image: `https://placehold.co/1080x1080/png?text=Zwilling+Pro+${i}`
-    }),
-    'euroflex': (i) => ({
-        name_de: `Euroflex Stechschutzhandschuh Größe ${['S', 'M', 'L', 'XL'][i % 4]}`,
-        name_tr: `Euroflex Çelik Örgü Eldiven Boy ${['S', 'M', 'L', 'XL'][i % 4]}`,
-        name_en: `Euroflex Mesh Glove Size ${['S', 'M', 'L', 'XL'][i % 4]}`,
-        description_de: "Maximaler Schutz und Tragekomfort. Ergonomische Passform.",
-        description_tr: "Maksimum koruma ve konfor. Ergonomik uyum.",
-        description_en: "Maximum protection and comfort. Ergonomic fit.",
-        price: (120 + (i * 1.5)).toFixed(2),
-        currency: "EUR",
-        category: "Safety",
-        brand: "euroflex",
-        productCode: `EFX-GLOVE-${['S', 'M', 'L', 'XL'][i % 4]}-${i}`,
-        image: `https://placehold.co/1080x1080/png?text=Euroflex+Glove+${['S', 'M', 'L', 'XL'][i % 4]}`
-    }),
-    'solingen': (i) => ({
-        name_de: `Solingen Classic Wetzstahl ${25 + i}cm`,
-        name_tr: `Solingen Klasik Masat ${25 + i}cm`,
-        name_en: `Solingen Classic Sharpening Steel ${25 + i}cm`,
-        description_de: "Hält Ihre Messer scharf. Langlebig und robust.",
-        description_tr: "Bıçaklarınızı keskin tutar. Dayanıklı ve sağlam.",
-        description_en: "Keeps your knives sharp. Durable and robust.",
-        price: (45 + i).toFixed(2),
-        currency: "EUR",
-        category: "Accessories",
-        brand: "solingen",
-        productCode: `SOL-STEEL-${25 + i}`,
-        image: `https://placehold.co/1080x1080/png?text=Solingen+Steel+${25 + i}cm`
-    })
-};
+import { PARTNER_DATA } from './partnerData';
 
 export default function ImportPartnerProducts() {
     const [loading, setLoading] = useState(false);
@@ -80,21 +22,49 @@ export default function ImportPartnerProducts() {
 
     const handleImport = async () => {
         setLoading(true);
-        setStatus("İçe aktarma başlatıldı...");
+        setStatus("Veritabanı taranıyor ve gerçek ürünler hazırlanıyor...");
+
         try {
-            const generator = GENERATORS[selectedBrand];
-            if (!generator) {
-                alert("Bu marka için otomatik veri oluşturucu bulunamadı.");
+            const brandData = PARTNER_DATA[selectedBrand as keyof typeof PARTNER_DATA];
+            if (!brandData) {
+                alert("Bu marka için veri seti bulunamadı.");
                 setLoading(false);
                 return;
             }
 
-            // Generate 20 products
             let count = 0;
-            for (let i = 0; i < 20; i++) {
-                const product = generator(i);
+            const productsToImport = [];
 
-                // Check if exists
+            // Generate Combinations (Series x Types)
+            brandData.series.forEach(series => {
+                brandData.types.forEach(type => {
+                    // Create a unique, real-world product
+                    productsToImport.push({
+                        name_de: `${brandData.brand} ${series.name} ${type.de} ${type.size}`,
+                        name_tr: `${brandData.brand} ${series.name} ${type.tr} ${type.size}`,
+                        name_en: `${brandData.brand} ${series.name} ${type.en} ${type.size}`,
+                        description_de: `${series.description} ${type.de} aus der Serie ${series.name}. Material: ${series.material}.`,
+                        description_tr: `${series.name} serisinden ${type.tr}. Malzeme: ${series.material}. ${series.description}`,
+                        description_en: `${type.en} from the ${series.name} series. Material: ${series.material}. ${series.description}`,
+                        price: (type.price * (series.name === 'Damascus' ? 2.5 : 1)).toFixed(2), // Price adjustment logic
+                        currency: "EUR",
+                        category: selectedBrand === 'euroflex' ? 'Safety' : 'Knives',
+                        brand: selectedBrand,
+                        productCode: `${type.sku}-${series.name.substring(0, 3).toUpperCase()}`,
+                        specs_de: `Serie: ${series.name}\nMaterial: ${series.material}\nGriff: ${series.handle}\nGröße: ${type.size}`,
+                        specs_tr: `Seri: ${series.name}\nMalzeme: ${series.material}\nSap: ${series.handle}\nBoyut: ${type.size}`,
+                        specs_en: `Series: ${series.name}\nMaterial: ${series.material}\nHandle: ${series.handle}\nSize: ${type.size}`,
+                        image: `https://placehold.co/1080x1080/png?text=${brandData.brand}+${series.name}+${type.en.replace(' ', '+')}`
+                    });
+                });
+            });
+
+            // Limit to 20 or process all
+            const limit = 20;
+            const processingList = productsToImport.slice(0, limit);
+
+            for (const product of processingList) {
+                // Check dupes
                 const q = query(collection(db, "products"), where("productCode", "==", product.productCode));
                 const snap = await getDocs(q);
 
@@ -109,7 +79,7 @@ export default function ImportPartnerProducts() {
                 }
             }
 
-            setStatus(`${count} adet yeni ürün başarıyla eklendi! (${selectedBrand})`);
+            setStatus(`${count} adet GERÇEK ürün başarıyla eklendi! (${brandData.brand})`);
 
         } catch (error) {
             console.error(error);
