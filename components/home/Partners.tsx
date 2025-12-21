@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 export default function Partners() {
     // Defines the shape of a Partner object
