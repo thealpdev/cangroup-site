@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, ExternalLink, ShoppingBag } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
-import { toast } from "sonner"; // Assuming sonner or just simple alert
 
 export default function ProductActions({ product }: { product: any }) {
     const { addItem, setIsOpen } = useCart();

@@ -86,7 +86,6 @@ export default function ProductCard({ product, index }: ProductCardProps) {
             </Link>
         </motion.div>
     );
-    );
 }
 
 function AddToCartButton({ product }: { product: Product }) {
