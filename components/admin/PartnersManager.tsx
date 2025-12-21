@@ -25,38 +25,20 @@ export default function PartnersManager() {
 
     // Real-time subscription
     useEffect(() => {
-        const q = query(collection(db, "partners"), orderBy("order", "asc"), orderBy("createdAt", "desc"));
+        // Simple query + Client-side sort (Avoiding complex index requirements)
+        const q = query(collection(db, "partners"));
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const data = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             })) as Partner[];
-            // Client-side sort fallback just in case, but query handles it
-            setPartners(data.sort((a, b) => (a.order || 0) - (b.order || 0)));
+            // Sort by order: If order is missing/0, treat as 999 (Put at end)
+            setPartners(data.sort((a, b) => (a.order || 999) - (b.order || 999)));
         }, (error) => {
             console.error("Partners fetch error:", error);
-            // If index missing, fallback to simple fetch
-            if (error.code === 'failed-precondition') {
-                console.log("Index missing, falling back to client sort");
-                // Fallback fetch without complex sort would require a new query, 
-                // but simplest is just: don't error out, maybe manual retry?
-                // For now, let's just assume index might be created or use client sort if query fails?
-                // Actually, if query fails here, data won't load. 
-                // Better to use simple query and sort client side for this small list.
-            }
         });
 
-        // Simpler query to avoid index issues immediately
-        const simpleQ = query(collection(db, "partners"));
-        const unsubSimple = onSnapshot(simpleQ, (snapshot) => {
-            const data = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            })) as Partner[];
-            setPartners(data.sort((a, b) => (a.order || 0) - (b.order || 0)));
-        });
-
-        return () => unsubSimple();
+        return () => unsubscribe();
     }, []);
 
     const handleAddPartner = async () => {
@@ -158,8 +140,15 @@ export default function PartnersManager() {
                             <span className="text-[10px] bg-stone-100 px-1 rounded text-stone-500">Sıra</span>
                             <Input
                                 type="number"
-                                defaultValue={partner.order || 0}
+                                defaultValue={partner.order || ""}
+                                placeholder="999"
                                 onBlur={(e) => handleUpdateOrder(partner.id, Number(e.target.value))}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleUpdateOrder(partner.id, Number(e.currentTarget.value));
+                                        e.currentTarget.blur();
+                                    }
+                                }}
                                 className="h-7 text-xs text-center bg-stone-50"
                             />
                         </div>

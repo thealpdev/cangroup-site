@@ -26,8 +26,8 @@ export default function Partners() {
                 id: doc.id,
                 ...doc.data()
             })) as Partner[];
-            // Sort by order ascending
-            setPartners(items.sort((a, b) => (a.order || 0) - (b.order || 0)));
+            // Sort by order: undefined/0 goes to end (999)
+            setPartners(items.sort((a, b) => (a.order || 999) - (b.order || 999)));
         });
 
         return () => unsubscribe();
