@@ -172,12 +172,13 @@ export default function AdminPage() {
 
                         {/* VIEW: TOOLS */}
                         {activeTab === 'tools' && (
-                            <div className="space-y-4">
+                            <div className="space-y-6">
                                 <div>
                                     <h2 className="text-2xl font-bold text-stone-900">Araçlar & İçe Aktarma</h2>
                                     <p className="text-stone-500">Veri tabanı işlemleri ve toplu ürün ekleme.</p>
                                 </div>
                                 <ImportVictorinox />
+                                <ImportPartnerProducts />
                             </div>
                         )}
 
