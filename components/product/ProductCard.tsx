@@ -79,30 +79,27 @@ export default function ProductCard({ product, index }: ProductCardProps) {
                         <p className="font-medium text-stone-500 text-sm">
                             {currencySymbol}{product.price}
                         </p>
-                    ) : (
-                        <p className="font-medium text-stone-400 text-sm italic">
-                            Details ansehen
-                        </p>
                     )}
                 </div>
             </Link>
         </motion.div>
-// ... (ProductCard function) ...
+    );
+}
 
 function AddToCartButton({ product }: { product: Product }) {
-        const { addItem } = useCart();
+    const { addItem } = useCart();
 
-        return (
-            <button
-                onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    addItem(product);
-                }}
-                className="bg-[#C8102E] text-white p-3 rounded-full shadow-lg hover:bg-[#a00d25] hover:scale-110 transition-all"
-                title="In den Warenkorb"
-            >
-                <ShoppingBag className="w-5 h-5" />
-            </button>
-        );
-    }
+    return (
+        <button
+            onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                addItem(product);
+            }}
+            className="bg-[#C8102E] text-white p-3 rounded-full shadow-lg hover:bg-[#a00d25] hover:scale-110 transition-all"
+            title="In den Warenkorb"
+        >
+            <ShoppingBag className="w-5 h-5" />
+        </button>
+    );
+}
