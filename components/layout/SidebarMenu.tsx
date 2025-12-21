@@ -10,9 +10,16 @@ interface SidebarMenuProps {
     onClose: () => void;
 }
 
-{ label: "Tarifler", href: "/recipes" },
-{ label: "Mağazalar", href: "/stores" },
-{ label: "Hakkımızda", href: "/about" },
+const MENU_ITEMS = [
+    { label: "ANASAYFA", href: "/" },
+    { label: "ÜRÜNLER", href: "/products" },
+    { label: "KATEGORİLER", href: "/categories" },
+];
+
+const SECONDARY_LINKS = [
+    { label: "Hakkımızda", href: "/about" },
+    { label: "İletişim", href: "/contact" },
+    { label: "Mağazalar", href: "/stores" },
 ];
 
 export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
