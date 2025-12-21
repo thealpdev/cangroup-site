@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { X, ChevronRight, ShoppingBag } from 'lucide-react';
+import { X, ChevronRight, ShoppingBag, Heart, User, HelpCircle, MapPin } from 'lucide-react';
 import { useCart } from "@/lib/cart-context";
 
 interface SidebarMenuProps {
