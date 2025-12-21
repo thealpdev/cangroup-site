@@ -79,9 +79,34 @@ export default function HeroPremium() {
             {/* Content Content - Centered */}
             <div className="relative z-10 h-full container mx-auto px-6 flex flex-col justify-center items-center text-center">
                 <motion.div
-                    key={`text - ${current} `}
+                    key={`text-${current}`}
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.3 }}
+                    className="max-w-4xl"
+                >
+                    {slide.subtitle && (
+                        <p className="text-[#C8102E] font-bold tracking-[0.3em] uppercase mb-6 text-sm md:text-base">
+                            {slide.subtitle}
+                        </p>
+                    )}
+
+                    {slide.title && (
+                        <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-10 leading-tight">
+                            {slide.title}
+                        </h1>
+                    )}
+
+                    {slide.link && (
+                        <Link
+                            href={slide.link}
+                            className="inline-flex items-center gap-4 bg-white text-[#0a0a0a] px-10 py-4 text-xs font-bold uppercase tracking-widest hover:bg-[#C8102E] hover:text-white transition-all duration-300 group"
+                        >
+                            {slide.cta || "İncele"}
+                            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                        </Link>
+                    )}
+                </motion.div>
             </div>
 
             {/* Slider Navigation (Dots) */}
