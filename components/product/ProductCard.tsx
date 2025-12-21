@@ -58,10 +58,14 @@ export default function ProductCard({ product, index }: ProductCardProps) {
                     )}
 
                     {/* Quick Action Hint */}
-                    <div className="absolute bottom-0 inset-x-0 p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 flex justify-center">
-                        <span className="bg-[#C8102E] text-white text-xs font-bold uppercase tracking-widest py-2 px-6 rounded-full shadow-lg">
-                            Ansehen
-                        </span>
+                    <div className="absolute bottom-0 inset-x-0 p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 flex justify-center gap-2">
+                        <button
+                            className="bg-white text-stone-900 border-stone-200 border p-3 rounded-full shadow-lg hover:bg-stone-50 hover:scale-110 transition-all"
+                            title="Details ansehen"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle cx="12" cy="12" r="3" /></svg>
+                        </button>
+                        <AddToCartButton product={product} />
                     </div>
                 </div>
 
@@ -81,5 +85,25 @@ export default function ProductCard({ product, index }: ProductCardProps) {
                 </div>
             </Link>
         </motion.div>
+    );
+    );
+}
+
+function AddToCartButton({ product }: { product: Product }) {
+    const { addItem } = require("@/lib/cart-context").useCart();
+    const { ShoppingBag } = require("lucide-react");
+
+    return (
+        <button
+            onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                addItem(product);
+            }}
+            className="bg-[#C8102E] text-white p-3 rounded-full shadow-lg hover:bg-[#a00d25] hover:scale-110 transition-all"
+            title="In den Warenkorb"
+        >
+            <ShoppingBag className="w-5 h-5" />
+        </button>
     );
 }

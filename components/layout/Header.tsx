@@ -144,12 +144,30 @@ export default function Header() {
 
                     {/* Actions */}
                     <div className="flex items-center gap-4 md:gap-8">
+                        <LanguageSwitcher />
                         <CartButton />
                     </div>
 
                 </div>
             </header>
         </>
+    );
+}
+
+function LanguageSwitcher() {
+    const { language, setLanguage } = require("@/lib/language-context").useLanguage();
+
+    return (
+        <div className="relative group">
+            <button className="flex items-center gap-1 text-white text-xs font-bold uppercase tracking-widest hover:text-[#C8102E] transition-colors">
+                {language.toUpperCase()} <ChevronDown className="w-3 h-3" />
+            </button>
+            <div className="absolute top-full right-0 mt-2 w-20 bg-white rounded-lg shadow-xl py-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto">
+                <button onClick={() => setLanguage('de')} className="block w-full text-left px-4 py-2 text-xs font-bold hover:bg-stone-50 text-stone-900">DE</button>
+                <button onClick={() => setLanguage('tr')} className="block w-full text-left px-4 py-2 text-xs font-bold hover:bg-stone-50 text-stone-900">TR</button>
+                <button onClick={() => setLanguage('en')} className="block w-full text-left px-4 py-2 text-xs font-bold hover:bg-stone-50 text-stone-900">EN</button>
+            </div>
+        </div>
     );
 }
 

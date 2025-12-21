@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import ProductGallery from '@/components/product/ProductGallery';
+import ProductActions from '@/components/product/ProductActions';
 
 // Helper to get currency symbol
 const getCurrencySymbol = (code?: string) => {
@@ -148,41 +149,7 @@ export default async function ProductDetailPage(props: { params: Promise<{ id: s
                         <Separator className="bg-stone-100" />
 
                         {/* Action Buttons */}
-                        <div className="flex flex-col gap-4">
-                            <Button
-                                size="lg"
-                                className="h-16 rounded-2xl bg-[#25D366] hover:bg-[#128C7E] text-white font-bold text-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-                            >
-                                <div className="flex items-center gap-3">
-                                    <div className="bg-white/20 p-2 rounded-full">
-                                        <ExternalLink className="w-5 h-5" />
-                                    </div>
-                                    <div className="flex flex-col items-start leading-none">
-                                        <span className="text-[10px] uppercase opacity-90 tracking-wider">Hemen Sipariş Ver</span>
-                                        <span>WhatsApp Hattı</span>
-                                    </div>
-                                </div>
-                            </Button>
-
-                            <div className="grid grid-cols-2 gap-4">
-                                <Button
-                                    size="lg"
-                                    variant="outline"
-                                    className="h-14 rounded-xl border-2 border-stone-100 bg-white text-stone-900 font-bold hover:bg-stone-50 hover:border-stone-200 transition-all"
-                                >
-                                    <Mail className="w-5 h-5 mr-2" />
-                                    Teklif İste
-                                </Button>
-                                <Button
-                                    size="lg"
-                                    variant="outline"
-                                    className="h-14 rounded-xl border-2 border-stone-100 bg-white text-stone-900 font-bold hover:bg-stone-50 hover:border-stone-200 transition-all"
-                                >
-                                    <Phone className="w-5 h-5 mr-2" />
-                                    Bizi Ara
-                                </Button>
-                            </div>
-                        </div>
+                        <ProductActions product={product} />
 
                         {/* Specs Box */}
                         <div className="bg-stone-50 rounded-3xl p-8 border border-stone-100/50">
