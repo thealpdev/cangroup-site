@@ -1,14 +1,11 @@
 "use client";
 
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
 
 export default function ContactPage() {
     return (
         <div className="min-h-screen bg-white">
-            <Header />
             <main className="pt-32 pb-20">
                 {/* Hero Section */}
                 <section className="container mx-auto px-4 mb-20 text-center">
@@ -112,7 +109,6 @@ export default function ContactPage() {
                     </div>
                 </div>
             </main>
-            <Footer />
         </div>
     );
 }

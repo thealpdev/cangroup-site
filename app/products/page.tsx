@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import { collection, query, orderBy, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import ProductCard from '@/components/product/ProductCard';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import { Loader2, Sparkles } from 'lucide-react';
 
 interface Product {
@@ -52,8 +50,6 @@ export default function ProductsPage() {
 
     return (
         <div className="min-h-screen bg-stone-50">
-            <Header />
-
             {/* Header / Filter Section */}
             <div className="pt-32 pb-12 bg-white border-b border-stone-100">
                 <div className="container mx-auto px-4">
@@ -103,8 +99,6 @@ export default function ProductsPage() {
                     </div>
                 )}
             </div>
-
-            <Footer />
         </div>
     );
 }

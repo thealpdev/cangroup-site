@@ -142,11 +142,30 @@ export default function Header() {
                         ))}
                     </nav>
 
-                    {/* Actions Spacer */}
-                    <div className="w-10"></div>
+                    {/* Actions */}
+                    <div className="flex items-center gap-4 md:gap-8">
+                        <CartButton />
+                    </div>
 
                 </div>
             </header>
         </>
+    );
+}
+
+function CartButton() {
+    const { setIsOpen, totalItems } = require("@/lib/cart-context").useCart();
+    return (
+        <button
+            onClick={() => setIsOpen(true)}
+            className="relative p-2 text-white hover:bg-white/10 rounded-full transition-colors group"
+        >
+            <ShoppingBag className="w-6 h-6 group-hover:text-[#C8102E] transition-colors" />
+            {totalItems > 0 && (
+                <span className="absolute top-0 right-0 w-4 h-4 bg-[#C8102E] text-white text-[10px] font-bold flex items-center justify-center rounded-full border border-[#0a0a0a]">
+                    {totalItems}
+                </span>
+            )}
+        </button>
     );
 }
