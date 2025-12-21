@@ -98,7 +98,14 @@ export default function AdminPage() {
 
                         {/* VIEW: OVERVIEW */}
                         {activeTab === 'overview' && (
-                            <DashboardOverview userEmail={user.email} />
+                            <div className="space-y-8">
+                                <DashboardOverview userEmail={user.email} />
+
+                                <div className="pt-8 border-t border-stone-100">
+                                    <h2 className="text-xl font-bold mb-6 text-stone-900">Hızlı İşlemler</h2>
+                                    <ImportVictorinox />
+                                </div>
+                            </div>
                         )}
 
                         {/* VIEW: PRODUCTS */}
