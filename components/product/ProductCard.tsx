@@ -3,6 +3,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useCart } from "@/lib/cart-context";
+import { ShoppingBag } from "lucide-react";
 
 interface Product {
     id: string;
@@ -85,24 +87,22 @@ export default function ProductCard({ product, index }: ProductCardProps) {
                 </div>
             </Link>
         </motion.div>
-    );
-}
+// ... (ProductCard function) ...
 
 function AddToCartButton({ product }: { product: Product }) {
-    const { addItem } = require("@/lib/cart-context").useCart();
-    const { ShoppingBag } = require("lucide-react");
+        const { addItem } = useCart();
 
-    return (
-        <button
-            onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                addItem(product);
-            }}
-            className="bg-[#C8102E] text-white p-3 rounded-full shadow-lg hover:bg-[#a00d25] hover:scale-110 transition-all"
-            title="In den Warenkorb"
-        >
-            <ShoppingBag className="w-5 h-5" />
-        </button>
-    );
-}
+        return (
+            <button
+                onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    addItem(product);
+                }}
+                className="bg-[#C8102E] text-white p-3 rounded-full shadow-lg hover:bg-[#a00d25] hover:scale-110 transition-all"
+                title="In den Warenkorb"
+            >
+                <ShoppingBag className="w-5 h-5" />
+            </button>
+        );
+    }

@@ -7,6 +7,8 @@ import { useState, useEffect } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { cn } from '@/lib/utils';
+import { useLanguage } from "@/lib/language-context";
+import { useCart } from "@/lib/cart-context";
 
 import { ChevronDown } from 'lucide-react';
 import { collection, query, orderBy, getDocs } from 'firebase/firestore';
@@ -155,7 +157,7 @@ export default function Header() {
 }
 
 function LanguageSwitcher() {
-    const { language, setLanguage } = require("@/lib/language-context").useLanguage();
+    const { language, setLanguage } = useLanguage();
 
     return (
         <div className="relative group">
@@ -172,7 +174,7 @@ function LanguageSwitcher() {
 }
 
 function CartButton() {
-    const { setIsOpen, totalItems } = require("@/lib/cart-context").useCart();
+    const { setIsOpen, totalItems } = useCart();
     return (
         <button
             onClick={() => setIsOpen(true)}
