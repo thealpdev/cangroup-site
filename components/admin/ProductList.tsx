@@ -22,6 +22,7 @@ interface Product {
 
 interface ProductListProps {
     onAddNew: () => void;
+    onEdit: (product: any) => void;
 }
 
 export default function ProductList({ onAddNew }: ProductListProps) {
