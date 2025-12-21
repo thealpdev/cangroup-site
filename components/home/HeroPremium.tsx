@@ -54,7 +54,7 @@ export default function HeroPremium() {
     const slide = slides[current] || slides[0];
 
     return (
-        <div className="relative h-screen w-full overflow-hidden bg-black">
+        <section className="relative h-screen w-full overflow-hidden bg-black">
             {/* Background Image Slider */}
             <AnimatePresence mode="wait">
                 <motion.div
