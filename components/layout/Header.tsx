@@ -39,14 +39,14 @@ export default function Header() {
                 className={cn(
                     "fixed top-0 z-50 w-full transition-all duration-500",
                     scrolled
-                        ? "bg-white/95 backdrop-blur-md h-24 border-b border-stone-100 shadow-sm"
+                        ? "bg-[#0a0a0a]/95 backdrop-blur-md h-24 border-b border-white/5 shadow-sm"
                         : "bg-transparent h-32 md:h-40 border-transparent"
                 )}
             >
                 <div className="container mx-auto px-6 h-full flex items-center justify-between">
 
                     {/* Mobile Menu */}
-                    <button className="lg:hidden p-2 text-stone-900 hover:bg-stone-100 rounded-full transition-colors">
+                    <button className="lg:hidden p-2 text-white hover:bg-white/10 rounded-full transition-colors">
                         <Menu className="w-8 h-8" />
                     </button>
 
@@ -54,15 +54,15 @@ export default function Header() {
                     <Link href="/" className="relative h-full flex items-center justify-center md:justify-start group">
                         <div className={cn(
                             "relative transition-all duration-500",
-                            scrolled ? "h-24 w-80" : "h-40 w-[500px] md:w-[600px]"
+                            scrolled ? "h-16 w-48" : "h-24 md:h-32 w-64 md:w-80" // Adjusted sizes for smoother transition
                         )}>
                             <Image
                                 src={logo}
                                 alt="CAN GROUP"
                                 fill
                                 className={cn(
-                                    "object-contain object-left transition-all duration-300",
-                                    scrolled && "brightness-0 opacity-80" // Force black logo on scroll
+                                    "object-contain object-left transition-all duration-300"
+                                    // Removed brightness-0 to keep logo colors (Red) correct on dark bg
                                 )}
                                 priority
                             />
@@ -82,7 +82,7 @@ export default function Header() {
                                 }
                                 className={cn(
                                     "text-sm font-bold uppercase tracking-[0.2em] transition-colors relative group py-2",
-                                    scrolled ? "text-stone-900 hover:text-[#C8102E]" : "text-white hover:text-[#C8102E] drop-shadow-md"
+                                    scrolled ? "text-white hover:text-[#C8102E]" : "text-white hover:text-[#C8102E] drop-shadow-md"
                                 )}
                             >
                                 {item}
