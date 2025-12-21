@@ -30,13 +30,13 @@ export default function Footer() {
 
                     {/* Quick Links */}
                     <div>
-                        <h4 className="font-bold text-sm uppercase tracking-[0.2em] mb-8 text-stone-500">Navigation</h4>
+                        <h4 className="font-bold text-sm uppercase tracking-[0.2em] mb-8 text-stone-500">Menü</h4>
                         <ul className="space-y-4">
                             {[
-                                { name: "Startseite", href: "/" },
-                                { name: "Produkte", href: "/products" },
-                                { name: "Über uns", href: "/about" },
-                                { name: "Kontakt", href: "/contact" }
+                                { name: "Anasayfa", href: "/" },
+                                { name: "Ürünler", href: "/products" },
+                                { name: "Hakkımızda", href: "/about" },
+                                { name: "İletişim", href: "/contact" }
                             ].map((link) => (
                                 <li key={link.name}>
                                     <Link href={link.href} className="text-stone-400 hover:text-white transition-colors text-sm hover:translate-x-1 inline-block duration-300">

@@ -64,10 +64,10 @@ export default function HeroPremium() {
                         src={SLIDES[current].image}
                         alt={SLIDES[current].title}
                         fill
-                        className="object-cover opacity-70"
+                        className="object-cover opacity-60"
                         priority
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/20 to-[#0a0a0a]/40" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-[#0a0a0a]/60" />
                 </motion.div>
             </AnimatePresence>
 

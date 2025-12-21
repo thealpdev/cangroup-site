@@ -41,14 +41,7 @@ export default function Header() {
             <SidebarMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
             <header
-                className={cn(
-                    "fixed top-0 z-50 w-full transition-all duration-300 ease-out",
-                    scrolled
-                        ? "bg-white/95 backdrop-blur-md h-20 border-b border-stone-100 shadow-sm"
-                        : "bg-gradient-to-b from-black/80 to-transparent h-28"
-                    // Using gradient on top for readability without full block if user wants transparency
-                    // But user said "don't change too much". Gradient is safer than raw transparent if image is light.
-                )}
+                className="fixed top-0 z-50 w-full bg-white/95 backdrop-blur-md h-24 border-b border-stone-100 shadow-sm transition-all duration-300"
             >
                 <div className="container mx-auto px-6 h-full flex items-center justify-between">
 
@@ -56,20 +49,14 @@ export default function Header() {
                     <div className="flex items-center gap-4 md:gap-6 flex-1">
                         <button
                             onClick={() => setIsMenuOpen(true)}
-                            className={cn(
-                                "flex items-center gap-2 text-xs font-bold uppercase tracking-widest transition-colors",
-                                scrolled ? "text-stone-900 hover:text-[#C8102E]" : "text-white hover:text-white/80"
-                            )}
+                            className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-stone-900 hover:text-[#C8102E] transition-colors"
                         >
                             <Menu className="w-6 h-6" />
                             <span className="hidden md:inline">Menü</span>
                         </button>
 
                         <button
-                            className={cn(
-                                "p-2 rounded-full transition-colors",
-                                scrolled ? "text-stone-900 hover:bg-stone-100" : "text-white hover:bg-white/10"
-                            )}
+                            className="p-2 rounded-full text-stone-900 hover:bg-stone-50 transition-colors"
                         >
                             <Search className="w-5 h-5" />
                         </button>
@@ -77,19 +64,15 @@ export default function Header() {
 
                     {/* Center: Logo */}
                     <Link href="/" className="relative h-full flex items-center justify-center group flex-1">
-                        <div className={cn(
-                            "relative transition-all duration-500",
-                            scrolled ? "h-10 w-40" : "h-14 w-56"
-                        )}>
-                            {/* Logo logic: Invert for dark mode vs light mode */}
+                        <div className="relative h-16 w-64 transition-transform duration-300 hover:scale-105">
+                            {/* Logo logic: Always display original logo */}
                             <Image
                                 src={logo || "/placeholder-logo.png"}
                                 alt="CAN GROUP"
                                 fill
-                                className={cn(
-                                    "object-contain object-center transition-all duration-300"
-                                )}
+                                className="object-contain object-center"
                                 priority
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             />
                         </div>
                     </Link>
@@ -97,9 +80,9 @@ export default function Header() {
                     {/* Right: Actions */}
                     <div className="flex items-center justify-end gap-6 flex-1">
                         <div className="hidden md:block">
-                            <LanguageSwitcher scrolled={scrolled} />
+                            <LanguageSwitcher scrolled={true} />
                         </div>
-                        <CartButton scrolled={scrolled} />
+                        <CartButton scrolled={true} />
                     </div>
 
                 </div>
