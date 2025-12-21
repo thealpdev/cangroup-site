@@ -43,23 +43,31 @@ export default function Partners() {
                 </div>
 
                 {/* Logo Grid */}
-                <div className="flex flex-wrap items-center justify-center gap-12 md:gap-24 group/list">
-                    {partners.map((partner) => (
-                        <motion.div
-                            key={partner.id}
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
-                            viewport={{ once: true }}
-                            className="relative w-32 h-16 md:w-40 md:h-20 transition-all duration-500 opacity-60 grayscale group-hover/list:opacity-30 hover:!opacity-100 hover:!grayscale-0 hover:scale-110 cursor-pointer"
-                        >
-                            <Image
-                                src={partner.imageUrl}
-                                alt={partner.name || 'Partner'}
-                                fill
-                                className="object-contain"
-                            />
-                        </motion.div>
-                    ))}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 md:gap-12 items-center justify-items-center group/list">
+                    {partners.map((partner) => {
+                        // Check if this is the first item (Canadam) to make it larger
+                        const isFirst = partner.order === 1;
+
+                        return (
+                            <motion.div
+                                key={partner.id}
+                                initial={{ opacity: 0 }}
+                                whileInView={{ opacity: 1 }}
+                                viewport={{ once: true }}
+                                className={cn(
+                                    "relative transition-all duration-500 opacity-60 grayscale group-hover/list:opacity-30 hover:!opacity-100 hover:!grayscale-0 cursor-pointer flex items-center justify-center",
+                                    isFirst ? "w-40 h-24 md:w-56 md:h-32 hover:scale-105" : "w-32 h-16 md:w-40 md:h-20 hover:scale-110"
+                                )}
+                            >
+                                <Image
+                                    src={partner.imageUrl}
+                                    alt={partner.name || 'Partner'}
+                                    fill
+                                    className="object-contain"
+                                />
+                            </motion.div>
+                        );
+                    })}
                 </div>
             </div>
         </section>
