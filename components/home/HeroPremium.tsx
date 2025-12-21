@@ -12,7 +12,7 @@ const SLIDES = [
         id: 1,
         title: "Profesyonel\nMükemmellik",
         subtitle: "Dick Premier Plus Serisi",
-        image: "https://images.unsplash.com/photo-1593642532744-937508af3952?q=80&w=2070",
+        image: "https://images.unsplash.com/photo-1556910103-1c02745a30bf?q=80&w=2070",
         cta: "Koleksiyonu İncele",
         link: "/products"
     },
@@ -20,7 +20,7 @@ const SLIDES = [
         id: 2,
         title: "İsviçre\nHassasiyeti",
         subtitle: "Victorinox Fibrox Koleksiyonu",
-        image: "https://images.unsplash.com/photo-1588611910609-0d12759e02c6?q=80&w=2070",
+        image: "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?q=80&w=2070",
         cta: "Keşfet",
         link: "/products?brand=Victorinox"
     },
@@ -28,7 +28,7 @@ const SLIDES = [
         id: 3,
         title: "Modern\nTeknoloji",
         subtitle: "Zwilling Enfinity Lüks Seri",
-        image: "https://images.unsplash.com/photo-1626202378950-84c47b5fd250?q=80&w=2070",
+        image: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=2070",
         cta: "Detayları Gör",
         link: "/products?brand=Zwilling"
     }
