@@ -75,7 +75,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
                     <h3 className="font-serif text-lg text-stone-900 group-hover:text-[#C8102E] transition-colors line-clamp-1">
                         {displayName}
                     </h3>
-                    {product.price ? (
+                    {product.price && (
                         <p className="font-medium text-stone-500 text-sm">
                             {currencySymbol}{product.price}
                         </p>
