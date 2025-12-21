@@ -25,7 +25,7 @@ interface ProductListProps {
     onEdit: (product: any) => void;
 }
 
-export default function ProductList({ onAddNew }: ProductListProps) {
+export default function ProductList({ onAddNew, onEdit }: ProductListProps) {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
