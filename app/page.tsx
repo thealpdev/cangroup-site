@@ -1,18 +1,16 @@
-import HeroV2 from '@/components/home/HeroV2';
-import Spotlight from '@/components/home/Spotlight';
-import Partners from '@/components/home/Partners';
+import HeroPremium from "@/components/home/HeroPremium";
+import BrandWorld from "@/components/home/BrandWorld";
+import Spotlight from "@/components/home/Spotlight";
 
 export default function Home() {
   return (
-    <div className="flex flex-col gap-0 bg-white">
-      {/* 1. Cinematic Hero */}
-      <HeroV2 />
+    <main className="min-h-screen bg-white">
+      <HeroPremium />
+      <BrandWorld />
 
-      {/* 2. Partners */}
-      <Partners />
-
-      {/* 3. Products (Spotlight) */}
-      <Spotlight />
-    </div>
+      <section className="py-24 bg-stone-50">
+        <Spotlight />
+      </section>
+    </main>
   );
 }
