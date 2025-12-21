@@ -38,40 +38,55 @@ export default function Spotlight() {
                 {products.map((item, i) => (
                     <motion.div
                         key={item.id}
-                        className="min-w-[280px] md:min-w-[350px] snap-center flex-shrink-0 group cursor-pointer"
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: i * 0.1 }}
+                        className="min-w-[220px] max-w-[220px] snap-center flex-shrink-0 group cursor-pointer relative"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5, delay: i * 0.1 }}
                     >
-                        <Link href={`/products/${item.id}`} className="block">
-                            <div className="relative aspect-[3/4] bg-stone-50 overflow-hidden mb-8">
-                                <Image
-                                    src={item.images?.[0] || item.image}
-                                    alt={item.name_de || item.name_en || 'Product'}
-                                    fill
-                                    className="object-cover object-center grayscale-[20%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                                />
+                        <Link href={`/products/${item.id}`} className="block h-full">
+                            {/* Card Container with Hover Lift */}
+                            <div className="bg-white rounded-xl overflow-hidden border border-stone-100 shadow-sm group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-300 ease-in-out h-full flex flex-col">
 
-                                {/* Minimal Tag */}
-                                {item.brand && (
-                                    <div className="absolute top-0 left-0 p-6">
-                                        <span className="text-[10px] uppercase tracking-widest text-[#0a0a0a] font-bold mix-blend-multiply opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                            {item.brand}
-                                        </span>
+                                {/* Image Area */}
+                                <div className="relative aspect-[4/5] overflow-hidden bg-stone-100">
+                                    <Image
+                                        src={item.images?.[0] || item.image}
+                                        alt={item.name_de || item.name_en || 'Product'}
+                                        fill
+                                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                    />
+
+                                    {/* Overlay Gradient on Hover */}
+                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+
+                                    {/* Action Button - Appears on Hover */}
+                                    <div className="absolute bottom-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                                        <div className="bg-white text-black p-2 rounded-full shadow-lg hover:bg-[#C8102E] hover:text-white transition-colors">
+                                            <ArrowRight className="w-4 h-4" />
+                                        </div>
                                     </div>
-                                )}
-                            </div>
+                                </div>
 
-                            <div className="text-center space-y-2">
-                                <h3 className="text-2xl font-serif italic text-[#0a0a0a] group-hover:text-[#C8102E] transition-colors duration-300">
-                                    {item.name_de || item.name_en}
-                                </h3>
-                                {item.price && (
-                                    <p className="text-stone-400 font-mono text-sm tracking-widest">
-                                        {item.currency === 'USD' ? '$' : item.currency === 'TRY' ? '₺' : item.currency === 'GBP' ? '£' : '€'}
-                                        {item.price}
-                                    </p>
-                                )}
+                                {/* Text Content */}
+                                <div className="p-4 flex-1 flex flex-col justify-between space-y-2">
+                                    <div>
+                                        <p className="text-[10px] font-bold tracking-widest text-[#C8102E] uppercase mb-1">
+                                            {item.brand || 'CanMarkt'}
+                                        </p>
+                                        <h3 className="text-sm font-bold text-stone-900 line-clamp-2 leading-tight group-hover:text-[#C8102E] transition-colors">
+                                            {item.name_de || item.name_en}
+                                        </h3>
+                                    </div>
+
+                                    {item.price ? (
+                                        <p className="text-lg font-bold text-stone-900">
+                                            {item.currency === 'USD' ? '$' : item.currency === 'TRY' ? '₺' : item.currency === 'GBP' ? '£' : '€'}
+                                            {item.price}
+                                        </p>
+                                    ) : (
+                                        <span className="text-xs text-stone-400 font-medium">Fiyat Gör</span>
+                                    )}
+                                </div>
                             </div>
                         </Link>
                     </motion.div>
