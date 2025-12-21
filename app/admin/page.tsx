@@ -16,6 +16,7 @@ import SettingsForm from '@/components/admin/SettingsForm';
 import PartnersManager from '@/components/admin/PartnersManager';
 import UsersManager from '@/components/admin/UsersManager';
 import ImportVictorinox from '@/components/admin/tools/ImportVictorinox'; // Added import
+import ImportPartnerProducts from '@/components/admin/tools/ImportPartnerProducts';
 
 // Sub-view for Products to handle List vs Add state
 function ProductsView() {

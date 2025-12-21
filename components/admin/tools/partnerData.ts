@@ -44,5 +44,20 @@ export const PARTNER_DATA = {
             { de: "Stechschutzhandschuh L", en: "Mesh Glove L", tr: "Çelik Eldiven L", size: "Large", sku: "EF-01-L", price: 110 },
             { de: "Stechschutzschürze", en: "Mesh Apron", tr: "Çelik Önlük", size: "75x45cm", sku: "EF-APR-75", price: 180 }
         ]
+    },
+    solingen: {
+        brand: "Solingen (Wetzstähle)",
+        series: [
+            { name: "Classic", description: "Standard sharpening steels for everyday use.", material: "Chrome Vanadium", handle: "Plastic/Wood" },
+            { name: "FineCut", description: "For honing and maintaining the edge.", material: "Fine Cut Steel", handle: "Ergonomic 2K" },
+            { name: "Diamond", description: "Diamond coated for material removal.", material: "Diamond Coating", handle: "Plastic" },
+            { name: "Polished", description: "Polishing steel for straightening the edge.", material: "Polished Steel", handle: "Wood" }
+        ],
+        types: [
+            { de: "Wetzstahl Oval", en: "Sharpening Steel Oval", tr: "Masat Oval", size: "30cm", sku: "WS-OV-30", price: 65 },
+            { de: "Wetzstahl Rund", en: "Sharpening Steel Round", tr: "Masat Yuvarlak", size: "25cm", sku: "WS-R-25", price: 45 },
+            { de: "Wetzstahl Feinzug", en: "Sharpening Steel Fine", tr: "Masat İnce", size: "30cm", sku: "WS-FINE-30", price: 75 },
+            { de: "Diamantwetzstahl", en: "Diamond Steel", tr: "Elmas Masat", size: "26cm", sku: "WS-DIA-26", price: 95 }
+        ]
     }
 };
