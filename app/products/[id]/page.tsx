@@ -50,7 +50,6 @@ export default async function ProductDetailPage(props: { params: Promise<{ id: s
     const currencySymbol = getCurrencySymbol(product.currency);
 
     return (
-    return (
         <div className="min-h-screen bg-white">
             {/* Top Navigation Bar - Sticky & Frosted */}
             <div className="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-md border-b border-stone-100">
