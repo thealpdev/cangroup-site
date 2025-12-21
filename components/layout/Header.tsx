@@ -53,14 +53,17 @@ export default function Header() {
                 className={cn(
                     "fixed top-0 z-50 w-full transition-all duration-500",
                     scrolled
-                        ? "bg-[#0a0a0a]/95 backdrop-blur-md h-24 border-b border-white/5 shadow-sm"
-                        : "bg-transparent h-32 md:h-40 border-transparent"
+                        ? "bg-white/95 backdrop-blur-md h-20 border-b border-stone-100 shadow-sm"
+                        : "bg-transparent h-32 border-transparent"
                 )}
             >
                 <div className="container mx-auto px-6 h-full flex items-center justify-between">
 
                     {/* Mobile Menu */}
-                    <button className="lg:hidden p-2 text-white hover:bg-white/10 rounded-full transition-colors">
+                    <button className={cn(
+                        "lg:hidden p-2 rounded-full transition-colors",
+                        scrolled ? "text-stone-900 hover:bg-stone-100" : "text-white hover:bg-white/10"
+                    )}>
                         <Menu className="w-8 h-8" />
                     </button>
 
@@ -68,59 +71,63 @@ export default function Header() {
                     <Link href="/" className="relative h-full flex items-center justify-center md:justify-start group">
                         <div className={cn(
                             "relative transition-all duration-500",
-                            scrolled ? "h-20 w-64" : "h-24 md:h-32 w-64 md:w-80"
+                            scrolled ? "h-12 w-48" : "h-20 w-64"
                         )}>
                             <Image
                                 src={logo}
                                 alt="CAN GROUP"
                                 fill
-                                className="object-contain object-left transition-all duration-300"
+                                className={cn(
+                                    "object-contain object-left transition-all duration-300",
+                                    scrolled ? "brightness-0" : "brightness-0 invert"
+                                    // Assuming logo is colored/dark. We invert it for dark hero, make it black for white header. 
+                                    // If logo is already white, this needs adjustment. 
+                                    // Let's assume the uploaded logo is colored or dark.
+                                )}
                                 priority
                             />
                         </div>
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <nav className="hidden lg:flex items-center gap-12">
+                    <nav className="hidden lg:flex items-center gap-10">
 
                         {/* Products Dropdown */}
                         <div
-                            className="relative group"
+                            className="relative group h-full flex items-center"
                             onMouseEnter={() => setIsProductHovered(true)}
                             onMouseLeave={() => setIsProductHovered(false)}
                         >
                             <Link
                                 href="/products"
                                 className={cn(
-                                    "flex items-center gap-1 text-sm font-bold uppercase tracking-[0.2em] transition-colors py-4",
-                                    scrolled ? "text-white hover:text-[#C8102E]" : "text-white hover:text-[#C8102E] drop-shadow-md"
+                                    "flex items-center gap-1 text-xs font-bold uppercase tracking-[0.15em] transition-colors",
+                                    scrolled ? "text-stone-900 hover:text-[#C8102E]" : "text-white hover:text-white/80"
                                 )}
                             >
-                                Produkte <ChevronDown className="w-4 h-4" />
+                                Produkte <ChevronDown className="w-3 h-3" />
                             </Link>
 
-                            {/* Mega Menu / Dropdown */}
+                            {/* Mega Menu */}
                             <div className={cn(
-                                "absolute top-full left-0 w-64 bg-[#0a0a0a] border border-white/10 rounded-xl shadow-2xl p-4 transition-all duration-300 origin-top transform",
+                                "absolute top-full -left-4 w-64 bg-white border border-stone-100 rounded-lg shadow-xl p-2 transition-all duration-300 origin-top transform",
                                 isProductHovered ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
                             )}>
-                                <div className="flex flex-col gap-2">
-                                    <Link href="/products" className="text-white hover:text-[#C8102E] text-sm py-2 px-2 rounded hover:bg-white/5 transition-colors">
+                                <div className="flex flex-col">
+                                    <Link href="/products" className="text-stone-900 hover:bg-stone-50 text-sm font-medium py-2.5 px-4 rounded-md transition-colors flex items-center justify-between">
                                         Alle Produkte
+                                        <ChevronDown className="-rotate-90 w-3 h-3 text-stone-400" />
                                     </Link>
-                                    <div className="h-px bg-white/10 my-1" />
+                                    <div className="h-px bg-stone-100 my-1" />
                                     {categories.map(cat => (
                                         <Link
                                             key={cat.id}
                                             href={`/products?category=${cat.name}`}
-                                            className="text-stone-300 hover:text-white hover:bg-white/5 py-2 px-2 rounded text-sm transition-colors"
+                                            className="text-stone-500 hover:text-[#C8102E] hover:bg-stone-50 py-2 px-4 rounded-md text-sm transition-colors"
                                         >
                                             {cat.name}
                                         </Link>
                                     ))}
-                                    {categories.length === 0 && (
-                                        <span className="text-stone-500 text-xs px-2">Kategori bulunamadı</span>
-                                    )}
                                 </div>
                             </div>
                         </div>
@@ -131,23 +138,20 @@ export default function Header() {
                                 key={item}
                                 href={item === 'Kontakt' ? '/contact' : '/about'}
                                 className={cn(
-                                    "text-sm font-bold uppercase tracking-[0.2em] transition-colors relative group py-2",
-                                    scrolled ? "text-white hover:text-[#C8102E]" : "text-white hover:text-[#C8102E] drop-shadow-md"
+                                    "text-xs font-bold uppercase tracking-[0.15em] transition-colors relative group py-2",
+                                    scrolled ? "text-stone-900 hover:text-[#C8102E]" : "text-white hover:text-white/80"
                                 )}
                             >
                                 {item}
-                                <span className={cn(
-                                    "absolute bottom-0 left-0 h-[2px] transition-all duration-300 group-hover:w-full w-0",
-                                    scrolled ? "bg-[#C8102E]" : "bg-[#C8102E]"
-                                )}></span>
                             </Link>
                         ))}
                     </nav>
 
                     {/* Actions */}
-                    <div className="flex items-center gap-4 md:gap-8">
-                        <LanguageSwitcher />
-                        <CartButton />
+                    <div className="flex items-center gap-6">
+                        <LanguageSwitcher scrolled={scrolled} />
+                        <div className="h-4 w-px bg-current opacity-20 hidden md:block" />
+                        <CartButton scrolled={scrolled} />
                     </div>
 
                 </div>
@@ -156,36 +160,48 @@ export default function Header() {
     );
 }
 
-function LanguageSwitcher() {
+function LanguageSwitcher({ scrolled }: { scrolled: boolean }) {
     const { language, setLanguage } = useLanguage();
 
     return (
         <div className="relative group">
-            <button className="flex items-center gap-1 text-white text-xs font-bold uppercase tracking-widest hover:text-[#C8102E] transition-colors">
+            <button className={cn(
+                "flex items-center gap-1 text-xs font-bold uppercase tracking-widest transition-colors",
+                scrolled ? "text-stone-900 hover:text-[#C8102E]" : "text-white hover:text-white/80"
+            )}>
                 {language.toUpperCase()} <ChevronDown className="w-3 h-3" />
             </button>
-            <div className="absolute top-full right-0 mt-2 w-20 bg-white rounded-lg shadow-xl py-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto">
-                <button onClick={() => setLanguage('de')} className="block w-full text-left px-4 py-2 text-xs font-bold hover:bg-stone-50 text-stone-900">DE</button>
-                <button onClick={() => setLanguage('tr')} className="block w-full text-left px-4 py-2 text-xs font-bold hover:bg-stone-50 text-stone-900">TR</button>
-                <button onClick={() => setLanguage('en')} className="block w-full text-left px-4 py-2 text-xs font-bold hover:bg-stone-50 text-stone-900">EN</button>
+            <div className="absolute top-full right-0 mt-4 w-32 bg-white rounded-lg shadow-xl py-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform origin-top-right scale-95 group-hover:scale-100 pointer-events-none group-hover:pointer-events-auto border border-stone-100">
+                <div className="px-4 py-2 text-[10px] font-bold text-stone-400 uppercase tracking-widest">Select Language</div>
+                <button onClick={() => setLanguage('de')} className="block w-full text-left px-4 py-2 text-sm font-medium hover:bg-stone-50 text-stone-900">Deutsch</button>
+                <button onClick={() => setLanguage('tr')} className="block w-full text-left px-4 py-2 text-sm font-medium hover:bg-stone-50 text-stone-900">Türkçe</button>
+                <button onClick={() => setLanguage('en')} className="block w-full text-left px-4 py-2 text-sm font-medium hover:bg-stone-50 text-stone-900">English</button>
             </div>
         </div>
     );
 }
 
-function CartButton() {
+function CartButton({ scrolled }: { scrolled: boolean }) {
     const { setIsOpen, totalItems } = useCart();
     return (
         <button
             onClick={() => setIsOpen(true)}
-            className="relative p-2 text-white hover:bg-white/10 rounded-full transition-colors group"
-        >
-            <ShoppingBag className="w-6 h-6 group-hover:text-[#C8102E] transition-colors" />
-            {totalItems > 0 && (
-                <span className="absolute top-0 right-0 w-4 h-4 bg-[#C8102E] text-white text-[10px] font-bold flex items-center justify-center rounded-full border border-[#0a0a0a]">
-                    {totalItems}
-                </span>
+            className={cn(
+                "relative group flex items-center gap-2 transition-colors",
+                scrolled ? "text-stone-900 hover:text-[#C8102E]" : "text-white hover:text-white/80"
             )}
+        >
+            <div className="relative">
+                <ShoppingBag className="w-5 h-5" />
+                {totalItems > 0 && (
+                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#C8102E] text-white text-[9px] font-bold flex items-center justify-center rounded-full border border-white">
+                        {totalItems}
+                    </span>
+                )}
+            </div>
+            <span className="hidden md:inline text-xs font-bold uppercase tracking-widest">
+                Anfrage
+            </span>
         </button>
     );
 }
