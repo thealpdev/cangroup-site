@@ -1,4 +1,3 @@
-```javascript
 "use client";
 
 import { useState, useEffect } from "react";
@@ -49,7 +48,7 @@ export default function HeroPremium() {
     }, [slides.length]);
 
     if (loading) return <div className="h-screen bg-black" />;
-    
+
     // Safety check
     if (slides.length === 0) return null;
     const slide = slides[current] || slides[0];
@@ -66,12 +65,12 @@ export default function HeroPremium() {
                     transition={{ duration: 1 }}
                     className="absolute inset-0 z-0"
                 >
-                    <Image 
-                         src={slide.image}
-                         alt={slide.title || "Hero"}
-                         fill
-                         className="object-cover opacity-60"
-                         priority
+                    <Image
+                        src={slide.image}
+                        alt={slide.title || "Hero"}
+                        fill
+                        className="object-cover opacity-60"
+                        priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-[#0a0a0a]/60" />
                 </motion.div>
@@ -80,7 +79,7 @@ export default function HeroPremium() {
             {/* Content Content - Centered */}
             <div className="relative z-10 h-full container mx-auto px-6 flex flex-col justify-center items-center text-center">
                 <motion.div
-                    key={`text - ${ current } `}
+                    key={`text - ${current} `}
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
             </div>
