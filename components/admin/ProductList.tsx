@@ -119,7 +119,15 @@ export default function ProductList({ onAddNew }: ProductListProps) {
                                     <td className="px-6 py-4 text-stone-400 text-xs">
                                         {product.createdAt?.seconds ? format(new Date(product.createdAt.seconds * 1000), 'dd MMM yyyy') : '-'}
                                     </td>
-                                    <td className="px-6 py-4 text-right">
+                                    <td className="px-6 py-4 text-right flex items-center justify-end gap-2">
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="text-stone-400 hover:text-blue-600 hover:bg-blue-50"
+                                            onClick={() => onEdit(product)}
+                                        >
+                                            <Edit className="w-4 h-4" />
+                                        </Button>
                                         <Button
                                             variant="ghost"
                                             size="icon"

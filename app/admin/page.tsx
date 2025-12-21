@@ -20,25 +20,43 @@ import ImportVictorinox from '@/components/admin/tools/ImportVictorinox'; // Add
 // Sub-view for Products to handle List vs Add state
 function ProductsView() {
     const [view, setView] = useState<'list' | 'add'>('list');
+    const [editingProduct, setEditingProduct] = useState<any>(null);
+
+    const handleEdit = (product: any) => {
+        setEditingProduct(product);
+        setView('add');
+    };
+
+    const handleAddNew = () => {
+        setEditingProduct(null);
+        setView('add');
+    };
+
+    const handleSuccess = () => {
+        setEditingProduct(null);
+        setView('list');
+    };
 
     return (
         <div className="space-y-4">
             <div>
-                <h2 className="text-2xl font-bold text-stone-900">Ürün Yönetimi</h2>
+                <h2 className="text-2xl font-bold text-stone-900">
+                    {view === 'list' ? 'Ürün Yönetimi' : (editingProduct ? 'Ürünü Düzenle' : 'Yeni Ürün Ekle')}
+                </h2>
                 <p className="text-stone-500">
-                    {view === 'list' ? 'Kataloğunuzdaki mevcut ürünleri yönetin.' : 'Yeni bir ürün ekleyin.'}
+                    {view === 'list' ? 'Kataloğunuzdaki mevcut ürünleri yönetin.' : 'Ürün bilgilerini giriniz.'}
                 </p>
             </div>
 
             {view === 'list' ? (
-                <ProductList onAddNew={() => setView('add')} />
+                <ProductList onAddNew={handleAddNew} onEdit={handleEdit} />
             ) : (
                 <div className="space-y-4 animate-in fade-in slide-in-from-right-4">
                     <Button variant="outline" onClick={() => setView('list')} className="mb-4">
                         ← Listeye Dön
                     </Button>
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
-                        <ProductForm />
+                        <ProductForm initialData={editingProduct} onSuccess={handleSuccess} />
                     </div>
                 </div>
             )}

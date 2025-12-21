@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { collection, addDoc, serverTimestamp, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, addDoc, updateDoc, doc, serverTimestamp, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 import { Button } from '@/components/ui/button';
@@ -51,7 +51,12 @@ interface ProductFormData {
     images: string[];
 }
 
-export default function ProductForm() {
+interface ProductFormProps {
+    initialData?: any;
+    onSuccess?: () => void;
+}
+
+export default function ProductForm({ initialData, onSuccess }: ProductFormProps) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [images, setImages] = useState<string[]>([]);
@@ -74,7 +79,30 @@ export default function ProductForm() {
             setCategories(snapshot.docs.map(d => ({ id: d.id, name: d.data().name })));
         };
         fetchCategories();
-    }, []);
+
+        if (initialData) {
+            setFormData({
+                productCode: initialData.productCode || '',
+                productNumber: initialData.productNumber || '',
+                name_de: initialData.name_de || '',
+                name_tr: initialData.name_tr || '',
+                name_en: initialData.name_en || '',
+                description_de: initialData.description_de || '',
+                description_tr: initialData.description_tr || '',
+                description_en: initialData.description_en || '',
+                specs_de: initialData.specs_de || '',
+                specs_tr: initialData.specs_tr || '',
+                specs_en: initialData.specs_en || '',
+                brand: initialData.brand ? initialData.brand.toLowerCase() : 'canadam',
+                category: initialData.category || '',
+                price: initialData.price ? String(initialData.price) : '',
+                currency: initialData.currency || 'EUR',
+                images: initialData.images || (initialData.image ? [initialData.image] : [])
+            });
+            if (initialData.images) setImages(initialData.images);
+            else if (initialData.image) setImages([initialData.image]);
+        }
+    }, [initialData]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -88,30 +116,32 @@ export default function ProductForm() {
             if (images.length === 0) { alert("En az bir görsel yüklemelisiniz."); return; }
             if (!formData.name_tr) { alert("Türkçe ürün adı zorunludur."); return; }
 
-            await addDoc(collection(db, "products"), {
+            const dataToSave = {
                 ...formData,
                 images: images,
-                createdAt: serverTimestamp(),
-            });
+                price: parseFloat(formData.price) || 0,
+                updatedAt: serverTimestamp(),
+            };
 
-            alert("Ürün başarıyla oluşturuldu! ✅");
+            if (initialData && initialData.id) {
+                // Update existing
+                await updateDoc(doc(db, "products", initialData.id), dataToSave);
+                alert("Ürün güncellendi! ✅");
+            } else {
+                // Create new
+                await addDoc(collection(db, "products"), {
+                    ...dataToSave,
+                    createdAt: serverTimestamp(),
+                });
+                alert("Ürün başarıyla oluşturuldu! ✅");
+            }
 
-            // Reset form
-            setFormData({
-                productCode: '', productNumber: '',
-                name_de: '', name_tr: '', name_en: '',
-                description_de: '', description_tr: '', description_en: '',
-                specs_de: '', specs_tr: '', specs_en: '',
-                brand: 'canadam', category: '',
-                price: '', currency: 'EUR',
-                images: []
-            });
-            setImages([]);
+            if (onSuccess) onSuccess();
             router.refresh();
 
         } catch (error) {
             console.error(error);
-            alert("Ürün oluşturulurken hata oluştu.");
+            alert("İşlem sırasında hata oluştu.");
         } finally {
             setLoading(false);
         }
