@@ -62,5 +62,31 @@ export default function MaintenanceGuard({ children }: { children: React.ReactNo
     // But allowing children to render (and potential flash) is better for UX than a blank white screen
     // if the check is fast. For now, we render children. 
 
+    if (authLoading || isChecking) {
+        return (
+            <div className="h-screen w-full flex items-center justify-center bg-white text-stone-900">
+                <div className="animate-pulse flex flex-col items-center gap-2">
+                    <div className="w-8 h-8 rounded-full border-2 border-stone-200 border-t-[#C8102E] animate-spin"></div>
+                    <span className="text-xs font-bold tracking-widest uppercase">Yükleniyor...</span>
+                </div>
+            </div>
+        );
+    }
+
+    // Strict Guard: Prevent rendering children if maintenance is active and user is blocked
+    // This prevents the "flash" of content before the useEffect redirect happens
+    if (maintenanceMode) {
+        const isPublicPath =
+            pathname === '/maintenance' ||
+            pathname.startsWith('/admin') ||
+            pathname.startsWith('/api') ||
+            pathname.startsWith('/_next') ||
+            pathname.startsWith('/static');
+
+        if (!user && !isPublicPath) {
+            return null; // Or keep showing loader
+        }
+    }
+
     return <>{children}</>;
 }

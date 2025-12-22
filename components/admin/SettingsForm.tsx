@@ -33,7 +33,7 @@ export default function SettingsForm() {
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    if (data.general) setGeneral(data.general);
+                    if (data.general) setGeneral(prev => ({ ...prev, ...data.general }));
                     if (data.legacy) setLegacy(data.legacy);
                     if (data.collections) setCollections(data.collections);
                 }
