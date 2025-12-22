@@ -17,20 +17,20 @@ export default function MaintenancePage() {
 
                 <div className="space-y-4">
                     <h1 className="text-4xl md:text-5xl font-serif tracking-tight">
-                        We Are Currently <br />
-                        <span className="text-[#C8102E] italic">Under Maintenance</span>
+                        Şu An <br />
+                        <span className="text-[#C8102E] italic">Bakımdayız</span>
                     </h1>
                     <p className="text-stone-400 text-lg leading-relaxed">
-                        We are upgrading our experience to serve you better.
+                        Size daha iyi hizmet verebilmek için sistemlerimizi güncelliyoruz.
                         <br />
-                        Please check back shortly.
+                        Lütfen kısa bir süre sonra tekrar deneyiniz.
                     </p>
                 </div>
 
                 <div className="pt-8 border-t border-white/10 w-full">
                     <div className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-stone-500">
                         <span className="w-2 h-2 rounded-full bg-[#C8102E] animate-ping"></span>
-                        System Upgrade In Progress
+                        Sistem Güncellemesi Sürüyor
                     </div>
                 </div>
             </div>
