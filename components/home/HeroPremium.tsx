@@ -83,7 +83,7 @@ export default function HeroPremium() {
                         className="object-cover"
                         priority
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 </motion.div>
             </AnimatePresence>
 

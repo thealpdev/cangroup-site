@@ -17,7 +17,7 @@ export default function SettingsForm() {
 
     // State for multiple sections
     const [general, setGeneral] = useState({ logo: '', contactPhone: '' });
-    const [hero, setHero] = useState({ title: '', subtitle: '', bgImage: '' });
+    // Hero section moved to separate manager
     const [legacy, setLegacy] = useState({ title: '', quote: '', bgImage: '' });
     const [collections, setCollections] = useState([
         { title: '', subtitle: '', image: '', link: '' },
@@ -34,7 +34,6 @@ export default function SettingsForm() {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     if (data.general) setGeneral(data.general);
-                    if (data.hero) setHero(data.hero);
                     if (data.legacy) setLegacy(data.legacy);
                     if (data.collections) setCollections(data.collections);
                 }
@@ -50,7 +49,6 @@ export default function SettingsForm() {
             setLoading(true);
             await setDoc(doc(db, "settings", "home"), {
                 general,
-                hero,
                 legacy,
                 collections,
                 updatedAt: new Date().toISOString()
@@ -77,41 +75,12 @@ export default function SettingsForm() {
                 </Button>
             </div>
 
-            <Tabs defaultValue="hero" className="space-y-4">
+            <Tabs defaultValue="collections" className="space-y-4">
                 <TabsList>
-                    <TabsTrigger value="hero" className="gap-2"><ImageIcon className="w-4 h-4" /> Hero (Giriş)</TabsTrigger>
-                    <TabsTrigger value="collections" className="gap-2"><ShoppingBag className="w-4 h-4" /> Koleksiyonlar</TabsTrigger>
+                    <TabsTrigger value="collections" className="gap-2"><ShoppingBag className="w-4 h-4" /> Vitrin / Koleksiyonlar</TabsTrigger>
                     <TabsTrigger value="legacy" className="gap-2"><BookOpen className="w-4 h-4" /> Hikaye (Legacy)</TabsTrigger>
                     <TabsTrigger value="general" className="gap-2"><LayoutTemplate className="w-4 h-4" /> Genel / Logo</TabsTrigger>
                 </TabsList>
-
-                {/* HERO SECTION */}
-                <TabsContent value="hero">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Giriş Ekranı (Hero)</CardTitle>
-                            <CardDescription>Sitenin en üstündeki büyük alan.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="space-y-2">
-                                <Label>Büyük Başlık</Label>
-                                <Input value={hero.title} onChange={e => setHero({ ...hero, title: e.target.value })} placeholder="Masterpiece" />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Alt Başlık</Label>
-                                <Input value={hero.subtitle} onChange={e => setHero({ ...hero, subtitle: e.target.value })} placeholder="Where engineering meets art..." />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Arkaplan Görseli</Label>
-                                <ImageUpload
-                                    value={hero.bgImage ? [hero.bgImage] : []}
-                                    onChange={(url) => setHero({ ...hero, bgImage: url })}
-                                    onRemove={() => setHero({ ...hero, bgImage: '' })}
-                                />
-                            </div>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
 
                 {/* COLLECTIONS SECTION */}
                 <TabsContent value="collections">
