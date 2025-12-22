@@ -80,10 +80,10 @@ export default function HeroPremium() {
                         src={slide.image}
                         alt={slide.title || "Hero"}
                         fill
-                        className="object-cover opacity-60"
+                        className="object-cover"
                         priority
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-[#0a0a0a]/60" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10" />
                 </motion.div>
             </AnimatePresence>
 
