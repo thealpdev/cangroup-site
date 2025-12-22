@@ -36,56 +36,41 @@ export default function Spotlight() {
                 </div>
             </div>
 
-            {/* Horizontal Scroll Container */}
-            <div className="flex overflow-x-auto pb-12 gap-6 px-4 md:px-0 container mx-auto snap-x scrollbar-hide">
+            {/* Horizontal Scroll Area */}
+            <div className="flex gap-4 md:gap-8 overflow-x-auto pb-12 px-6 md:px-0 container mx-auto scrollbar-hide snap-x items-start">
                 {products.map((item, i) => (
                     <motion.div
                         key={item.id}
-                        initial={{ opacity: 0, x: 50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                        className="min-w-[280px] md:min-w-[320px] snap-center group"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ delay: i * 0.05 }}
+                        className="min-w-[160px] md:min-w-[220px] snap-start group cursor-pointer"
                     >
-                        <Link href={`/products/${item.id}`} className="block h-full bg-white rounded-2xl overflow-hidden border border-stone-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 ease-out flex flex-col">
-                            {/* Image Container */}
-                            <div className="relative aspect-[3/4] overflow-hidden bg-stone-100">
+                        <Link href={`/products/${item.id}`} className="block h-full">
+                            {/* Image - Pure & Simple */}
+                            <div className="relative aspect-[3/4] overflow-hidden rounded-sm bg-[#fafafa]">
                                 <Image
                                     src={item.images?.[0] || item.image}
-                                    alt={item.name_de || item.name}
+                                    alt={item.name_de || item.name_en || 'Product'}
                                     fill
-                                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                    className="object-cover transition-transform duration-700 group-hover:scale-105"
                                 />
-                                {/* Overlay Actions */}
-                                <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-gradient-to-t from-black/60 to-transparent">
-                                    <Button className="w-full bg-white text-black hover:bg-[#C8102E] hover:text-white border-none font-bold">
+
+                                {/* Hover: Quick Add */}
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                                    <div className="bg-white text-black px-4 py-2 text-[10px] font-bold uppercase tracking-widest shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
                                         İncele
-                                    </Button>
-                                </div>
-                                {/* Badge */}
-                                <div className="absolute top-4 left-4 bg-[#C8102E] text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">
-                                    Yeni
+                                    </div>
                                 </div>
                             </div>
 
-                            {/* Content */}
-                            <div className="p-6 flex flex-col flex-1">
-                                <div className="flex items-center gap-1 text-yellow-400 mb-2">
-                                    <Star className="w-3 h-3 fill-current" />
-                                    <Star className="w-3 h-3 fill-current" />
-                                    <Star className="w-3 h-3 fill-current" />
-                                    <Star className="w-3 h-3 fill-current" />
-                                    <Star className="w-3 h-3 fill-current" />
-                                </div>
-                                <h3 className="font-bold text-stone-900 text-lg leading-tight mb-2 group-hover:text-[#C8102E] transition-colors">
+                            {/* Text - Clean & Spacious */}
+                            <div className="pt-3 text-center md:text-left">
+                                <h3 className="font-medium text-stone-900 text-xs md:text-sm leading-tight truncate px-1">
                                     {item.name_de || item.name_en}
                                 </h3>
-                                <div className="mt-auto pt-4 border-t border-stone-50 flex items-center justify-between">
-                                    <span className="text-xl font-bold text-stone-900">
-                                        {item.price ? `€${item.price}` : 'Fiyat Sorunuz'}
-                                    </span>
-                                    <div className="w-8 h-8 rounded-full bg-stone-50 flex items-center justify-center group-hover:bg-[#C8102E] group-hover:text-white transition-colors">
-                                        <ArrowRight className="w-4 h-4" />
-                                    </div>
+                                <div className="mt-1 text-xs font-bold text-stone-400 px-1 decoration-stone-300 group-hover:text-[#C8102E] transition-colors">
+                                    {item.price ? `${item.currency === 'TRY' ? '₺' : '€'}${item.price}` : ''}
                                 </div>
                             </div>
                         </Link>
