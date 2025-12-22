@@ -9,11 +9,11 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white">
       <HeroPremium />
-      <Partners />
+      <Spotlight />
       <CategoryShowcase />
       <BrandStory />
-      <Spotlight />
       <Newsletter />
+      <Partners />
     </main>
   );
 }

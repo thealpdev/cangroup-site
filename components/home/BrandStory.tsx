@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export default function BrandStory() {
     return (
-        <section className="relative py-32 overflow-hidden bg-[#0a0a0a] text-white my-12">
+        <section className="relative py-20 overflow-hidden bg-[#0a0a0a] text-white my-0">
             {/* Background Texture/Image */}
             <div
                 className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1536409893998-35616b23b827?q=80&w=2660')] bg-cover bg-center bg-fixed opacity-30"

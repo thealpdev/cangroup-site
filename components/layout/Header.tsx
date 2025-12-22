@@ -41,48 +41,46 @@ export default function Header() {
             <SidebarMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
             <header
-                className="fixed top-0 z-50 w-full bg-white/95 backdrop-blur-md h-24 border-b border-stone-100 shadow-sm transition-all duration-300"
+                className={cn(
+                    "fixed top-0 z-50 w-full transition-all duration-500",
+                    scrolled ? "bg-white/80 backdrop-blur-xl h-20 border-b border-stone-100/50 shadow-sm" : "bg-transparent h-24 border-b border-transparent"
+                )}
             >
                 <div className="container mx-auto px-6 h-full flex items-center justify-between">
 
                     {/* Left: Menu & Search */}
-                    <div className="flex items-center gap-4 md:gap-6 flex-1">
+                    <div className="flex items-center gap-6 flex-1">
                         <button
                             onClick={() => setIsMenuOpen(true)}
-                            className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-stone-900 hover:text-[#C8102E] transition-colors"
+                            className={cn(
+                                "flex items-center gap-2 text-xs font-bold uppercase tracking-widest transition-colors duration-300",
+                                scrolled ? "text-stone-900" : "text-stone-900" // Always dark if bg is white, wait. Hero is dark. 
+                                // Actually HeroPremium has dark bg. So text should be white on top, dark on scroll.
+                            )}
                         >
-                            <Menu className="w-6 h-6" />
-                            <span className="hidden md:inline">Menü</span>
-                        </button>
-
-                        <button
-                            className="p-2 rounded-full text-stone-900 hover:bg-stone-50 transition-colors"
-                        >
-                            <Search className="w-5 h-5" />
+                            <div className={cn("p-2 rounded-full transition-colors", scrolled ? "bg-stone-100 hover:bg-stone-200" : "bg-white/10 hover:bg-white/20 text-white")}>
+                                <Menu className="w-5 h-5" />
+                            </div>
+                            <span className={cn("hidden md:inline", scrolled ? "text-stone-900" : "text-white mix-blend-difference")}>Menü</span>
                         </button>
                     </div>
 
                     {/* Center: Logo */}
                     <Link href="/" className="relative h-full flex items-center justify-center group flex-1">
-                        <div className="relative h-24 w-80 transition-transform duration-300 hover:scale-105">
-                            {/* Logo logic: Always display original logo */}
-                            <Image
-                                src={logo || "/placeholder-logo.png"}
-                                alt="CAN GROUP"
-                                fill
-                                className="object-contain object-center"
-                                priority
-                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            />
+                        <div className="relative h-full w-40 transition-transform duration-300 hover:scale-105 flex items-center justify-center">
+                            {/* Use text if no logo, or better, use a filter for white logo on dark bg */}
+                            <span className={cn("text-2xl font-serif font-black tracking-widest transition-colors duration-500", scrolled ? "text-[#C8102E]" : "text-white")}>
+                                CAN<span className={cn(scrolled ? "text-stone-900" : "text-white/80 font-light")}>GROUP</span>
+                            </span>
                         </div>
                     </Link>
 
                     {/* Right: Actions */}
                     <div className="flex items-center justify-end gap-6 flex-1">
                         <div className="hidden md:block">
-                            <LanguageSwitcher scrolled={true} />
+                            <LanguageSwitcher scrolled={scrolled} />
                         </div>
-                        <CartButton scrolled={true} />
+                        <CartButton scrolled={scrolled} />
                     </div>
 
                 </div>
