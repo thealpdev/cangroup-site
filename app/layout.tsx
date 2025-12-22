@@ -5,6 +5,7 @@ import { LanguageProvider } from "@/lib/language-context";
 import { AuthProvider } from '@/lib/auth-context';
 import { CartProvider } from "@/lib/cart-context";
 import MaintenanceGuard from '@/components/layout/MaintenanceGuard';
+import ClientLayout from "@/components/layout/ClientLayout";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" }); // Define serif font
@@ -26,7 +27,9 @@ export default function RootLayout({
           <LanguageProvider>
             <CartProvider>
               <MaintenanceGuard>
-                {children}
+                <ClientLayout>
+                  {children}
+                </ClientLayout>
               </MaintenanceGuard>
             </CartProvider>
           </LanguageProvider>
