@@ -12,6 +12,7 @@ import DashboardOverview from '@/components/admin/DashboardOverview';
 import ProductForm from '@/components/admin/ProductForm';
 import ProductList from '@/components/admin/ProductList';
 import CategoriesManager from '@/components/admin/CategoriesManager';
+import HeroManager from '@/components/admin/HeroManager';
 import SettingsForm from '@/components/admin/SettingsForm';
 import PartnersManager from '@/components/admin/PartnersManager';
 import UsersManager from '@/components/admin/UsersManager';
@@ -138,6 +139,19 @@ export default function AdminPage() {
                                 </div>
                                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
                                     <CategoriesManager />
+                                </div>
+                            </div>
+                        )}
+
+                        {/* VIEW: HERO */}
+                        {activeTab === 'hero' && (
+                            <div className="space-y-4">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-stone-900">Slider Yönetimi</h2>
+                                    <p className="text-stone-500">Anasayfa manşet alanını düzenleyin.</p>
+                                </div>
+                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                                    <HeroManager />
                                 </div>
                             </div>
                         )}

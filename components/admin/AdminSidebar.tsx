@@ -1,15 +1,18 @@
+```
 "use client";
 
 import {
     LayoutDashboard,
     Package,
-    Settings,
+    Tag,
     Users,
-    UserPlus,
+    Settings,
     LogOut,
     Menu,
-    List,
-    Database
+    X,
+    Layers,
+    Award,
+    Layout
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -35,9 +38,10 @@ export default function AdminSidebar({
     const menuItems = [
         { id: 'overview', label: 'Genel Bakış', icon: LayoutDashboard },
         { id: 'products', label: 'Ürün Yönetimi', icon: Package },
-        { id: 'categories', label: 'Kategoriler', icon: List },
-        { id: 'partners', label: 'Marka Ortakları', icon: Users },
-        { id: 'users', label: 'Erişim / Yetki', icon: UserPlus },
+        { id: 'categories', label: 'Kategoriler', icon: Layers },
+        { id: 'hero', label: 'Slider / Hero', icon: Layout },
+        { id: 'partners', label: 'Markalar', icon: Award },
+        { id: 'users', label: 'Kullanıcılar', icon: Users },
         { id: 'settings', label: 'Site Ayarları', icon: Settings },
     ];
 
