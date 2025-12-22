@@ -1,26 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google"; // Added Playfair Display for premium feel
 import "./globals.css";
-import ClientLayout from "@/components/layout/ClientLayout";
+import { LanguageProvider } from "@/lib/language-context";
+import { AuthProvider } from '@/lib/auth-context';
+import { CartProvider } from "@/lib/cart-context";
+import MaintenanceGuard from '@/components/layout/MaintenanceGuard';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const playfair = Playfair_Display({
-  variable: "--font-serif",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" }); // Define serif font
 
 export const metadata: Metadata = {
-  title: "CanMarkt | Profesyonel Mutfak Çözümleri",
-  description: "Endüstriyel mutfak ekipmanları, bıçaklar ve gıda güvenliği ürünleri.",
+  title: "CanMarkt | Premium Kalite & Tazelik",
+  description: "En taze ürünler ve premium hizmet kalitesiyle CanMarkt hizmetinizde.",
 };
 
 export default function RootLayout({
@@ -29,14 +20,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased font-sans`}
-        suppressHydrationWarning
-      >
-        <ClientLayout>
-          {children}
-        </ClientLayout>
+    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+      <body className="antialiased font-sans bg-white text-stone-900 selection:bg-[#C8102E] selection:text-white">
+        <AuthProvider>
+          <LanguageProvider>
+            <CartProvider>
+              <MaintenanceGuard>
+                {children}
+              </MaintenanceGuard>
+            </CartProvider>
+          </LanguageProvider>
+        </AuthProvider>
       </body>
     </html>
   );

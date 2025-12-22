@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, ShoppingBag, Menu } from 'lucide-react';
+import { Search, ShoppingBag, Menu, X, ChevronDown, Instagram, Facebook } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { useLanguage } from "@/lib/language-context";
 import { useCart } from "@/lib/cart-context";
 import SidebarMenu from "@/components/layout/SidebarMenu";
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Header() {
     const [scrolled, setScrolled] = useState(false);
@@ -18,7 +19,6 @@ export default function Header() {
 
     useEffect(() => {
         const handleScroll = () => {
-            // Lower threshold for quicker stabilization
             setScrolled(window.scrollY > 20);
         };
         window.addEventListener('scroll', handleScroll);
@@ -40,40 +40,61 @@ export default function Header() {
         <>
             <SidebarMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
-            <header
+            <motion.header
+                initial={{ y: -100 }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                 className={cn(
                     "fixed top-0 z-50 w-full transition-all duration-500",
-                    scrolled ? "bg-white/80 backdrop-blur-xl h-20 border-b border-stone-100/50 shadow-sm" : "bg-transparent h-24 border-b border-transparent"
+                    scrolled
+                        ? "bg-white/90 backdrop-blur-md h-20 border-b border-stone-100 shadow-sm"
+                        : "bg-transparent h-28 border-b border-white/10"
                 )}
             >
                 <div className="container mx-auto px-6 h-full flex items-center justify-between">
 
-                    {/* Left: Menu & Search */}
+                    {/* Left: Menu Trigger */}
                     <div className="flex items-center gap-6 flex-1">
                         <button
                             onClick={() => setIsMenuOpen(true)}
-                            className={cn(
-                                "flex items-center gap-2 text-xs font-bold uppercase tracking-widest transition-colors duration-300",
-                                scrolled ? "text-stone-900" : "text-stone-900" // Always dark if bg is white, wait. Hero is dark. 
-                                // Actually HeroPremium has dark bg. So text should be white on top, dark on scroll.
-                            )}
+                            className="group flex items-center gap-3 focus:outline-none"
                         >
-                            <div className={cn("p-2 rounded-full transition-colors", scrolled ? "bg-stone-100 hover:bg-stone-200" : "bg-white/10 hover:bg-white/20 text-white")}>
-                                <Menu className="w-5 h-5" />
+                            <div className={cn(
+                                "relative w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 border",
+                                scrolled
+                                    ? "border-stone-200 bg-stone-50 text-stone-900 group-hover:bg-[#C8102E] group-hover:border-[#C8102E] group-hover:text-white"
+                                    : "border-white/20 bg-white/10 text-white group-hover:bg-white group-hover:text-stone-900"
+                            )}>
+                                <Menu className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
                             </div>
-                            <span className={cn("hidden md:inline", scrolled ? "text-stone-900" : "text-white mix-blend-difference")}>Menü</span>
+                            <span className={cn(
+                                "hidden md:inline text-xs font-bold uppercase tracking-[0.2em] transition-colors duration-300",
+                                scrolled ? "text-stone-900 group-hover:text-[#C8102E]" : "text-white group-hover:text-white/80"
+                            )}>
+                                Menü
+                            </span>
                         </button>
                     </div>
 
-                    {/* Center: Logo */}
-                    <Link href="/" className="relative h-full flex items-center justify-center group flex-1">
-                        <div className="relative h-full w-40 transition-transform duration-300 hover:scale-105 flex items-center justify-center">
-                            {/* Use text if no logo, or better, use a filter for white logo on dark bg */}
-                            <span className={cn("text-2xl font-serif font-black tracking-widest transition-colors duration-500", scrolled ? "text-[#C8102E]" : "text-white")}>
-                                CAN<span className={cn(scrolled ? "text-stone-900" : "text-white/80 font-light")}>GROUP</span>
-                            </span>
-                        </div>
-                    </Link>
+                    {/* Center: Brand Logo */}
+                    <div className="flex-1 flex justify-center">
+                        <Link href="/" className="relative group">
+                            <div className="flex flex-col items-center">
+                                {/* Logo Text */}
+                                <span className={cn(
+                                    "font-serif text-3xl font-black tracking-tight transition-colors duration-500",
+                                    scrolled ? "text-[#C8102E]" : "text-white"
+                                )}>
+                                    CAN<span className={cn("font-light", scrolled ? "text-stone-900" : "text-white/90")}>GROUP</span>
+                                </span>
+                                {/* Decorative line */}
+                                <span className={cn(
+                                    "w-0 h-[1px] bg-current transition-all duration-500 group-hover:w-full mt-1",
+                                    scrolled ? "text-[#C8102E]" : "text-white"
+                                )}></span>
+                            </div>
+                        </Link>
+                    </div>
 
                     {/* Right: Actions */}
                     <div className="flex items-center justify-end gap-6 flex-1">
@@ -84,12 +105,10 @@ export default function Header() {
                     </div>
 
                 </div>
-            </header>
+            </motion.header>
         </>
     );
 }
-
-import { ChevronDown } from 'lucide-react';
 
 function LanguageSwitcher({ scrolled }: { scrolled: boolean }) {
     const { language, setLanguage } = useLanguage();
@@ -97,15 +116,31 @@ function LanguageSwitcher({ scrolled }: { scrolled: boolean }) {
     return (
         <div className="relative group">
             <button className={cn(
-                "flex items-center gap-1 text-xs font-bold uppercase tracking-widest transition-colors",
+                "flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest transition-all duration-300 py-2",
                 scrolled ? "text-stone-900 hover:text-[#C8102E]" : "text-white hover:text-white/80"
             )}>
-                {language.toUpperCase()} <ChevronDown className="w-3 h-3" />
+                {language}
+                <ChevronDown className="w-3 h-3 opacity-50 group-hover:rotate-180 transition-transform duration-300" />
             </button>
-            <div className="absolute top-full right-0 mt-4 w-32 bg-white rounded-lg shadow-xl py-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform origin-top-right scale-95 group-hover:scale-100 pointer-events-none group-hover:pointer-events-auto border border-stone-100">
-                <button onClick={() => setLanguage('de')} className="block w-full text-left px-4 py-2 text-sm font-medium hover:bg-stone-50 text-stone-900">Deutsch</button>
-                <button onClick={() => setLanguage('tr')} className="block w-full text-left px-4 py-2 text-sm font-medium hover:bg-stone-50 text-stone-900">Türkçe</button>
-                <button onClick={() => setLanguage('en')} className="block w-full text-left px-4 py-2 text-sm font-medium hover:bg-stone-50 text-stone-900">English</button>
+
+            {/* Dropdown */}
+            <div className="absolute top-full right-0 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-right scale-95 group-hover:scale-100">
+                <div className="bg-white p-2 rounded-xl border border-stone-100 shadow-xl w-32 flex flex-col gap-1">
+                    {['de', 'tr', 'en'].map((lang) => (
+                        <button
+                            key={lang}
+                            onClick={() => setLanguage(lang as any)}
+                            className={cn(
+                                "w-full text-left px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-colors",
+                                language === lang
+                                    ? "bg-red-50 text-[#C8102E]"
+                                    : "text-stone-600 hover:bg-stone-50 hover:text-stone-900"
+                            )}
+                        >
+                            {lang === 'de' ? 'Deutsch' : lang === 'tr' ? 'Türkçe' : 'English'}
+                        </button>
+                    ))}
+                </div>
             </div>
         </div>
     );
@@ -113,23 +148,34 @@ function LanguageSwitcher({ scrolled }: { scrolled: boolean }) {
 
 function CartButton({ scrolled }: { scrolled: boolean }) {
     const { setIsOpen, totalItems } = useCart();
+
     return (
         <button
             onClick={() => setIsOpen(true)}
             className={cn(
-                "relative group flex items-center gap-2 transition-colors",
-                scrolled ? "text-stone-900 hover:text-[#C8102E]" : "text-white hover:text-white/80"
+                "group flex items-center gap-3 transition-colors duration-300",
+                scrolled ? "text-stone-900" : "text-white"
             )}
         >
             <div className="relative">
-                <ShoppingBag className="w-5 h-5" />
+                <div className={cn(
+                    "p-2 rounded-full transition-all duration-300",
+                    scrolled
+                        ? "bg-stone-100 group-hover:bg-[#C8102E] group-hover:text-white"
+                        : "bg-white/10 group-hover:bg-white group-hover:text-stone-900"
+                )}>
+                    <ShoppingBag className="w-5 h-5" />
+                </div>
                 {totalItems > 0 && (
-                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#C8102E] text-white text-[9px] font-bold flex items-center justify-center rounded-full border border-white">
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#C8102E] text-white text-[9px] font-bold flex items-center justify-center rounded-full border-2 border-white shadow-sm group-hover:scale-110 transition-transform">
                         {totalItems}
                     </span>
                 )}
             </div>
-            <span className="hidden md:inline text-xs font-bold uppercase tracking-widest">
+            <span className={cn(
+                "hidden md:block text-xs font-bold uppercase tracking-widest transition-colors",
+                scrolled ? "group-hover:text-[#C8102E]" : "group-hover:text-white/80"
+            )}>
                 Anfrage
             </span>
         </button>

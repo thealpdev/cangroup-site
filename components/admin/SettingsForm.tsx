@@ -10,13 +10,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ImageUpload from '@/components/admin/ImageUpload';
-import { Loader2, Save, LayoutTemplate, Image as ImageIcon, ShoppingBag, BookOpen } from 'lucide-react';
+import { Loader2, Save, LayoutTemplate, Image as ImageIcon, ShoppingBag, BookOpen, Wrench, ShieldAlert } from 'lucide-react';
 
 export default function SettingsForm() {
     const [loading, setLoading] = useState(false);
 
     // State for multiple sections
-    const [general, setGeneral] = useState({ logo: '', contactPhone: '' });
+    const [general, setGeneral] = useState({ logo: '', contactPhone: '', maintenanceMode: false });
     // Hero section moved to separate manager
     const [legacy, setLegacy] = useState({ title: '', quote: '', bgImage: '' });
     const [collections, setCollections] = useState([
@@ -187,8 +187,54 @@ export default function SettingsForm() {
                             </div>
                         </CardContent>
                     </Card>
+
+                    <Card className="border-red-100 bg-red-50/50 mt-4">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-[#C8102E]">
+                                <Wrench className="w-5 h-5" />
+                                Bakım Modu (Maintenance Mode)
+                            </CardTitle>
+                            <CardDescription>
+                                Siteyi bakıma alırsanız, <b>Yönetici olmayan</b> herkes "Bakımdayız" sayfasını görür.
+                                Siz (Admin) siteyi görmeye devam edersiniz.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="flex items-center justify-between p-4 bg-white rounded-lg border border-red-100 shadow-sm">
+                                <div>
+                                    <h4 className="font-bold text-stone-900">Site Erişimi</h4>
+                                    <p className="text-xs text-stone-500">
+                                        {general.maintenanceMode ? "Şu an site BAKIMDA." : "Site YAYINDA."}
+                                    </p>
+                                </div>
+                                <Button
+                                    type="button"
+                                    variant={general.maintenanceMode ? "destructive" : "outline"}
+                                    onClick={() => setGeneral({ ...general, maintenanceMode: !general.maintenanceMode })}
+                                    className="gap-2"
+                                >
+                                    {general.maintenanceMode ? (
+                                        <>
+                                            <ShieldAlert className="w-4 h-4" />
+                                            Bakım Modunu KAPAT
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Wrench className="w-4 h-4" />
+                                            Bakım Moduna AL
+                                        </>
+                                    )}
+                                </Button>
+                            </div>
+                            {general.maintenanceMode && (
+                                <div className="text-xs text-red-600 font-medium animate-pulse">
+                                    ⚠️ Dikkat: Site şu an ziyaretçilere kapalı.
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
                 </TabsContent>
             </Tabs>
-        </div>
+        </div >
     );
 }
