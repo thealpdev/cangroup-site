@@ -65,7 +65,7 @@ export default function HeroPremium() {
     const slide = slides[current] || slides[0];
 
     return (
-        <section className="relative h-screen w-full overflow-hidden bg-black">
+        <section className="relative h-screen w-full overflow-hidden bg-[#050505]">
             {/* Background Image Slider */}
             <AnimatePresence mode="wait">
                 <motion.div
@@ -82,6 +82,7 @@ export default function HeroPremium() {
                         fill
                         className="object-cover"
                         priority
+                        unoptimized
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 </motion.div>

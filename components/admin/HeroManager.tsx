@@ -67,7 +67,7 @@ export default function HeroManager() {
             if (!res.ok) throw new Error('Upload failed');
 
             const data = await res.json();
-            setImage(data.url);
+            setImage(data.secure_url || data.url);
         } catch (error) {
             console.error("Upload error:", error);
             alert("Resim yüklenemedi. Lütfen tekrar deneyin.");
