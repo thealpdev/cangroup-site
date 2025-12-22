@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { motion } from 'framer-motion';
@@ -37,38 +38,46 @@ export default function Partners() {
     if (partners.length === 0) return null;
 
     return (
-        <section className="py-24 bg-white border-b border-stone-100">
+        <section className="py-24 bg-stone-50/50 border-b border-stone-100">
             <div className="container mx-auto px-4">
-                <div className="text-center mb-12">
-                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-stone-400">Trusted Partners</span>
+                <div className="text-center mb-16">
+                    <span className="text-xs font-bold uppercase tracking-[0.3em] text-[#C8102E] mb-2 block">Markalarımız</span>
+                    <h2 className="text-3xl md:text-4xl font-serif text-stone-900">Güvenilir İş Ortakları</h2>
                 </div>
 
                 {/* Logo Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 md:gap-12 items-center justify-items-center group/list">
-                    {partners.map((partner) => {
-                        // Check if this is the first item (Canadam) to make it larger
-                        const isFirst = partner.order === 1;
-
-                        return (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                    {partners.map((partner, index) => (
+                        <Link
+                            key={partner.id}
+                            href={`/products?search=${encodeURIComponent(partner.name || '')}`}
+                            className="group block"
+                        >
                             <motion.div
-                                key={partner.id}
-                                initial={{ opacity: 0 }}
-                                whileInView={{ opacity: 1 }}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                className={cn(
-                                    "relative transition-all duration-500 opacity-60 grayscale group-hover/list:opacity-30 hover:!opacity-100 hover:!grayscale-0 cursor-pointer flex items-center justify-center",
-                                    isFirst ? "w-40 h-24 md:w-56 md:h-32 hover:scale-105" : "w-32 h-16 md:w-40 md:h-20 hover:scale-110"
-                                )}
+                                transition={{ delay: index * 0.1 }}
+                                whileHover={{ y: -5 }}
+                                className="relative h-32 bg-white rounded-xl border border-stone-100 shadow-sm flex items-center justify-center p-6 transition-all duration-300 group-hover:shadow-[0_0_30px_rgba(200,16,46,0.1)] group-hover:border-[#C8102E]/20"
                             >
-                                <Image
-                                    src={partner.imageUrl}
-                                    alt={partner.name || 'Partner'}
-                                    fill
-                                    className="object-contain"
-                                />
+                                {/* Glow Effect */}
+                                <div className="absolute inset-0 bg-gradient-to-tr from-[#C8102E]/0 via-[#C8102E]/0 to-[#C8102E]/0 group-hover:via-[#C8102E]/5 transition-all duration-500 rounded-xl" />
+
+                                <div className={cn(
+                                    "relative w-full h-full transition-all duration-300 opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0",
+                                    partner.order === 1 ? "scale-110" : "scale-100"
+                                )}>
+                                    <Image
+                                        src={partner.imageUrl}
+                                        alt={partner.name || 'Partner'}
+                                        fill
+                                        className="object-contain"
+                                    />
+                                </div>
                             </motion.div>
-                        );
-                    })}
+                        </Link>
+                    ))}
                 </div>
             </div>
         </section>
