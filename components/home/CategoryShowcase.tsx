@@ -9,7 +9,13 @@ export default function CategoryShowcase() {
     return (
         <section className="py-24 bg-white">
             <div className="container mx-auto px-4">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6"
+                >
                     <div>
                         <span className="text-[#C8102E] font-bold tracking-[0.2em] uppercase text-xs block mb-2">Koleksiyonlar</span>
                         <h2 className="text-4xl md:text-5xl font-serif text-[#0a0a0a]">Profesyonel Seçimler</h2>
@@ -20,7 +26,7 @@ export default function CategoryShowcase() {
                             <ArrowRight className="w-4 h-4" />
                         </div>
                     </Link>
-                </div>
+                </motion.div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-[600px]">
                     {/* Large Left Card */}

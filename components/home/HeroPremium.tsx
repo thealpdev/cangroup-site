@@ -70,10 +70,10 @@ export default function HeroPremium() {
             <AnimatePresence mode="wait">
                 <motion.div
                     key={slide.id + current} // Force re-render key
-                    initial={{ opacity: 0, scale: 1.05 }}
+                    initial={{ opacity: 0, scale: 1.1 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 1 }}
+                    transition={{ duration: 1.5, ease: "easeInOut" }}
                     className="absolute inset-0 z-0"
                 >
                     <Image
@@ -84,7 +84,14 @@ export default function HeroPremium() {
                         priority
                         unoptimized
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    {/* Ken Burns Effect Layer */}
+                    <motion.div
+                        initial={{ scale: 1 }}
+                        animate={{ scale: 1.05 }}
+                        transition={{ duration: 20, ease: "linear" }}
+                        className="absolute inset-0 bg-transparent"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30" />
                 </motion.div>
             </AnimatePresence>
 
