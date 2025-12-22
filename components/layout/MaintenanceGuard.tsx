@@ -19,7 +19,9 @@ export default function MaintenanceGuard({ children }: { children: React.ReactNo
         const unsubscribe = onSnapshot(docRef, (docSnap) => {
             if (docSnap.exists()) {
                 const data = docSnap.data();
-                setMaintenanceMode(data.general?.maintenanceMode || false);
+                const mode = data.general?.maintenanceMode;
+                // Handle boolean or string "true" just in case
+                setMaintenanceMode(mode === true || mode === 'true');
             }
             setIsChecking(false);
         });
