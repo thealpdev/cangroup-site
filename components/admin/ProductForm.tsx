@@ -167,9 +167,10 @@ export default function ProductForm({ initialData, onSuccess }: ProductFormProps
                     </CardHeader>
                     <CardContent className="space-y-6">
                         <ImageUpload
-                            images={images}
-                            onImagesChange={setImages}
-                            maxImages={5}
+                            value={images}
+                            onChange={(url) => setImages((current) => [...current, url])}
+                            onRemove={(url) => setImages((current) => current.filter((c) => c !== url))}
+                            disabled={loading}
                         />
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
