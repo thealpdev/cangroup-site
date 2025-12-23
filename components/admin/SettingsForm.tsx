@@ -35,7 +35,15 @@ export default function SettingsForm() {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     if (data.general) setGeneral(prev => ({ ...prev, ...data.general }));
-                    if (data.collections) setCollections(data.collections);
+
+                    if (data.collections && Array.isArray(data.collections)) {
+                        // Ensure we always have exactly 3 items to match UI
+                        const newCols = [...data.collections];
+                        while (newCols.length < 3) {
+                            newCols.push({ title: '', subtitle: '', image: '', link: '' });
+                        }
+                        setCollections(newCols);
+                    }
                 }
             } catch (error) {
                 console.error("Ayarlar yüklenemedi:", error);

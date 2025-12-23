@@ -42,9 +42,29 @@ export default function CategoryShowcase() {
         return () => unsubscribe();
     }, []);
 
-    const leftBox = collections[0] || DEFAULT_COLLECTIONS[0];
-    const topRight = collections[1] || DEFAULT_COLLECTIONS[1];
-    const bottomRight = collections[2] || DEFAULT_COLLECTIONS[2];
+    const leftBox = {
+        ...collections[0],
+        image: collections[0]?.image || DEFAULT_COLLECTIONS[0].image,
+        title: collections[0]?.title || DEFAULT_COLLECTIONS[0].title,
+        subtitle: collections[0]?.subtitle || DEFAULT_COLLECTIONS[0].subtitle,
+        link: collections[0]?.link || DEFAULT_COLLECTIONS[0].link
+    };
+
+    const topRight = {
+        ...collections[1],
+        image: collections[1]?.image || DEFAULT_COLLECTIONS[1].image,
+        title: collections[1]?.title || DEFAULT_COLLECTIONS[1].title,
+        subtitle: collections[1]?.subtitle || DEFAULT_COLLECTIONS[1].subtitle,
+        link: collections[1]?.link || DEFAULT_COLLECTIONS[1].link
+    };
+
+    const bottomRight = {
+        ...collections[2],
+        image: collections[2]?.image || DEFAULT_COLLECTIONS[2].image,
+        title: collections[2]?.title || DEFAULT_COLLECTIONS[2].title,
+        subtitle: collections[2]?.subtitle || DEFAULT_COLLECTIONS[2].subtitle,
+        link: collections[2]?.link || DEFAULT_COLLECTIONS[2].link
+    };
 
     return (
         <section className="py-24 bg-white">
