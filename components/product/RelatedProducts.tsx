@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { collection, query, where, limit, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { ArrowRight } from 'lucide-react';
+import { useLanguage } from '@/lib/language-context';
 
 interface RelatedProductsProps {
     currentProductId: string;
@@ -15,6 +16,7 @@ interface RelatedProductsProps {
 
 export default function RelatedProducts({ currentProductId, category, brand }: RelatedProductsProps) {
     const [products, setProducts] = useState<any[]>([]);
+    const { language } = useLanguage(); // Only language needed here
 
     useEffect(() => {
         const fetchRelated = async () => {
@@ -63,9 +65,11 @@ export default function RelatedProducts({ currentProductId, category, brand }: R
     return (
         <section className="py-16 border-t border-stone-100">
             <div className="flex items-center justify-between mb-8">
-                <h3 className="text-2xl font-serif font-bold text-stone-900">Bunları da Beğenebilirsiniz</h3>
+                <h3 className="text-2xl font-serif font-bold text-stone-900">
+                    {language === 'tr' ? 'Bunları da Beğenebilirsiniz' : language === 'de' ? 'Das könnte Ihnen auch gefallen' : 'You Might Also Like'}
+                </h3>
                 <Link href="/products" className="text-sm font-bold text-[#C8102E] flex items-center gap-2 hover:underline tracking-wide uppercase">
-                    Tüm Katalog <ArrowRight className="w-4 h-4" />
+                    {language === 'tr' ? 'Tüm Katalog' : language === 'de' ? 'Alle Produkte' : 'Full Catalog'} <ArrowRight className="w-4 h-4" />
                 </Link>
             </div>
 
@@ -76,16 +80,18 @@ export default function RelatedProducts({ currentProductId, category, brand }: R
                             <div className="relative aspect-[4/5] bg-white rounded-xl overflow-hidden mb-4">
                                 <Image
                                     src={item.images?.[0] || item.image}
-                                    alt={item.name_de || item.name}
+                                    alt={item[`name_${language}`] || item.name_de || "Product"}
                                     fill
                                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                                 />
                             </div>
                             <div>
                                 <p className="text-[10px] font-bold uppercase text-[#C8102E] mb-1">{item.brand}</p>
-                                <h4 className="font-bold text-stone-900 text-sm line-clamp-2 leading-tight group-hover:text-[#C8102E] transition-colors">{item.name_de || item.name_en}</h4>
+                                <h4 className="font-bold text-stone-900 text-sm line-clamp-2 leading-tight group-hover:text-[#C8102E] transition-colors">
+                                    {item[`name_${language}`] || item.name_de || item.name_en}
+                                </h4>
                                 <div className="mt-2 text-stone-600 font-medium">
-                                    {item.price ? `${item.price} ${item.currency === 'TRY' ? '₺' : '€'}` : 'Fiyat Sorunuz'}
+                                    {item.price ? `${item.price} ${item.currency === 'TRY' ? '₺' : '€'}` : (language === 'tr' ? 'Fiyat Sorunuz' : 'Price on Request')}
                                 </div>
                             </div>
                         </div>

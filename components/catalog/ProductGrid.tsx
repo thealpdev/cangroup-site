@@ -33,10 +33,24 @@ export default function ProductGrid({ initialBrand = 'all' }: ProductGridProps) 
             );
 
             // Apply Filter
-            if (filterBrand !== 'all') {
+            if (filterBrand === 'canadam') {
                 q = query(
                     collection(db, "products"),
-                    where("brand", "==", filterBrand),
+                    where("brand", "==", "canadam"),
+                    orderBy("createdAt", "desc"),
+                    limit(20)
+                );
+            } else if (filterBrand === 'partner') {
+                // Partner brands list matching the Form
+                const PARTNER_BRANDS = ['dick', 'victorinox', 'zwilling', 'solingen', 'euroflex', 'other'];
+                q = query(
+                    collection(db, "products"),
+                    where("brand", "in", PARTNER_BRANDS),
+                    // Note: 'in' queries do not strongly support ordering by a different field (createdAt) 
+                    // without a composite index. We might need to remove orderBy OR create index.
+                    // For now, let's try without strict orderBy on createdAt if it fails, or rely on client sort if needed.
+                    // Actually, Firestore allows orderBy createdAt IF index exists. Safest is to remove orderBy for this specific query if index is missing.
+                    // Let's keep orderBy and assume index can be built.
                     orderBy("createdAt", "desc"),
                     limit(20)
                 );

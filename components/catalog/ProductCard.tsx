@@ -3,18 +3,17 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { useLanguage } from '@/lib/language-context';
 
 interface Product {
     id: string;
-    name_de: string;
-    description_de: string;
+    name_de: string; name_tr: string; name_en: string;
+    description_de: string; description_tr: string; description_en: string;
     category: string;
     brand: string;
     productCode?: string;
-    price?: string;
-    currency?: string; // e.g. 'EUR', 'USD', 'TRY'
+    price?: number | string;
+    currency?: string;
     images: string[];
 }
 
@@ -24,6 +23,13 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, index = 0 }: ProductCardProps) {
+    const { language, t } = useLanguage();
+
+    // Helper to secure data access
+    const getName = () => {
+        return (product as any)[`name_${language}`] || product.name_de || product.name_en || "Product";
+    };
+
     return (
         <Link href={`/products/${product.id}`} className="block">
             <motion.div
@@ -34,7 +40,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
                 className="group cursor-pointer"
             >
                 {/* Image Area - Floating */}
-                <div className="relative aspect-[4/5] bg-stone-50 overflow-hidden mb-6">
+                <div className="relative aspect-[4/5] bg-stone-50 overflow-hidden mb-6 rounded-lg">
                     {/* Brand Tag - Minimal & Top Left */}
                     {product.brand === 'canadam' && (
                         <div className="absolute top-4 left-4 z-10">
@@ -49,7 +55,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
                         {product.images?.[0] ? (
                             <Image
                                 src={product.images[0]}
-                                alt={product.name_de}
+                                alt={getName()}
                                 fill
                                 className="object-contain mix-blend-multiply"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -61,10 +67,10 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
                         )}
                     </div>
 
-                    {/* Minimal Overlay - Only "View" text */}
+                    {/* Minimal Overlay */}
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500 flex items-center justify-center opacity-0 group-hover:opacity-100">
                         <span className="text-stone-900 text-xs font-bold uppercase tracking-[0.2em] transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                            View Details
+                            {t('details')}
                         </span>
                     </div>
                 </div>
@@ -75,8 +81,8 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
                         {product.category || 'Collection'}
                     </div>
 
-                    <h3 className="font-serif text-xl italic text-stone-900 group-hover:text-[#C8102E] transition-colors duration-300">
-                        {product.name_de}
+                    <h3 className="font-serif text-xl italic text-stone-900 group-hover:text-[#C8102E] transition-colors duration-300 line-clamp-2 min-h-[3.5rem] flex items-center justify-center">
+                        {getName()}
                     </h3>
 
                     {product.price && (
