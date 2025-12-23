@@ -14,12 +14,7 @@ export default function MaintenanceGuard({ children }: { children: React.ReactNo
     const [isChecking, setIsChecking] = useState(true);
 
     useEffect(() => {
-        // FORCED MAINTENANCE MODE (Hardcoded Request)
-        setMaintenanceMode(true);
-        setIsChecking(false);
-
-        // Firestore listener disabled for now to force "Hard Mode"
-        /*
+        // Real-time listener for maintenance setting
         const docRef = doc(db, "settings", "home");
         const unsubscribe = onSnapshot(docRef, (docSnap) => {
             if (docSnap.exists()) {
@@ -32,7 +27,6 @@ export default function MaintenanceGuard({ children }: { children: React.ReactNo
         });
 
         return () => unsubscribe();
-        */
     }, []);
 
     useEffect(() => {
