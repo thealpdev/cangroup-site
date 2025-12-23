@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, GripVertical, Image as ImageIcon } from 'lucide-react';
+import { Plus, Trash2, GripVertical, Loader2, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { collection, addDoc, deleteDoc, doc, updateDoc, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import Image from 'next/image';
+import ImageUpload from '@/components/admin/ImageUpload';
+import { useTranslations } from "next-intl";
 
 interface HeroSlide {
     id: string;
@@ -18,6 +20,7 @@ interface HeroSlide {
 }
 
 export default function HeroManager() {
+    const t = useTranslations('Admin'); // Integrating existing translations since we are here
     const [slides, setSlides] = useState<HeroSlide[]>([]);
     const [loading, setLoading] = useState(true);
     const [isAdding, setIsAdding] = useState(false);
@@ -28,8 +31,8 @@ export default function HeroManager() {
     const [image, setImage] = useState('');
     const [cta, setCta] = useState('İncele');
     const [link, setLink] = useState('/products');
-    const [uploading, setUploading] = useState(false);
 
+    // Subscribe to Firebase
     useEffect(() => {
         const q = query(collection(db, "hero"), orderBy("order", "asc"));
         const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -39,42 +42,6 @@ export default function HeroManager() {
         });
         return () => unsubscribe();
     }, []);
-
-    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        setUploading(true);
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('upload_preset', 'canmarkt_uploads'); // Using unsigned preset if available, or API route
-
-        try {
-            // We'll use the existing API route if possible, or direct fetch to Cloudinary
-            // Assuming a standard upload flow or using the same method as ProductForm
-            // For now, let's try a direct upload or an API route if one exists.
-            // Checking previous context, user has `lib/cloudinary.ts`. 
-            // Better to use a secure upload via API route if present, or client-side if set up.
-            // Let's assume there is an API route `/api/upload` based on `ProductForm`. 
-            // If not, we'll need to create one or use a public key. 
-            // Let's try the fetch to /api/upload first.
-
-            const res = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!res.ok) throw new Error('Upload failed');
-
-            const data = await res.json();
-            setImage(data.secure_url || data.url);
-        } catch (error) {
-            console.error("Upload error:", error);
-            alert("Resim yüklenemedi. Lütfen tekrar deneyin.");
-        } finally {
-            setUploading(false);
-        }
-    };
 
     const handleAdd = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -87,7 +54,7 @@ export default function HeroManager() {
                 image,
                 cta,
                 link,
-                order: slides.length, // Append to end
+                order: slides.length,
                 createdAt: new Date().toISOString()
             });
             setIsAdding(false);
@@ -108,7 +75,7 @@ export default function HeroManager() {
         }
     };
 
-    if (loading) return <div>Yükleniyor...</div>;
+    if (loading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin h-8 w-8 text-[#C8102E]" /></div>;
 
     return (
         <div className="space-y-6">
@@ -124,31 +91,11 @@ export default function HeroManager() {
                     <form onSubmit={handleAdd} className="space-y-4 max-w-lg">
                         <div>
                             <label className="block text-sm font-medium mb-1">Resim Yükle</label>
-                            <div className="flex gap-4 items-center">
-                                {image ? (
-                                    <div className="relative w-32 h-20 rounded-lg overflow-hidden border border-stone-200">
-                                        <Image src={image} alt="Preview" fill className="object-cover" />
-                                        <button
-                                            type="button"
-                                            onClick={() => setImage('')}
-                                            className="absolute inset-0 bg-black/50 text-white flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity text-xs"
-                                        >
-                                            Değiştir
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className="w-32 h-20 bg-white border border-dashed border-stone-300 rounded-lg flex items-center justify-center text-stone-400">
-                                        <ImageIcon className="w-6 h-6" />
-                                    </div>
-                                )}
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImageUpload}
-                                    className="block w-full text-sm text-stone-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-stone-100 file:text-stone-700 hover:file:bg-stone-200"
-                                    disabled={uploading}
-                                />
-                            </div>
+                            <ImageUpload
+                                value={image ? [image] : []}
+                                onChange={(url) => setImage(url)}
+                                onRemove={() => setImage('')}
+                            />
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
@@ -194,8 +141,8 @@ export default function HeroManager() {
                         </div>
 
                         <div className="pt-2">
-                            <Button type="submit" disabled={uploading || !image} className="w-full">
-                                {uploading ? "Resim Yükleniyor..." : "Slaytı Kaydet"}
+                            <Button type="submit" disabled={!image} className="w-full bg-[#C8102E] hover:bg-[#A00C24]">
+                                Slaytı Kaydet
                             </Button>
                         </div>
                     </form>
