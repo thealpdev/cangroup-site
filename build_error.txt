@@ -1,0 +1,29 @@
+
+> canmarkt.de@0.1.0 build
+> next build
+
+   ▲ Next.js 16.0.10 (Turbopack)
+   - Environments: .env.local
+
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+   Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 1 errors:
+./app/[locale]/layout.tsx:3:1
+Module not found: Can't resolve '../../globals.css'
+[0m [90m 1 |[39m [36mimport[39m type { [33mMetadata[39m } [36mfrom[39m [32m"next"[39m[33m;[39m
+ [90m 2 |[39m [36mimport[39m { [33mInter[39m[33m,[39m [33mPlayfair_Display[39m } [36mfrom[39m [32m"next/font/google"[39m[33m;[39m [90m// Added Playfair Display for premium feel[39m
+[31m[1m>[22m[39m[90m 3 |[39m [36mimport[39m [32m"../../globals.css"[39m[33m;[39m [90m// Adjusted path[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 4 |[39m [36mimport[39m { [33mLanguageProvider[39m } [36mfrom[39m [32m"@/lib/language-context"[39m[33m;[39m
+ [90m 5 |[39m [36mimport[39m { [33mAuthProvider[39m } [36mfrom[39m [32m'@/lib/auth-context'[39m[33m;[39m
+ [90m 6 |[39m [36mimport[39m { [33mCartProvider[39m } [36mfrom[39m [32m"@/lib/cart-context"[39m[33m;[39m[0m
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (./app/[locale]/layout.tsx:3:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)

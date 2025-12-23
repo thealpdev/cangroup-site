@@ -5,13 +5,16 @@ import { collection, query, orderBy, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import ProductCard from '@/components/product/ProductCard';
 import { Loader2, Sparkles, X, ArrowUpDown } from 'lucide-react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
+import { useLocale, useTranslations } from 'next-intl';
 
 interface Product {
     id: string;
     name_en: string;
     name_de: string;
     name_tr: string;
+    name_fr?: string;
     price: string;
     currency: string;
     images?: string[];
@@ -39,6 +42,9 @@ function ProductGrid() {
 
     const searchParams = useSearchParams();
     const router = useRouter();
+    const locale = useLocale();
+    const t = useTranslations('Products');
+    const tCommon = useTranslations('Common');
 
     // URL Params
     const urlCategory = searchParams.get('category');
@@ -64,6 +70,11 @@ function ProductGrid() {
     const clearFilters = () => {
         setBrandFilter('All');
         router.push('/products');
+    };
+
+    const getProductName = (p: Product) => {
+        const key = `name_${locale}` as keyof Product;
+        return (p[key] as string) || p.name_en || p.name_de || p.name_tr || '';
     };
 
     const filteredProducts = products.filter(p => {
@@ -98,7 +109,7 @@ function ProductGrid() {
             case 'price-desc':
                 return (parseFloat(b.salePrice || b.price) || 0) - (parseFloat(a.salePrice || a.price) || 0);
             case 'name-asc':
-                return (a.name_tr || '').localeCompare(b.name_tr || '');
+                return getProductName(a).localeCompare(getProductName(b));
             case 'newest':
             default:
                 return 0;
@@ -109,12 +120,12 @@ function ProductGrid() {
 
     // Dynamic Title
     const pageTitle = urlCategory
-        ? `${urlCategory} Koleksiyonu`
+        ? `${urlCategory}` // keeping category name as is for now, or could map translations
         : urlSearch
-            ? `"${urlSearch}" için sonuçlar`
-            : "Tüm Ürünler";
+            ? `"${urlSearch}"`
+            : t('allProducts');
 
-    const pageSubtitle = urlCategory ? "Özenle seçilmiş premium ürünler" : "CanMarkt ürün kataloğu";
+    const pageSubtitle = urlCategory ? t('categorySubtitle') : t('catalogSubtitle'); // "Özenle seçilmiş premium ürünler" vs "CanMarkt ürün kataloğu"
 
     return (
         <div className="min-h-screen bg-stone-50">
@@ -129,7 +140,7 @@ function ProductGrid() {
 
                             {(urlCategory || urlSearch) && (
                                 <div className="flex items-center gap-2 mt-4 text-sm text-stone-500">
-                                    <span>Aktif Filtre:</span>
+                                    <span>{t('activeFilter')}:</span>
                                     <button
                                         onClick={() => router.push('/products')}
                                         className="flex items-center gap-1 bg-stone-100 px-3 py-1 rounded-full text-stone-900 hover:bg-stone-200"
@@ -146,34 +157,34 @@ function ProductGrid() {
 
                         {/* Brand Filter */}
                         <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
-                            <span className="text-xs font-bold uppercase text-stone-400 whitespace-nowrap mr-2">Marka:</span>
+                            <span className="text-xs font-bold uppercase text-stone-400 whitespace-nowrap mr-2">{t('brand')}:</span>
                             {brands.map(brand => (
                                 <button
                                     key={brand as string}
                                     onClick={() => setBrandFilter(brand as string)}
                                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap ${brandFilter === brand
-                                            ? 'bg-[#0a0a0a] text-white shadow-lg'
-                                            : 'bg-white text-stone-600 hover:bg-stone-200 border border-stone-200'
+                                        ? 'bg-[#0a0a0a] text-white shadow-lg'
+                                        : 'bg-white text-stone-600 hover:bg-stone-200 border border-stone-200'
                                         }`}
                                 >
-                                    {brand === 'All' ? 'Tümü' : brand}
+                                    {brand === 'All' ? t('all') : brand}
                                 </button>
                             ))}
                         </div>
 
                         {/* Sorting Dropdown */}
                         <div className="flex items-center gap-2 w-full md:w-auto">
-                            <span className="text-xs font-bold uppercase text-stone-400 whitespace-nowrap">Sırala:</span>
+                            <span className="text-xs font-bold uppercase text-stone-400 whitespace-nowrap">{t('sort')}:</span>
                             <div className="relative group">
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value as SortOption)}
                                     className="appearance-none bg-white pl-4 pr-10 py-2 rounded-lg border border-stone-200 text-sm font-medium text-stone-700 outline-none focus:border-[#C8102E] cursor-pointer"
                                 >
-                                    <option value="newest">En Yeniler</option>
-                                    <option value="price-asc">Fiyat (Artan)</option>
-                                    <option value="price-desc">Fiyat (Azalan)</option>
-                                    <option value="name-asc">İsim (A-Z)</option>
+                                    <option value="newest">{t('sortNewest')}</option>
+                                    <option value="price-asc">{t('sortPriceLow')}</option>
+                                    <option value="price-desc">{t('sortPriceHigh')}</option>
+                                    <option value="name-asc">{t('sortName')}</option>
                                 </select>
                                 <ArrowUpDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" />
                             </div>
@@ -188,7 +199,7 @@ function ProductGrid() {
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-20">
                         <Loader2 className="w-10 h-10 text-[#C8102E] animate-spin mb-4" />
-                        <p className="text-stone-500 font-medium animate-pulse">Koleksiyon yükleniyor...</p>
+                        <p className="text-stone-500 font-medium animate-pulse">{t('collectionLoading')}</p>
                     </div>
                 ) : filteredProducts.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
@@ -199,13 +210,13 @@ function ProductGrid() {
                 ) : (
                     <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-stone-200">
                         <Sparkles className="w-12 h-12 text-stone-300 mx-auto mb-4" />
-                        <h3 className="text-xl font-bold text-stone-900 mb-2">Ürün Bulunamadı</h3>
-                        <p className="text-stone-500 mb-6">Arama kriterlerinize uygun ürün bulunamadı.</p>
+                        <h3 className="text-xl font-bold text-stone-900 mb-2">{t('noProductsFound')}</h3>
+                        <p className="text-stone-500 mb-6">{t('noProductsDesc')}</p>
                         <button
                             onClick={clearFilters}
                             className="bg-[#0a0a0a] text-white px-6 py-3 rounded-full font-bold hover:bg-[#C8102E] transition-colors"
                         >
-                            Filtreleri Temizle
+                            {t('clearFilters')}
                         </button>
                     </div>
                 )}

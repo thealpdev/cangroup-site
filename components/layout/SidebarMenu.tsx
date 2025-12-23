@@ -1,26 +1,30 @@
 "use client";
 
 import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation'; // Use i18n Link
 import { X, ChevronRight, Heart, User, HelpCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface SidebarMenuProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
-const MENU_ITEMS = [
-    { label: "Anasayfa", href: "/" },
-    { label: "Ürünler", href: "/products" },
-    { label: "Koleksiyonlar", href: "/categories" },
-];
-
-const SECONDARY_LINKS = [
-    { label: "Hakkımızda", href: "/about" },
-    { label: "İletişim", href: "/contact" },
-];
-
 export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
+    const t = useTranslations('Navbar');
+    const tFooter = useTranslations('Footer'); // For extra links if needed or generic
+
+    const MENU_ITEMS = [
+        { label: t('home'), href: "/" },
+        { label: t('products'), href: "/products" },
+        { label: t('categories'), href: "/categories" },
+    ];
+
+    const SECONDARY_LINKS = [
+        { label: t('about'), href: "/about" },
+        { label: t('contact'), href: "/contact" },
+    ];
+
     return (
         <AnimatePresence>
             {isOpen && (
@@ -61,7 +65,7 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
                             <nav className="space-y-6">
                                 {MENU_ITEMS.map((item) => (
                                     <Link
-                                        key={item.label}
+                                        key={item.href}
                                         href={item.href}
                                         onClick={onClose}
                                         className="block group"
@@ -80,7 +84,7 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
                             <nav className="space-y-4 pt-6 border-t border-white/5">
                                 {SECONDARY_LINKS.map(link => (
                                     <Link
-                                        key={link.label}
+                                        key={link.href}
                                         href={link.href}
                                         onClick={onClose}
                                         className="block text-lg text-stone-500 hover:text-white transition-colors tracking-wider"
@@ -95,11 +99,11 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
                                 <div className="space-y-4">
                                     <Link href="/wishlist" onClick={onClose} className="flex items-center gap-4 text-stone-400 hover:text-[#C8102E] transition-colors group">
                                         <Heart className="w-5 h-5" />
-                                        <span className="font-light tracking-wider">Favori Listesi</span>
+                                        <span className="font-light tracking-wider">{t('offerList').replace('List', 'Listem')}</span> {/* Fallback or specific key */}
                                     </Link>
                                     <Link href="/help" onClick={onClose} className="flex items-center gap-4 text-stone-400 hover:text-white transition-colors group">
                                         <HelpCircle className="w-5 h-5" />
-                                        <span className="font-light tracking-wider">Yardım & İletişim</span>
+                                        <span className="font-light tracking-wider">{t('help')} & {t('contact')}</span>
                                     </Link>
                                 </div>
                             </div>
@@ -112,7 +116,7 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
                                 onClick={onClose}
                                 className="flex items-center justify-between w-full p-4 border border-stone-800 hover:border-[#C8102E] hover:bg-[#C8102E]/5 rounded-lg group transition-all duration-300"
                             >
-                                <span className="font-medium tracking-widest text-sm uppercase text-white">Teklif Listem</span>
+                                <span className="font-medium tracking-widest text-sm uppercase text-white">{t('offerList')}</span>
                                 <ChevronRight className="w-4 h-4 text-[#C8102E] transform group-hover:translate-x-1 transition-transform" />
                             </Link>
                         </div>
@@ -120,10 +124,7 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
                 </>
             )}
 
-            {/* Global Styles for Scrollbar Hiding inside this component scope if possible, 
-                but tailwind 'no-scrollbar' class usually needs plugin or custom css. 
-                We will use inline style for specific override or standard css-in-js approach 
-            */}
+            {/* Global Styles for Scrollbar Hiding */}
             <style jsx global>{`
                 .no-scrollbar::-webkit-scrollbar {
                     display: none;

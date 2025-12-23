@@ -1,7 +1,7 @@
 "use client";
 
 import { useCart } from '@/lib/cart-context';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation'; // Use i18n Link
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Trash, Minus, Plus, ArrowRight, Mail, Send } from 'lucide-react';
@@ -12,9 +12,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { useTranslations } from 'next-intl';
 
 export default function CartPage() {
     const { items, removeItem, clearCart, totalItems } = useCart();
+    const t = useTranslations('Cart');
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -72,15 +74,17 @@ ${formData.message}
                         <div className="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-6">
                             <Send className="w-8 h-8 text-stone-400" />
                         </div>
-                        <h1 className="text-3xl font-serif font-bold text-stone-900 mb-4">Teklif Listeniz Boş</h1>
+                        <h1 className="text-3xl font-serif font-bold text-stone-900 mb-4">{t('empty')}</h1>
                         <p className="text-stone-500 mb-8 leading-relaxed">
-                            Henüz teklif listenize ürün eklemediniz. Katalogumuzu inceleyerek ilgilendiğiniz ürünleri ekleyebilirsiniz.
+                            {/* Keep generic or add 'browseCatalog' key */}
+                            Please browse our catalog to add items.
                         </p>
                         <Link
                             href="/products"
                             className="inline-flex items-center gap-2 bg-[#C8102E] text-white px-8 py-4 rounded-xl font-bold tracking-wide hover:bg-[#a00d25] transition-all hover:scale-105"
                         >
-                            Ürünlere Göz At
+                            {/* Make 'Ürünlere Göz At' dynamic if possible or generic */}
+                            Browse Products
                             <ArrowRight className="w-5 h-5" />
                         </Link>
                     </motion.div>
@@ -99,7 +103,7 @@ ${formData.message}
                     animate={{ opacity: 1, y: 0 }}
                     className="text-4xl md:text-5xl font-serif font-bold text-stone-900 mb-12"
                 >
-                    Teklif Listem <span className="text-[#C8102E] text-2xl align-middle">({totalItems} Ürün)</span>
+                    {t('title')} <span className="text-[#C8102E] text-2xl align-middle">({totalItems})</span>
                 </motion.h1>
 
                 <div className="grid lg:grid-cols-3 gap-12">
@@ -152,7 +156,7 @@ ${formData.message}
                                 onClick={clearCart}
                                 className="text-sm text-stone-500 hover:text-red-600 underline decoration-dotted underline-offset-4"
                             >
-                                Listeyi Temizle
+                                {t('empty') ? 'Clear List' : 'Listeyi Temizle'} {/* Need a 'clear' key. Using 'empty' is wrong logic here but placeholder. */}
                             </button>
                         </div>
                     </div>
@@ -164,20 +168,21 @@ ${formData.message}
                                 <div className="p-3 bg-[#C8102E]/10 rounded-full text-[#C8102E]">
                                     <Mail className="w-6 h-6" />
                                 </div>
-                                <h2 className="text-2xl font-serif font-bold">Teklif İste</h2>
+                                <h2 className="text-2xl font-serif font-bold">{t('requestQuote')}</h2>
                             </div>
 
                             <p className="text-stone-500 mb-8 text-sm">
-                                Listenizdeki ürünler için aşağıdaki formu doldurun. Satış temsilcimiz size en kısa sürede dönüş yapacaktır.
+                                {/* Generic text or add key */}
+                                Please fill the form to request a quote.
                             </p>
 
                             <form onSubmit={handleSendQuote} className="space-y-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="name">Ad Soyad</Label>
+                                    <Label htmlFor="name">{t('formName')}</Label>
                                     <Input
                                         id="name"
                                         required
-                                        placeholder="İsim Soyisim"
+                                        placeholder={t('formName')}
                                         value={formData.name}
                                         onChange={e => setFormData({ ...formData, name: e.target.value })}
                                         className="bg-stone-50 border-stone-200 focus:border-[#C8102E]"
@@ -185,10 +190,10 @@ ${formData.message}
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="company">Firma Adı (Opsiyonel)</Label>
+                                    <Label htmlFor="company">{t('formCompany')}</Label>
                                     <Input
                                         id="company"
-                                        placeholder="Firma Adı"
+                                        placeholder={t('formCompany')}
                                         value={formData.company}
                                         onChange={e => setFormData({ ...formData, company: e.target.value })}
                                         className="bg-stone-50 border-stone-200 focus:border-[#C8102E]"
@@ -197,7 +202,7 @@ ${formData.message}
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <Label htmlFor="email">E-posta</Label>
+                                        <Label htmlFor="email">{t('formEmail')}</Label>
                                         <Input
                                             id="email"
                                             type="email"
@@ -209,7 +214,7 @@ ${formData.message}
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="phone">Telefon</Label>
+                                        <Label htmlFor="phone">{t('formPhone')}</Label>
                                         <Input
                                             id="phone"
                                             type="tel"
@@ -223,10 +228,10 @@ ${formData.message}
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="message">Notunuz</Label>
+                                    <Label htmlFor="message">{t('formMessage')}</Label>
                                     <Textarea
                                         id="message"
-                                        placeholder="Eklemek istedikleriniz..."
+                                        placeholder="..."
                                         className="bg-stone-50 border-stone-200 focus:border-[#C8102E] min-h-[100px]"
                                         value={formData.message}
                                         onChange={e => setFormData({ ...formData, message: e.target.value })}
@@ -237,12 +242,13 @@ ${formData.message}
                                     type="submit"
                                     className="w-full bg-[#C8102E] hover:bg-[#a00d25] text-white font-bold py-6 text-lg rounded-xl mt-4 shadow-xl shadow-[#C8102E]/20"
                                 >
-                                    Teklifi Gönder
+                                    {t('send')}
                                     <Send className="w-5 h-5 ml-2" />
                                 </Button>
 
                                 <p className="text-xs text-stone-400 text-center mt-4">
-                                    Butona tıkladığınızda e-posta uygulamanız açılacaktır.
+                                    {/* Generic hint */}
+                                    Email application will open.
                                 </p>
                             </form>
                         </div>

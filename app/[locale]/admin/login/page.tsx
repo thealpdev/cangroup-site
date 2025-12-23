@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { useRouter } from 'next/navigation';
+import { useRouter, Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Loader2, ShieldCheck, Lock } from 'lucide-react';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -17,6 +17,7 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const router = useRouter();
+    const t = useTranslations('Admin');
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -28,7 +29,7 @@ export default function LoginPage() {
             router.push('/admin');
         } catch (err: any) {
             console.error("Login failed:", err);
-            setError("Giriş bilgileri hatalı. Lütfen tekrar deneyin.");
+            setError(t('loginError'));
         } finally {
             setLoading(false);
         }
@@ -43,10 +44,10 @@ export default function LoginPage() {
                         <ShieldCheck className="w-6 h-6 text-white" />
                     </div>
                     <div className="text-sm font-bold tracking-[0.2em] uppercase opacity-90 mb-1">
-                        Yönetici Paneli
+                        {t('panelTitle')}
                     </div>
                     <h1 className="text-3xl font-bold tracking-tight">
-                        GÜVENLİ GİRİŞ
+                        {t('secureLogin')}
                     </h1>
                 </div>
 
@@ -54,7 +55,7 @@ export default function LoginPage() {
                     <form onSubmit={handleLogin} className="space-y-6">
                         <div className="space-y-2">
                             <Label htmlFor="email" className="text-xs font-bold uppercase tracking-wide text-stone-500">
-                                Kullanıcı Adı (E-posta)
+                                {t('username')}
                             </Label>
                             <Input
                                 id="email"
@@ -69,7 +70,7 @@ export default function LoginPage() {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="password" className="text-xs font-bold uppercase tracking-wide text-stone-500">
-                                Şifre
+                                {t('password')}
                             </Label>
                             <div className="relative">
                                 <Input
@@ -100,10 +101,10 @@ export default function LoginPage() {
                             {loading ? (
                                 <div className="flex items-center gap-2">
                                     <Loader2 className="animate-spin w-5 h-5" />
-                                    <span>Giriş Yapılıyor...</span>
+                                    <span>{t('loggingIn')}</span>
                                 </div>
                             ) : (
-                                "GİRİŞ YAP"
+                                t('login')
                             )}
                         </Button>
                     </form>
@@ -111,7 +112,7 @@ export default function LoginPage() {
 
                 <CardFooter className="bg-stone-50 border-t border-stone-100 p-6 flex flex-col items-center gap-3">
                     <Link href="/" className="text-xs text-stone-400 hover:text-stone-600 transition-colors">
-                        ← Mağazaya Dön
+                        ← {t('backToStore')}
                     </Link>
                 </CardFooter>
             </Card>

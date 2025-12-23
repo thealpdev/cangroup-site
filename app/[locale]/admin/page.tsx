@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { Menu } from "lucide-react";
 import { Button } from '@/components/ui/button';
+import { useTranslations } from 'next-intl';
 
 // Components
 import AdminSidebar from '@/components/admin/AdminSidebar';
@@ -21,6 +22,7 @@ import UsersManager from '@/components/admin/UsersManager';
 function ProductsView() {
     const [view, setView] = useState<'list' | 'add'>('list');
     const [editingProduct, setEditingProduct] = useState<any>(null);
+    const t = useTranslations('Admin');
 
     const handleEdit = (product: any) => {
         setEditingProduct(product);
@@ -41,10 +43,10 @@ function ProductsView() {
         <div className="space-y-4">
             <div>
                 <h2 className="text-2xl font-bold text-stone-900">
-                    {view === 'list' ? 'Ürün Yönetimi' : (editingProduct ? 'Ürünü Düzenle' : 'Yeni Ürün Ekle')}
+                    {view === 'list' ? t('productsTitle') : (editingProduct ? t('editProduct') : t('addProduct'))}
                 </h2>
                 <p className="text-stone-500">
-                    {view === 'list' ? 'Kataloğunuzdaki mevcut ürünleri yönetin.' : 'Ürün bilgilerini giriniz.'}
+                    {view === 'list' ? t('productsDesc') : t('productsFormDesc')}
                 </p>
             </div>
 
@@ -53,7 +55,7 @@ function ProductsView() {
             ) : (
                 <div className="space-y-4 animate-in fade-in slide-in-from-right-4">
                     <Button variant="outline" onClick={() => setView('list')} className="mb-4">
-                        ← Listeye Dön
+                        ← {t('backToList')}
                     </Button>
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
                         <ProductForm initialData={editingProduct} onSuccess={handleSuccess} />
@@ -69,6 +71,7 @@ export default function AdminPage() {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState('overview');
     const [isMobileOpen, setIsMobileOpen] = useState(false);
+    const t = useTranslations('Admin');
 
     useEffect(() => {
         if (!loading && !user) {
@@ -79,7 +82,7 @@ export default function AdminPage() {
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-stone-50">
-                <div className="text-[#C8102E] font-bold animate-pulse">Yükleniyor...</div>
+                <div className="text-[#C8102E] font-bold animate-pulse">{t('loading')}</div>
             </div>
         );
     }
@@ -134,8 +137,8 @@ export default function AdminPage() {
                         {activeTab === 'categories' && (
                             <div className="space-y-4">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-stone-900">Kategori Yönetimi</h2>
-                                    <p className="text-stone-500">Ürün kategorilerini düzenleyin.</p>
+                                    <h2 className="text-2xl font-bold text-stone-900">{t('tabCategories')}</h2>
+                                    <p className="text-stone-500">{t('categoriesDesc')}</p>
                                 </div>
                                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
                                     <CategoriesManager />
@@ -147,8 +150,8 @@ export default function AdminPage() {
                         {activeTab === 'hero' && (
                             <div className="space-y-4">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-stone-900">Slider Yönetimi</h2>
-                                    <p className="text-stone-500">Anasayfa manşet alanını düzenleyin.</p>
+                                    <h2 className="text-2xl font-bold text-stone-900">{t('tabHero')}</h2>
+                                    <p className="text-stone-500">{t('heroDesc')}</p>
                                 </div>
                                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
                                     <HeroManager />
@@ -160,8 +163,8 @@ export default function AdminPage() {
                         {activeTab === 'partners' && (
                             <div className="space-y-4">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-stone-900">Marka Ortakları</h2>
-                                    <p className="text-stone-500">İş birliği yapılan markaları yönetin.</p>
+                                    <h2 className="text-2xl font-bold text-stone-900">{t('tabPartners')}</h2>
+                                    <p className="text-stone-500">{t('partnersDesc')}</p>
                                 </div>
                                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
                                     <PartnersManager />
@@ -173,8 +176,8 @@ export default function AdminPage() {
                         {activeTab === 'users' && (
                             <div className="space-y-4">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-stone-900">Erişim Yönetimi</h2>
-                                    <p className="text-stone-500">Panel yetkilerini düzenleyin.</p>
+                                    <h2 className="text-2xl font-bold text-stone-900">{t('tabUsers')}</h2>
+                                    <p className="text-stone-500">{t('usersDesc')}</p>
                                 </div>
                                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
                                     <UsersManager />
@@ -186,8 +189,8 @@ export default function AdminPage() {
                         {activeTab === 'settings' && (
                             <div className="space-y-4">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-stone-900">Site Ayarları</h2>
-                                    <p className="text-stone-500">Genel konfigürasyon.</p>
+                                    <h2 className="text-2xl font-bold text-stone-900">{t('tabSettings')}</h2>
+                                    <p className="text-stone-500">{t('settingsDesc')}</p>
                                 </div>
                                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
                                     <SettingsForm />

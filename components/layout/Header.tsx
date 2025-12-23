@@ -1,26 +1,26 @@
 "use client";
 
-import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { Link, usePathname, useRouter } from '@/i18n/navigation'; // Use i18n routing
 import { Search, ShoppingBag, Menu, X, ChevronDown, Instagram, Facebook, User } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { cn } from '@/lib/utils';
-import { useLanguage } from "@/lib/language-context";
+// import { useLanguage } from "@/lib/language-context"; // Deprecated in favor of next-intl
 import { useCart } from "@/lib/cart-context";
 import { useAuth } from "@/lib/auth-context";
 import SidebarMenu from "@/components/layout/SidebarMenu";
 import AuthModal from "@/components/auth/AuthModal";
 import { motion, AnimatePresence } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+import { useTranslations, useLocale } from 'next-intl';
 
 export default function Header() {
     const [scrolled, setScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isAuthOpen, setIsAuthOpen] = useState(false);
     const [logo, setLogo] = useState("");
+    const t = useTranslations('Navbar');
 
     useEffect(() => {
         const handleScroll = () => {
@@ -81,7 +81,7 @@ export default function Header() {
                                 "hidden md:inline text-xs font-bold uppercase tracking-[0.2em] transition-colors duration-300",
                                 isScrolledState ? "text-stone-900 group-hover:text-[#C8102E]" : "text-white group-hover:text-white/80"
                             )}>
-                                Menü
+                                {t('products')} {/* Using 'products' as generic menu label or add 'menu' key */}
                             </span>
                         </button>
                     </div>
@@ -111,6 +111,7 @@ export default function Header() {
                         <div className="hidden md:block">
                             <SearchButton scrolled={isScrolledState} />
                         </div>
+                        <LanguageSwitcher scrolled={isScrolledState} />
                         <UserButton scrolled={isScrolledState} onAuthOpen={() => setIsAuthOpen(true)} />
                         <CartButton scrolled={isScrolledState} />
                     </div>
@@ -124,6 +125,7 @@ export default function Header() {
 function UserButton({ scrolled, onAuthOpen }: { scrolled: boolean; onAuthOpen: () => void }) {
     const { user } = useAuth();
     const router = useRouter();
+    const t = useTranslations('Navbar');
 
     const handleClick = () => {
         if (user) {
@@ -157,7 +159,7 @@ function UserButton({ scrolled, onAuthOpen }: { scrolled: boolean; onAuthOpen: (
                 "hidden lg:block text-xs font-bold uppercase tracking-widest transition-colors",
                 scrolled ? "group-hover:text-[#C8102E]" : "group-hover:text-white/80"
             )}>
-                {user ? (user.displayName?.split(' ')[0] || 'Hesabım') : 'Giriş'}
+                {user ? (user.displayName?.split(' ')[0] || t('account')) : t('account')}
             </span>
         </button>
     );
@@ -168,6 +170,7 @@ function SearchButton({ scrolled }: { scrolled: boolean }) {
     const [query, setQuery] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
+    const t = useTranslations('Navbar');
 
     useEffect(() => {
         if (isOpen && inputRef.current) {
@@ -178,7 +181,7 @@ function SearchButton({ scrolled }: { scrolled: boolean }) {
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         if (query.trim()) {
-            router.push(`/products?search=${encodeURIComponent(query.trim())}`);
+            router.push(`/ products ? search = ${encodeURIComponent(query.trim())} `);
             setIsOpen(false);
             setQuery("");
         }
@@ -196,7 +199,7 @@ function SearchButton({ scrolled }: { scrolled: boolean }) {
                         type="text"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Suchen..."
+                        placeholder={t('search')}
                         className={cn(
                             "w-full bg-transparent border-b text-sm py-1 outline-none placeholder:text-stone-400",
                             scrolled
@@ -222,33 +225,60 @@ function SearchButton({ scrolled }: { scrolled: boolean }) {
 }
 
 function LanguageSwitcher({ scrolled }: { scrolled: boolean }) {
-    const { language, setLanguage } = useLanguage();
+    const router = useRouter();
+    const pathname = usePathname();
+    const locale = useLocale();
+
+    const switchLanguage = (newLocale: string) => {
+        router.replace(pathname, { locale: newLocale });
+    };
+
+    const getLabel = (l: string) => {
+        switch (l) {
+            case 'de': return <><span className="text-lg leading-none">🇩🇪</span><span>DE</span></>;
+            case 'en': return <><span className="text-lg leading-none">🇬🇧</span><span>EN</span></>;
+            case 'fr': return <><span className="text-lg leading-none">🇫🇷</span><span>FR</span></>;
+            case 'tr': return <><span className="text-lg leading-none">🇹🇷</span><span>TR</span></>;
+            default: return l.toUpperCase();
+        }
+    };
+
+    const getFlag = (l: string) => {
+        switch (l) {
+            case 'de': return '🇩🇪';
+            case 'en': return '🇬🇧';
+            case 'fr': return '🇫🇷';
+            case 'tr': return '🇹🇷';
+            default: return '';
+        }
+    };
 
     return (
         <div className="relative group">
             <button className={cn(
-                "flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest transition-all duration-300 py-2",
+                "flex items-center gap-2 text-xs font-bold uppercase tracking-widest transition-all duration-300 py-2",
                 scrolled ? "text-stone-900 hover:text-[#C8102E]" : "text-white hover:text-white/80"
             )}>
-                {language}
+                {getLabel(locale)}
                 <ChevronDown className="w-3 h-3 opacity-50 group-hover:rotate-180 transition-transform duration-300" />
             </button>
 
             {/* Dropdown */}
             <div className="absolute top-full right-0 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-right scale-95 group-hover:scale-100">
-                <div className="bg-white p-2 rounded-xl border border-stone-100 shadow-xl w-32 flex flex-col gap-1">
-                    {['de', 'tr', 'en'].map((lang) => (
+                <div className="bg-white p-2 rounded-xl border border-stone-100 shadow-xl w-40 flex flex-col gap-1">
+                    {['de', 'tr', 'en', 'fr'].map((lang) => (
                         <button
                             key={lang}
-                            onClick={() => setLanguage(lang as any)}
+                            onClick={() => switchLanguage(lang)}
                             className={cn(
-                                "w-full text-left px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-colors",
-                                language === lang
+                                "w-full text-left px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-colors flex items-center gap-3",
+                                locale === lang
                                     ? "bg-red-50 text-[#C8102E]"
                                     : "text-stone-600 hover:bg-stone-50 hover:text-stone-900"
                             )}
                         >
-                            {lang === 'de' ? 'Deutsch' : lang === 'tr' ? 'Türkçe' : 'English'}
+                            <span className="text-lg leading-none">{getFlag(lang)}</span>
+                            {lang === 'de' ? 'Deutsch' : lang === 'tr' ? 'Türkçe' : lang === 'fr' ? 'Français' : 'English'}
                         </button>
                     ))}
                 </div>
@@ -259,6 +289,7 @@ function LanguageSwitcher({ scrolled }: { scrolled: boolean }) {
 
 function CartButton({ scrolled }: { scrolled: boolean }) {
     const { setIsOpen, totalItems } = useCart();
+    const t = useTranslations('Cart');
 
     return (
         <button
@@ -287,7 +318,7 @@ function CartButton({ scrolled }: { scrolled: boolean }) {
                 "hidden md:block text-xs font-bold uppercase tracking-widest transition-colors",
                 scrolled ? "group-hover:text-[#C8102E]" : "group-hover:text-white/80"
             )}>
-                Anfrage
+                {t('title').split(' ')[0]} {/* Use first word or custom label */}
             </span>
         </button>
     );

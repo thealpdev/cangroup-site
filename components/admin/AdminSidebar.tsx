@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTranslations } from 'next-intl';
 
 interface AdminSidebarProps {
     activeTab: string;
@@ -33,15 +34,16 @@ export default function AdminSidebar({
     isMobileOpen,
     setIsMobileOpen
 }: AdminSidebarProps) {
+    const t = useTranslations('Admin');
 
     const menuItems = [
-        { id: 'overview', label: 'Genel Bakış', icon: LayoutDashboard },
-        { id: 'products', label: 'Ürün Yönetimi', icon: Package },
-        { id: 'categories', label: 'Kategoriler', icon: Layers },
-        { id: 'hero', label: 'Slider / Hero', icon: Layout },
-        { id: 'partners', label: 'Markalar', icon: Award },
-        { id: 'users', label: 'Kullanıcılar', icon: Users },
-        { id: 'settings', label: 'Site Ayarları', icon: Settings },
+        { id: 'overview', label: t('tabOverview'), icon: LayoutDashboard },
+        { id: 'products', label: t('tabProducts'), icon: Package },
+        { id: 'categories', label: t('tabCategories'), icon: Layers },
+        { id: 'hero', label: t('tabHero'), icon: Layout },
+        { id: 'partners', label: t('tabPartners'), icon: Award },
+        { id: 'users', label: t('tabUsers'), icon: Users },
+        { id: 'settings', label: t('tabSettings'), icon: Settings },
     ];
 
     return (
@@ -99,7 +101,7 @@ export default function AdminSidebar({
                 <div className="p-4 border-t border-white/10 bg-black/20">
                     <div className="flex flex-col gap-3">
                         <div className="px-2">
-                            <div className="text-xs text-stone-500 uppercase tracking-wider mb-1">Giriş Yapıldı</div>
+                            <div className="text-xs text-stone-500 uppercase tracking-wider mb-1">{t('loggedIn')}</div>
                             <div className="text-sm font-medium truncate text-stone-300" title={userEmail || ''}>
                                 {userEmail}
                             </div>
@@ -110,7 +112,7 @@ export default function AdminSidebar({
                             className="w-full justify-start gap-2 text-stone-400 hover:text-red-400 hover:bg-white/5 rounded-xl"
                         >
                             <LogOut className="w-4 h-4" />
-                            Çıkış Yap
+                            {t('logout')}
                         </Button>
                     </div>
                 </div>

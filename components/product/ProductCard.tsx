@@ -6,11 +6,11 @@ import { motion } from 'framer-motion';
 import { useCart } from "@/lib/cart-context";
 import { useWishlist } from "@/lib/wishlist-context";
 import { ShoppingBag, Heart } from "lucide-react";
-import { useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 
 interface Product {
     id: string;
-    name_en?: string; name_de?: string; name_tr?: string;
+    name_en?: string; name_de?: string; name_tr?: string; name_fr?: string;
     price: string; currency: string;
     images?: string[]; image?: string;
     brand?: string; category?: string;
@@ -28,8 +28,16 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, index }: ProductCardProps) {
+    const locale = useLocale();
+    const t = useTranslations('Products');
+
+    // Currency Handling (Simplified)
     const currencySymbol = product.currency === 'USD' ? '$' : product.currency === 'TRY' ? '₺' : product.currency === 'GBP' ? '£' : '€';
-    const displayName = product.name_en || product.name_de || product.name_tr || 'Unnamed Product';
+
+    // Dynamic Name Selection
+    const nameKey = `name_${locale}` as keyof Product;
+    const displayName = product[nameKey] as string || product.name_en || product.name_de || product.name_tr || 'Unnamed Product';
+
     const displayImage = product.images?.[0] || product.image || '/placeholder-knife.jpg';
 
     // Logic
@@ -51,7 +59,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
             className={`group relative ${isOutOfStock ? 'opacity-75 grayscale-[0.5]' : ''}`}
         >
             <div className="absolute top-4 right-4 z-20">
-                <FavoriteButton product={product} />
+                <FavoriteButton product={product} displayName={displayName} />
             </div>
 
             {/* BADGES */}
@@ -63,12 +71,12 @@ export default function ProductCard({ product, index }: ProductCardProps) {
                 )}
                 {product.isNew && !isOutOfStock && (
                     <span className="text-[10px] font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1.5 rounded-full shadow-sm border border-blue-100">
-                        YENİ
+                        {t('new')}
                     </span>
                 )}
                 {isSale && !isOutOfStock && discountPercent > 0 && (
                     <span className="text-[10px] font-bold uppercase tracking-widest text-white bg-[#C8102E] px-3 py-1.5 rounded-full shadow-sm">
-                        %{discountPercent} İNDİRİM
+                        %{discountPercent} {t('discount')}
                     </span>
                 )}
             </div>
@@ -80,7 +88,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
                     {isOutOfStock && (
                         <div className="absolute inset-0 z-30 bg-stone-100/60 backdrop-blur-[1px] flex items-center justify-center">
                             <span className="bg-stone-900 text-white px-4 py-2 text-xs font-bold uppercase tracking-widest rotate-[-10deg]">
-                                TÜKENDİ
+                                {t('outOfStock')}
                             </span>
                         </div>
                     )}
@@ -99,11 +107,11 @@ export default function ProductCard({ product, index }: ProductCardProps) {
                         <div className="absolute bottom-0 inset-x-0 p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 flex justify-center gap-2 z-20">
                             <button
                                 className="bg-white text-stone-900 border-stone-200 border p-3 rounded-full shadow-lg hover:bg-stone-50 hover:scale-110 transition-all"
-                                title="İncele"
+                                title={t('view')}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle cx="12" cy="12" r="3" /></svg>
                             </button>
-                            <AddToCartButton product={product} />
+                            <AddToCartButton product={product} title={t('addToCart')} />
                         </div>
                     )}
                 </div>
@@ -136,7 +144,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
     );
 }
 
-function AddToCartButton({ product }: { product: Product }) {
+function AddToCartButton({ product, title }: { product: Product; title: string }) {
     const { addItem } = useCart();
 
     return (
@@ -147,14 +155,14 @@ function AddToCartButton({ product }: { product: Product }) {
                 addItem(product);
             }}
             className="bg-[#C8102E] text-white p-3 rounded-full shadow-lg hover:bg-[#a00d25] hover:scale-110 transition-all"
-            title="In den Warenkorb"
+            title={title}
         >
             <ShoppingBag className="w-5 h-5" />
         </button>
     );
 }
 
-function FavoriteButton({ product }: { product: Product }) {
+function FavoriteButton({ product, displayName }: { product: Product; displayName: string }) {
     const { isInWishlist, toggleItem } = useWishlist();
     const isFav = isInWishlist(product.id);
 
@@ -165,7 +173,7 @@ function FavoriteButton({ product }: { product: Product }) {
         toggleItem({
             id: product.id,
             productNumber: product.productCode || product.id, // Fallback
-            name_tr: product.name_tr || product.name_en || product.name_de || '',
+            name_tr: displayName, // Use correct locale name
             price: product.isSale ? product.salePrice || product.price : product.price,
             image: product.images?.[0] || product.image,
             slug: product.id

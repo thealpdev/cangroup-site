@@ -1,0 +1,82 @@
+{
+    "Navbar": {
+        "home": "Anasayfa",
+        "products": "Ürünler",
+        "categories": "Koleksiyonlar",
+        "about": "Hakkımızda",
+        "contact": "İletişim",
+        "search": "Ara...",
+        "offerList": "Teklif Listem",
+        "account": "Hesabım",
+        "help": "Yardım"
+    },
+    "Common": {
+        "loading": "Yükleniyor...",
+        "admin": "Yönetici"
+    },
+    "Footer": {
+        "rights": "Tüm hakları saklıdır.",
+        "menu": "Menü",
+        "legal": "Yasal",
+        "newsletter": "Bülten",
+        "subscribeText": "Bültenimize abone olun.",
+        "emailPlaceholder": "E-Posta Adresi"
+    },
+    "Cart": {
+        "title": "Teklif Listem",
+        "empty": "Listeniz boş.",
+        "requestQuote": "Teklif İste",
+        "formName": "Ad Soyad",
+        "formCompany": "Firma",
+        "formEmail": "E-Posta",
+        "formPhone": "Telefon",
+        "formMessage": "Mesaj",
+        "send": "Gönder",
+        "success": "Teklif istendi!"
+    },
+    "Legal": {
+        "Impressum": "Künye",
+        "Datenschutzerklärung": "Gizlilik",
+        "AGB": "Şartlar",
+        "Widerrufsrecht": "İade"
+    },
+    "Products": {
+        "new": "YENİ",
+        "sale": "İNDİRİM",
+        "outOfStock": "TÜKENDİ",
+        "view": "İncele",
+        "addToCart": "Sepete Ekle",
+        "discount": "İNDİRİM"
+    },
+    "Admin": {
+        "panelTitle": "Yönetici Paneli",
+        "secureLogin": "GÜVENLİ GİRİŞ",
+        "username": "Kullanıcı Adı",
+        "password": "Şifre",
+        "login": "GİRİŞ YAP",
+        "loggingIn": "Giriş Yapılıyor...",
+        "loginError": "Giriş bilgileri hatalı.",
+        "backToStore": "Mağazaya Dön",
+        "loading": "Yükleniyor...",
+        "tabOverview": "Genel Bakış",
+        "tabProducts": "Ürün Yönetimi",
+        "tabCategories": "Kategoriler",
+        "tabHero": "Slider / Hero",
+        "tabPartners": "Markalar",
+        "tabUsers": "Kullanıcılar",
+        "tabSettings": "Site Ayarları",
+        "productsTitle": "Ürün Yönetimi",
+        "productsDesc": "Mevcut ürünleri yönetin.",
+        "addProduct": "Yeni Ürün Ekle",
+        "editProduct": "Ürünü Düzenle",
+        "productsFormDesc": "Ürün bilgilerini giriniz.",
+        "backToList": "Listeye Dön",
+        "loggedIn": "Giriş Yapıldı",
+        "logout": "Çıkış Yap",
+        "categoriesDesc": "Ürün kategorilerini düzenleyin.",
+        "heroDesc": "Anasayfa manşet alanını düzenleyin.",
+        "partnersDesc": "İş birliği yapılan markaları yönetin.",
+        "usersDesc": "Panel yetkilerini düzenleyin.",
+        "settingsDesc": "Genel konfigürasyon."
+    }
+}

@@ -1,0 +1,82 @@
+{
+    "Navbar": {
+        "home": "Startseite",
+        "products": "Produkte",
+        "categories": "Kollektionen",
+        "about": "Über uns",
+        "contact": "Kontakt",
+        "search": "Suche...",
+        "offerList": "Angebot",
+        "account": "Konto",
+        "help": "Hilfe"
+    },
+    "Common": {
+        "loading": "Laden...",
+        "admin": "Admin"
+    },
+    "Footer": {
+        "rights": "Alle Rechte vorbehalten.",
+        "menu": "Menü",
+        "legal": "Rechtliches",
+        "newsletter": "Newsletter",
+        "subscribeText": "Abonnieren Sie unseren Newsletter für exklusive Angebote.",
+        "emailPlaceholder": "E-Mail Adresse"
+    },
+    "Cart": {
+        "title": "Angebotsliste",
+        "empty": "Ihre Liste ist leer.",
+        "requestQuote": "Angebot anfordern",
+        "formName": "Name",
+        "formCompany": "Firma",
+        "formEmail": "E-Mail",
+        "formPhone": "Telefon",
+        "formMessage": "Nachricht",
+        "send": "Senden",
+        "success": "Angebot angefordert!"
+    },
+    "Legal": {
+        "Impressum": "Impressum",
+        "Datenschutzerklärung": "Datenschutz",
+        "AGB": "AGB",
+        "Widerrufsrecht": "Widerruf"
+    },
+    "Products": {
+        "new": "NEU",
+        "sale": "SALE",
+        "outOfStock": "AUSVERKAUFT",
+        "view": "Ansehen",
+        "addToCart": "In den Warenkorb",
+        "discount": "RABATT"
+    },
+    "Admin": {
+        "panelTitle": "Verwaltung",
+        "secureLogin": "LOGIN",
+        "username": "E-Mail",
+        "password": "Passwort",
+        "login": "ANMELDEN",
+        "loggingIn": "Anmeldung...",
+        "loginError": "Anmeldung fehlgeschlagen.",
+        "backToStore": "Zurück zum Shop",
+        "loading": "Laden...",
+        "tabOverview": "Übersicht",
+        "tabProducts": "Produkte",
+        "tabCategories": "Kategorien",
+        "tabHero": "Slider",
+        "tabPartners": "Partner",
+        "tabUsers": "Benutzer",
+        "tabSettings": "Einstellungen",
+        "productsTitle": "Produktverwaltung",
+        "productsDesc": "Verwalten Sie Ihre Produkte.",
+        "addProduct": "Neues Produkt",
+        "editProduct": "Produkt ändern",
+        "productsFormDesc": "Produktinformationen eingeben.",
+        "backToList": "Zurück zur Liste",
+        "loggedIn": "Angemeldet",
+        "logout": "Abmelden",
+        "categoriesDesc": "Kategorien verwalten.",
+        "heroDesc": "Homepage Slider verwalten.",
+        "partnersDesc": "Markenpartner verwalten.",
+        "usersDesc": "Zugriffsrechte verwalten.",
+        "settingsDesc": "Allgemeine Einstellungen."
+    }
+}
