@@ -8,9 +8,12 @@ import { db } from '@/lib/firebase';
 import { motion } from 'framer-motion';
 import { ArrowRight, ShoppingBag, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useTranslations } from 'next-intl';
 
 export default function Spotlight() {
     const [products, setProducts] = useState<any[]>([]);
+    const t = useTranslations('Homepage');
+    const tProd = useTranslations('Products');
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -28,8 +31,8 @@ export default function Spotlight() {
         <section className="py-24 bg-stone-50 overflow-hidden">
             <div className="container mx-auto px-4 mb-12 flex items-end justify-between">
                 <div>
-                    <span className="text-[#C8102E] font-bold tracking-[0.2em] uppercase text-xs block mb-2">Editor's Choice</span>
-                    <h2 className="text-4xl md:text-5xl font-serif text-[#0a0a0a]">Öne Çıkanlar</h2>
+                    <span className="text-[#C8102E] font-bold tracking-[0.2em] uppercase text-xs block mb-2">{t('editorsChoice')}</span>
+                    <h2 className="text-4xl md:text-5xl font-serif text-[#0a0a0a]">{t('featuredTitle')}</h2>
                 </div>
                 <div className="hidden md:flex gap-2">
                     {/* Navigation hints could go here */}
@@ -59,7 +62,7 @@ export default function Spotlight() {
                                 {/* Hover: Quick Add */}
                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                                     <div className="bg-white text-black px-4 py-2 text-[10px] font-bold uppercase tracking-widest shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                                        İncele
+                                        {tProd('view')}
                                     </div>
                                 </div>
                             </div>

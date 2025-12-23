@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { useCart } from "@/lib/cart-context";
 import { X, Trash2, MessageCircle, Send } from "lucide-react";
 import Image from "next/image";
@@ -8,6 +10,8 @@ import { cn } from "@/lib/utils";
 
 export default function CartDrawer() {
     const { items, removeItem, isOpen, setIsOpen, totalItems } = useCart();
+    const t = useTranslations('Cart');
+    const tCommon = useTranslations('Common');
 
     if (!isOpen) return null;
 
@@ -57,7 +61,7 @@ export default function CartDrawer() {
                 {/* Header */}
                 <div className="p-6 border-b border-stone-100 flex items-center justify-between bg-stone-50">
                     <div>
-                        <h2 className="text-xl font-bold font-serif text-[#0a0a0a]">Angebotsliste</h2>
+                        <h2 className="text-xl font-bold font-serif text-[#0a0a0a]">{t('title')}</h2>
                         <p className="text-xs text-stone-500">{totalItems} Produkte</p>
                     </div>
                     <button
@@ -75,7 +79,7 @@ export default function CartDrawer() {
                             <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center text-stone-300">
                                 <Trash2 className="w-8 h-8" />
                             </div>
-                            <p className="text-stone-500 font-medium">Ihre Liste ist leer.</p>
+                            <p className="text-stone-500 font-medium">{t('empty')}</p>
                             <Button variant="outline" onClick={() => setIsOpen(false)}>
                                 Produkte durchsuchen
                             </Button>
@@ -87,7 +91,7 @@ export default function CartDrawer() {
                                     {item.image ? (
                                         <Image src={item.image} alt={item.name} fill className="object-cover" />
                                     ) : (
-                                        <div className="flex items-center justify-center h-full text-[8px] text-stone-400">NO IMG</div>
+                                        <div className="flex items-center justify-center h-full text-[8px] text-stone-400">{tCommon('noImage')}</div>
                                     )}
                                 </div>
                                 <div className="flex-1 min-w-0">
@@ -125,7 +129,7 @@ export default function CartDrawer() {
                             onClick={handleWhatsAppQuote}
                         >
                             <MessageCircle className="w-5 h-5" />
-                            Angebot per WhatsApp
+                            {t('whatsappBtn')}
                         </Button>
                         <Button
                             variant="outline"
@@ -133,10 +137,10 @@ export default function CartDrawer() {
                             onClick={handleEmailQuote}
                         >
                             <Send className="w-4 h-4 mr-2" />
-                            Per Email anfragen
+                            {t('emailBtn')}
                         </Button>
                         <p className="text-[10px] text-center text-stone-400 pt-2">
-                            Dies ist eine unverbindliche Preisanfrage.
+                            {t('disclaimer')}
                         </p>
                     </div>
                 )}

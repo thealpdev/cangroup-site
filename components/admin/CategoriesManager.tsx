@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState, useEffect } from 'react';
 import { collection, addDoc, deleteDoc, updateDoc, doc, onSnapshot, query, orderBy, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -21,6 +22,7 @@ interface Category {
 }
 
 export default function CategoriesManager() {
+    const t = useTranslations('Admin');
     const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState<Category[]>([]);
 
@@ -89,8 +91,8 @@ export default function CategoriesManager() {
 
             resetForm();
         } catch (error) {
-            console.error("Hata:", error);
-            alert("İşlem başarısız.");
+            console.error(t('errorPrefix'), error);
+            alert(t('operationFailed'));
         } finally {
             setLoading(false);
         }
@@ -98,12 +100,12 @@ export default function CategoriesManager() {
 
     const handleDelete = async (id: string, e: React.MouseEvent) => {
         e.stopPropagation(); // Prevent potentially triggering edit if row is clicked
-        if (!confirm("Bu kategoriyi silmek istediğinize emin misiniz?")) return;
+        if (!confirm(t('confirmDeleteCategory'))) return;
         try {
             await deleteDoc(doc(db, "categories", id));
             if (editingId === id) resetForm();
         } catch (error) {
-            console.error("Silme hatası:", error);
+            console.error(t('errorPrefix'), error);
         }
     };
 
@@ -116,38 +118,38 @@ export default function CategoriesManager() {
                         <div className="flex items-center gap-2">
                             {editingId ? <Edit2 className="h-5 w-5 text-[#C8102E]" /> : <Plus className="h-5 w-5 text-[#C8102E]" />}
                             <span className="text-xs font-bold uppercase tracking-widest text-[#C8102E]">
-                                {editingId ? 'Düzenle' : 'Yeni Kategori'}
+                                {editingId ? t('edit') : t('newCategory')}
                             </span>
                         </div>
                         {editingId && (
                             <Button variant="ghost" size="sm" onClick={resetForm} className="text-stone-400 hover:text-stone-900">
-                                <X className="h-4 w-4 mr-1" /> İptal
+                                <X className="h-4 w-4 mr-1" /> {t('cancel')}
                             </Button>
                         )}
                     </div>
                     <CardTitle className="text-xl font-bold tracking-tight">
-                        {editingId ? 'Kategoriyi Güncelle' : 'Kategori Oluştur'}
+                        {editingId ? t('updateCategory') : t('createCategory')}
                     </CardTitle>
                     <CardDescription>
-                        {editingId ? 'Mevcut kategori bilgilerini düzenliyorsunuz.' : 'Ürünlerinizi gruplamak için yeni bir başlık ekleyin.'}
+                        {editingId ? t('editingCategory') : t('newCategoryHeading')}
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-6">
 
                         <div className="space-y-2">
-                            <Label>Kategori Görseli</Label>
+                            <Label>{t('categoryImage')}</Label>
                             <ImageUpload
                                 value={images}
                                 onChange={(url) => setImages(prev => [...prev, url])}
                                 onRemove={(url) => setImages(prev => prev.filter(p => p !== url))}
                                 disabled={loading}
                             />
-                            <p className="text-xs text-stone-400">İlk yüklenen görsel kapak fotoğrafı olacaktır.</p>
+                            <p className="text-xs text-stone-400">{t('firstImageCover')}</p>
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Kategori Adı</Label>
+                            <Label>{t('categoryName')}</Label>
                             <Input
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
@@ -157,11 +159,11 @@ export default function CategoriesManager() {
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Açıklama (Opsiyonel)</Label>
+                            <Label>{t('descriptionOptional')}</Label>
                             <Textarea
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
-                                placeholder="Kategori hakkında kısa açıklama..."
+                                placeholder={t('categoryShortDesc')}
                                 className="rounded-xl border-stone-200 focus-visible:ring-[#C8102E]"
                                 rows={3}
                             />
@@ -177,7 +179,7 @@ export default function CategoriesManager() {
                             ) : (
                                 <>
                                     {editingId ? <Save className="mr-2 h-4 w-4" /> : <Plus className="mr-2 h-4 w-4" />}
-                                    {editingId ? 'Değişiklikleri Kaydet' : 'Ekle'}
+                                    {editingId ? t('saveChanges') : t('add')}
                                 </>
                             )}
                         </Button>
@@ -190,9 +192,9 @@ export default function CategoriesManager() {
                 <CardHeader>
                     <div className="flex items-center gap-2 mb-2">
                         <List className="h-5 w-5 text-stone-900" />
-                        <span className="text-xs font-bold uppercase tracking-widest text-[#C8102E]">Mevcut Kategoriler</span>
+                        <span className="text-xs font-bold uppercase tracking-widest text-[#C8102E]">{t('currentCategories')}</span>
                     </div>
-                    <CardTitle className="text-xl font-bold tracking-tight">Kategori Listesi</CardTitle>
+                    <CardTitle className="text-xl font-bold tracking-tight">{t('categoryList')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-3">
@@ -224,7 +226,7 @@ export default function CategoriesManager() {
                                     <h4 className={`font-bold truncate ${editingId === cat.id ? 'text-[#C8102E]' : 'text-stone-900'}`}>
                                         {cat.name}
                                     </h4>
-                                    <p className="text-xs text-stone-500 truncate">{cat.description || 'Açıklama yok'}</p>
+                                    <p className="text-xs text-stone-500 truncate">{cat.description || ''}</p>
                                 </div>
 
                                 {/* Actions */}
@@ -232,7 +234,7 @@ export default function CategoriesManager() {
                                     <button
                                         onClick={(e) => handleDelete(cat.id, e)}
                                         className="p-2 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                        title="Sil"
+                                        title={t('confirmDeleteCategory')}
                                     >
                                         <Trash className="h-4 w-4" />
                                     </button>
@@ -242,7 +244,7 @@ export default function CategoriesManager() {
 
                         {categories.length === 0 && (
                             <div className="text-center py-12">
-                                <p className="text-stone-400 italic">Henüz kategori bulunmuyor.</p>
+                                <p className="text-stone-400 italic">{t('noCategories')}</p>
                             </div>
                         )}
                     </div>

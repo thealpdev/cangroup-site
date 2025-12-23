@@ -1,10 +1,14 @@
 "use client";
 
+import { useTranslations } from 'next-intl';
+
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 
 export default function BrandStory() {
+    const t = useTranslations('Homepage');
+
     return (
         <section className="relative py-20 overflow-hidden bg-[#0a0a0a] text-white my-0">
             {/* Background Texture/Image */}
@@ -26,8 +30,8 @@ export default function BrandStory() {
                     </span>
 
                     <h2 className="text-4xl md:text-6xl lg:text-7xl font-serif leading-tight">
-                        Mutfakta <span className="italic text-stone-400">Mükemmellik</span> <br />
-                        Bir Seçim Değil, <span className="text-[#C8102E]">Standarttır.</span>
+                        {t('storyTitle')} <br />
+                        <span className="text-[#C8102E]">{t('storySubtitle')}</span>
                     </h2>
 
                     <p className="text-stone-300 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto font-light">
@@ -40,7 +44,7 @@ export default function BrandStory() {
                             href="/about"
                             className="inline-flex items-center gap-2 text-white border border-white/20 bg-white/5 hover:bg-white hover:text-black px-8 py-4 rounded-full transition-all duration-300 backdrop-blur-sm"
                         >
-                            <span className="text-sm font-bold uppercase tracking-widest">Hikayemizi Oku</span>
+                            <span className="text-sm font-bold uppercase tracking-widest">{t('readStory')}</span>
                             <ArrowUpRight className="w-4 h-4" />
                         </Link>
                     </div>

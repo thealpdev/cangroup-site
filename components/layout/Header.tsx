@@ -235,10 +235,10 @@ function LanguageSwitcher({ scrolled }: { scrolled: boolean }) {
 
     const getLabel = (l: string) => {
         switch (l) {
-            case 'de': return <><span className="text-lg leading-none">🇩🇪</span><span>DE</span></>;
-            case 'en': return <><span className="text-lg leading-none">🇬🇧</span><span>EN</span></>;
-            case 'fr': return <><span className="text-lg leading-none">🇫🇷</span><span>FR</span></>;
-            case 'tr': return <><span className="text-lg leading-none">🇹🇷</span><span>TR</span></>;
+            case 'de': return <span className="text-2xl leading-none">🇩🇪</span>;
+            case 'en': return <span className="text-2xl leading-none">🇬🇧</span>;
+            case 'fr': return <span className="text-2xl leading-none">🇫🇷</span>;
+            case 'tr': return <span className="text-2xl leading-none">🇹🇷</span>;
             default: return l.toUpperCase();
         }
     };

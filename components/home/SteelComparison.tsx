@@ -1,10 +1,14 @@
 "use client";
 
+import { useTranslations } from 'next-intl';
+
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 
 export default function SteelComparison() {
+    const t = useTranslations('Homepage');
+
     return (
         <section className="py-24 bg-stone-900 text-white relative overflow-hidden">
             {/* Decorative Background */}
@@ -39,18 +43,18 @@ export default function SteelComparison() {
                         </div>
 
                         <div className="h-1 w-20 bg-[#C8102E]"></div>
-                        <h4 className="text-3xl font-bold uppercase">Solingen Steel</h4>
+                        <h4 className="text-3xl font-bold uppercase">{t('steelSolingen')}</h4>
                         <p className="text-stone-300 leading-relaxed font-light text-lg">
                             Renowned worldwide as the "City of Blades". Solingen steel represents the pinnacle of German forging technology. Known for extreme durability, edge retention, and heavy-duty performance in professional kitchens.
                         </p>
                         <ul className="space-y-3">
                             <li className="flex items-center gap-3">
                                 <Check className="text-[#C8102E] w-5 h-5" />
-                                <span className="text-sm font-bold uppercase tracking-wider">High Carbon Content</span>
+                                <span className="text-sm font-bold uppercase tracking-wider">{t('steelHighCarbon')}</span>
                             </li>
                             <li className="flex items-center gap-3">
                                 <Check className="text-[#C8102E] w-5 h-5" />
-                                <span className="text-sm font-bold uppercase tracking-wider">Maximum Durability</span>
+                                <span className="text-sm font-bold uppercase tracking-wider">{t('steelDurability')}</span>
                             </li>
                         </ul>
                     </motion.div>
@@ -73,18 +77,18 @@ export default function SteelComparison() {
                         </div>
 
                         <div className="h-1 w-20 bg-white"></div>
-                        <h4 className="text-3xl font-bold uppercase">Swiss Stainless</h4>
+                        <h4 className="text-3xl font-bold uppercase">{t('steelSwiss')}</h4>
                         <p className="text-stone-300 leading-relaxed font-light text-lg">
                             Celebrated for precision and corrosion resistance. Swiss steel offers a lighter, razor-sharp edge that is easy to maintain. The choice of professionals who value surgical precision and hygiene.
                         </p>
                         <ul className="space-y-3 w-full flex flex-col items-end">
                             <li className="flex items-center gap-3 flex-row-reverse">
                                 <Check className="text-white w-5 h-5" />
-                                <span className="text-sm font-bold uppercase tracking-wider">Surgical Sharpness</span>
+                                <span className="text-sm font-bold uppercase tracking-wider">{t('steelSharpness')}</span>
                             </li>
                             <li className="flex items-center gap-3 flex-row-reverse">
                                 <Check className="text-white w-5 h-5" />
-                                <span className="text-sm font-bold uppercase tracking-wider">Corrosion Resistant</span>
+                                <span className="text-sm font-bold uppercase tracking-wider">{t('steelCorrosion')}</span>
                             </li>
                         </ul>
                     </motion.div>

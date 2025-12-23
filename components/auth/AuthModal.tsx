@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from 'next-intl';
+
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail, Lock, Loader2, User } from 'lucide-react';
@@ -14,6 +16,7 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
+    const t = useTranslations('Auth');
     const [mode, setMode] = useState<'login' | 'register'>('login');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -82,7 +85,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     <div className="h-32 bg-[#0a0a0a] relative overflow-hidden flex items-center justify-center">
                         <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1593642632823-8f7853670961?q=80&w=2070')] bg-cover bg-center" />
                         <h2 className="relative z-10 text-white font-serif text-2xl font-bold tracking-wide">
-                            {mode === 'login' ? 'Hoşgeldiniz' : 'Aramıza Katılın'}
+                            {mode === 'login' ? t('welcome') : t('joinUs')}
                         </h2>
                         <button
                             onClick={onClose}
@@ -102,7 +105,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                                     mode === 'login' ? "bg-white text-[#0a0a0a] shadow-sm" : "text-stone-500 hover:text-stone-700"
                                 )}
                             >
-                                Giriş Yap
+                                {t('loginTitle')}
                             </button>
                             <button
                                 onClick={() => setMode('register')}
@@ -111,7 +114,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                                     mode === 'register' ? "bg-white text-[#0a0a0a] shadow-sm" : "text-stone-500 hover:text-stone-700"
                                 )}
                             >
-                                Kayıt Ol
+                                {t('registerTitle')}
                             </button>
                         </div>
 
@@ -126,7 +129,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                         <form onSubmit={handleSubmit} className="space-y-4">
                             {mode === 'register' && (
                                 <div className="space-y-1">
-                                    <label className="text-xs font-bold uppercase text-stone-500">İsim Soyisim</label>
+                                    <label className="text-xs font-bold uppercase text-stone-500">{t('nameLabel')}</label>
                                     <div className="relative">
                                         <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
                                         <input
@@ -135,14 +138,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                                             value={formData.name}
                                             onChange={e => setFormData({ ...formData, name: e.target.value })}
                                             className="w-full pl-10 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-[#C8102E] transition-colors"
-                                            placeholder="Adınız"
+                                            placeholder="..."
                                         />
                                     </div>
                                 </div>
                             )}
 
                             <div className="space-y-1">
-                                <label className="text-xs font-bold uppercase text-stone-500">E-posta</label>
+                                <label className="text-xs font-bold uppercase text-stone-500">{t('emailLabel')}</label>
                                 <div className="relative">
                                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
                                     <input
@@ -151,13 +154,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                                         value={formData.email}
                                         onChange={e => setFormData({ ...formData, email: e.target.value })}
                                         className="w-full pl-10 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-[#C8102E] transition-colors"
-                                        placeholder="ornek@email.com"
+                                        placeholder="..."
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-1">
-                                <label className="text-xs font-bold uppercase text-stone-500">Şifre</label>
+                                <label className="text-xs font-bold uppercase text-stone-500">{t('passwordLabel')}</label>
                                 <div className="relative">
                                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
                                     <input
@@ -178,7 +181,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                                 className="w-full bg-[#C8102E] text-white font-bold uppercase tracking-wider py-4 rounded-lg hover:bg-[#A00C24] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-4"
                             >
                                 {loading && <Loader2 className="w-5 h-5 animate-spin" />}
-                                {mode === 'login' ? 'Giriş Yap' : 'Hesap Oluştur'}
+                                {mode === 'login' ? t('submitLogin') : t('submitRegister')}
                             </button>
                         </form>
                     </div>

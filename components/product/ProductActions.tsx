@@ -1,11 +1,14 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, ExternalLink, ShoppingBag } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 
 export default function ProductActions({ product }: { product: any }) {
     const { addItem, setIsOpen } = useCart();
+    const t = useTranslations('Products');
 
     const handleAddToCart = () => {
         addItem(product);
@@ -30,8 +33,8 @@ export default function ProductActions({ product }: { product: any }) {
                         <ShoppingBag className="w-5 h-5" />
                     </div>
                     <div className="flex flex-col items-start leading-none">
-                        <span className="text-[10px] uppercase opacity-90 tracking-wider">Zur Liste hinzufügen</span>
-                        <span>Angebot Anfordern</span>
+                        <span className="text-[10px] uppercase opacity-90 tracking-wider">{t('addToQuote')}</span>
+                        <span>{t('requestQuote')}</span>
                     </div>
                 </div>
             </Button>
@@ -52,7 +55,7 @@ export default function ProductActions({ product }: { product: any }) {
                     className="h-14 rounded-xl border-2 border-stone-100 bg-white text-stone-900 font-bold hover:bg-stone-50 hover:border-stone-200 transition-all"
                 >
                     <Phone className="w-5 h-5 mr-2" />
-                    Anrufen
+                    {t('call')}
                 </Button>
             </div>
         </div>

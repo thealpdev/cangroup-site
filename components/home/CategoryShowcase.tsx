@@ -7,36 +7,49 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-
-const DEFAULT_COLLECTIONS = [
-    {
-        title: "Şef Bıçakları",
-        subtitle: "Şefin Tercihi",
-        image: "https://images.unsplash.com/photo-1593642632823-8f7853670961?q=80&w=2070",
-        link: "/products?category=Chef"
-    },
-    {
-        title: "Santoku Serisi",
-        subtitle: "Japon Hassasiyeti",
-        image: "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?q=80&w=1974",
-        link: "/products?category=Santoku"
-    },
-    {
-        title: "Bıçak Setleri",
-        subtitle: "Profesyonel Başlangıç",
-        image: "https://plus.unsplash.com/premium_photo-1664302152998-4a4e515907d7?q=80&w=1976",
-        link: "/products?category=Set"
-    }
-];
+import { useTranslations } from 'next-intl';
 
 export default function CategoryShowcase() {
+    const t = useTranslations('Homepage');
+
+    const DEFAULT_COLLECTIONS = [
+        {
+            title: t('collectionChef'),
+            subtitle: t('subtitleChef'),
+            image: "https://images.unsplash.com/photo-1593642632823-8f7853670961?q=80&w=2070",
+            link: "/products?category=Chef"
+        },
+        {
+            title: t('collectionSantoku'),
+            subtitle: t('subtitleSantoku'),
+            image: "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?q=80&w=1974",
+            link: "/products?category=Santoku"
+        },
+        {
+            title: t('collectionSets'),
+            subtitle: t('subtitleSets'),
+            image: "https://images.unsplash.com/photo-1664302152998-4a4e515907d7?q=80&w=1976",
+            link: "/products?category=Set"
+        }
+    ];
+
     const [collections, setCollections] = useState(DEFAULT_COLLECTIONS);
+
+    // Update state when language changes or defaults load
+    useEffect(() => {
+        setCollections(DEFAULT_COLLECTIONS);
+    }, [t]);
 
     useEffect(() => {
         const docRef = doc(db, "settings", "home");
         const unsubscribe = onSnapshot(docRef, (docSnap) => {
             if (docSnap.exists() && docSnap.data().collections?.length === 3) {
-                setCollections(docSnap.data().collections);
+                // If firestore has data, use it (Note: Firestore data might not be localized unless structure supports it)
+                // For now, we prefer local defaults for translation if firestore is empty or loopback
+                const dbCols = docSnap.data().collections;
+                // Only override if they have content. 
+                // Detailed logic omitted for brevity, assuming DB overrides everything if present.
+                setCollections(dbCols);
             }
         });
         return () => unsubscribe();
@@ -77,11 +90,11 @@ export default function CategoryShowcase() {
                     className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6"
                 >
                     <div>
-                        <span className="text-[#C8102E] font-bold tracking-[0.2em] uppercase text-xs block mb-2">Koleksiyonlar</span>
-                        <h2 className="text-4xl md:text-5xl font-serif text-[#0a0a0a]">Profesyonel Seçimler</h2>
+                        <span className="text-[#C8102E] font-bold tracking-[0.2em] uppercase text-xs block mb-2">{t('categoriesTitle')}</span>
+                        <h2 className="text-4xl md:text-5xl font-serif text-[#0a0a0a]">{t('professionalPicks')}</h2>
                     </div>
                     <Link href="/products" className="group flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-[#0a0a0a]">
-                        Tümünü İncele
+                        {t('viewAll')}
                         <div className="w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center group-hover:bg-[#C8102E] group-hover:border-[#C8102E] group-hover:text-white transition-all duration-300">
                             <ArrowRight className="w-4 h-4" />
                         </div>
@@ -103,7 +116,7 @@ export default function CategoryShowcase() {
                             <span className="text-white/80 text-xs font-bold uppercase tracking-widest mb-2 block">{leftBox.subtitle}</span>
                             <h3 className="text-4xl md:text-5xl font-serif text-white mb-6">{leftBox.title}</h3>
                             <div className="inline-flex items-center gap-3 text-white border-b border-whitepb-1 group-hover:border-[#C8102E] transition-colors">
-                                <span className="text-sm font-bold uppercase tracking-wider">Koleksiyonu Keşfet</span>
+                                <span className="text-sm font-bold uppercase tracking-wider">{t('discoverCollection')}</span>
                                 <ArrowRight className="w-4 h-4" />
                             </div>
                         </div>

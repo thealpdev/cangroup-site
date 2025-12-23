@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from 'next-intl';
+
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,6 +11,8 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 export default function Partners() {
+    const t = useTranslations('Homepage');
+
     // Defines the shape of a Partner object
     interface Partner {
         id: string;
@@ -41,8 +45,8 @@ export default function Partners() {
         <section className="py-24 bg-stone-50/50 border-b border-stone-100">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
-                    <span className="text-xs font-bold uppercase tracking-[0.3em] text-[#C8102E] mb-2 block">Markalarımız</span>
-                    <h2 className="text-3xl md:text-4xl font-serif text-stone-900">Güvenilir İş Ortakları</h2>
+                    <span className="text-xs font-bold uppercase tracking-[0.3em] text-[#C8102E] mb-2 block">{t('partnersSubtitle')}</span>
+                    <h2 className="text-3xl md:text-4xl font-serif text-stone-900">{t('partnersTitle')}</h2>
                 </div>
 
                 {/* Logo Grid */}

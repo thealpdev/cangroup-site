@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { useState, useEffect } from 'react';
 import { collection, getDocs, deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { initializeApp, getApp, deleteApp } from "firebase/app";
@@ -19,6 +21,7 @@ interface AdminUser {
 }
 
 export default function UsersManager() {
+    const t = useTranslations('Admin');
     const [users, setUsers] = useState<AdminUser[]>([]);
     const [loading, setLoading] = useState(true);
     const [newEmail, setNewEmail] = useState('');
@@ -66,7 +69,7 @@ export default function UsersManager() {
                 createdAt: new Date().toISOString()
             });
 
-            alert("Yeni Yönetici Başarıyla Eklendi ✅");
+            alert(t('successAdd'));
             setNewEmail('');
             setNewPassword('');
             fetchUsers();
@@ -74,8 +77,8 @@ export default function UsersManager() {
             // Cleanup
             await secondaryAuth.signOut();
         } catch (error: any) {
-            console.error("Kullanıcı ekleme hatası:", error);
-            alert("Hata: " + error.message);
+            console.error(t('errorPrefix'), error);
+            alert(t('errorPrefix') + error.message);
         } finally {
             if (secondaryApp) {
                 await deleteApp(secondaryApp);
@@ -85,14 +88,14 @@ export default function UsersManager() {
     };
 
     const handleDeleteUser = async (userId: string) => {
-        if (!confirm("Emin misiniz? Bu kişiyi listeden silmek, panele erişimini engellemez. Firebase Console üzerinden de silmeniz gerekir.")) return;
+        if (!confirm(t('confirmDelete'))) return;
 
         try {
             await deleteDoc(doc(db, "admins", userId));
-            alert("Kullanıcı listeden silindi. ÖNEMLİ: Bu kişinin giriş yapmasını engellemek için Firebase Console > Authentication kısmından da silmelisiniz.");
+            alert(t('successDelete'));
             fetchUsers();
         } catch (error) {
-            console.error("Silme hatası:", error);
+            console.error(t('errorPrefix'), error);
         }
     };
 
@@ -103,17 +106,17 @@ export default function UsersManager() {
                 <CardHeader>
                     <div className="flex items-center gap-2 mb-2">
                         <UserPlus className="h-5 w-5 text-[#C8102E]" />
-                        <span className="text-xs font-bold uppercase tracking-widest text-[#C8102E]">Erişim Yönetimi</span>
+                        <span className="text-xs font-bold uppercase tracking-widest text-[#C8102E]">{t('accessManagement')}</span>
                     </div>
-                    <CardTitle className="text-xl font-bold uppercase tracking-tight">Yeni Yönetici Ekle</CardTitle>
+                    <CardTitle className="text-xl font-bold uppercase tracking-tight">{t('addUserTitle')}</CardTitle>
                     <CardDescription>
-                        Panele tam yetkili yeni bir kullanıcı ekleyin.
+                        {t('addUserDesc')}
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleCreateUser} className="space-y-4">
                         <div className="space-y-2">
-                            <Label>Kullanıcı E-Posta</Label>
+                            <Label>{t('userEmail')}</Label>
                             <Input
                                 type="email"
                                 value={newEmail}
@@ -124,7 +127,7 @@ export default function UsersManager() {
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label>Geçici Şifre</Label>
+                            <Label>{t('tempPassword')}</Label>
                             <Input
                                 type="password"
                                 value={newPassword}
@@ -140,7 +143,7 @@ export default function UsersManager() {
                             disabled={creating}
                             className="w-full bg-[#C8102E] hover:bg-[#A00C24] text-white font-bold uppercase tracking-widest rounded-none"
                         >
-                            {creating ? <Loader2 className="animate-spin" /> : "Hesabı Oluştur"}
+                            {creating ? <Loader2 className="animate-spin" /> : t('createAccount')}
                         </Button>
                     </form>
                 </CardContent>
@@ -151,9 +154,9 @@ export default function UsersManager() {
                 <CardHeader>
                     <div className="flex items-center gap-2 mb-2">
                         <Shield className="h-5 w-5 text-stone-900" />
-                        <span className="text-xs font-bold uppercase tracking-widest text-stone-500">Yetkili Personel</span>
+                        <span className="text-xs font-bold uppercase tracking-widest text-stone-500">{t('authPersonnel')}</span>
                     </div>
-                    <CardTitle className="text-xl font-bold uppercase tracking-tight">Aktif Yöneticiler</CardTitle>
+                    <CardTitle className="text-xl font-bold uppercase tracking-tight">{t('activeAdmins')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     {loading ? (
@@ -162,7 +165,7 @@ export default function UsersManager() {
                         </div>
                     ) : (
                         <div className="space-y-4">
-                            {users.length === 0 && <p className="text-stone-500 italic">Başka yönetici bulunamadı.</p>}
+                            {users.length === 0 && <p className="text-stone-500 italic">{t('noAdminsFound')}</p>}
                             {users.map(user => (
                                 <div key={user.id} className="flex items-center justify-between p-4 bg-stone-50 border border-stone-200">
                                     <div>

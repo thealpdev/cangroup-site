@@ -9,11 +9,14 @@ import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { useTranslations } from "next-intl";
 
 export default function HeroPremium() {
     const [current, setCurrent] = useState(0);
     const [slides, setSlides] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+
+    const t = useTranslations('Homepage');
 
     useEffect(() => {
         const q = query(collection(db, "hero"), orderBy("order", "asc"));
@@ -22,15 +25,15 @@ export default function HeroPremium() {
             if (items.length > 0) {
                 setSlides(items);
             } else {
-                // Fallback demo slide if admin is empty
+                // Fallback demo slide translated
                 setSlides([
                     {
                         id: 'demo',
-                        title: "Profesyonel Mutfak",
-                        subtitle: "CanMarkt Kalitesiyle",
+                        title: t('heroTitle'),
+                        subtitle: t('heroSubtitle'),
                         image: "https://images.unsplash.com/photo-1556910103-1c02745a30bf?q=80&w=2070",
                         link: "/products",
-                        cta: "Alışverişe Başla"
+                        cta: t('heroCta')
                     }
                 ]);
             }
@@ -38,7 +41,7 @@ export default function HeroPremium() {
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [t]);
 
     useEffect(() => {
         if (slides.length <= 1) return;
