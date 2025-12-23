@@ -4,12 +4,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useCart } from "@/lib/cart-context";
-import { useAuth } from "@/lib/auth-context";
+import { useWishlist } from "@/lib/wishlist-context";
 import { ShoppingBag, Heart } from "lucide-react";
-import { useState, useEffect } from 'react';
-import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
-import AuthModal from "@/components/auth/AuthModal";
+import { useState } from 'react';
 
 interface Product {
     id: string;
@@ -158,51 +155,32 @@ function AddToCartButton({ product }: { product: Product }) {
 }
 
 function FavoriteButton({ product }: { product: Product }) {
-    const { user } = useAuth();
-    const [isFav, setIsFav] = useState(false);
-    const [authOpen, setAuthOpen] = useState(false);
+    const { isInWishlist, toggleItem } = useWishlist();
+    const isFav = isInWishlist(product.id);
 
-    useEffect(() => {
-        const checkFav = async () => {
-            if (!user) { setIsFav(false); return; }
-            const ref = doc(db, `users/${user.uid}/favorites`, product.id);
-            const snap = await getDoc(ref);
-            setIsFav(snap.exists());
-        };
-        checkFav();
-    }, [user, product.id]);
-
-    const toggleFav = async (e: React.MouseEvent) => {
+    const handleToggle = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
 
-        if (!user) {
-            setAuthOpen(true);
-            return;
-        }
-
-        const ref = doc(db, `users/${user.uid}/favorites`, product.id);
-        if (isFav) {
-            await deleteDoc(ref);
-            setIsFav(false);
-        } else {
-            await setDoc(ref, { id: product.id, addedAt: new Date() });
-            setIsFav(true);
-        }
+        toggleItem({
+            id: product.id,
+            productNumber: product.productCode || product.id, // Fallback
+            name_tr: product.name_tr || product.name_en || product.name_de || '',
+            price: product.isSale ? product.salePrice || product.price : product.price,
+            image: product.images?.[0] || product.image,
+            slug: product.id
+        });
     };
 
     return (
-        <>
-            <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
-            <button
-                onClick={toggleFav}
-                className={`p-2 rounded-full backdrop-blur-sm transition-all shadow-sm border ${isFav
-                    ? "bg-red-50 border-red-100 text-[#C8102E]"
-                    : "bg-white/80 border-stone-200 text-stone-400 hover:text-[#C8102E] hover:border-[#C8102E]/30"
-                    }`}
-            >
-                <Heart className={`w-4 h-4 ${isFav ? "fill-current" : ""}`} />
-            </button>
-        </>
+        <button
+            onClick={handleToggle}
+            className={`p-2 rounded-full backdrop-blur-sm transition-all shadow-sm border ${isFav
+                ? "bg-red-50 border-red-100 text-[#C8102E]"
+                : "bg-white/80 border-stone-200 text-stone-400 hover:text-[#C8102E] hover:border-[#C8102E]/30"
+                }`}
+        >
+            <Heart className={`w-4 h-4 ${isFav ? "fill-current" : ""}`} />
+        </button>
     );
 }

@@ -4,6 +4,7 @@ import "./globals.css";
 import { LanguageProvider } from "@/lib/language-context";
 import { AuthProvider } from '@/lib/auth-context';
 import { CartProvider } from "@/lib/cart-context";
+import { WishlistProvider } from "@/lib/wishlist-context";
 import MaintenanceGuard from '@/components/layout/MaintenanceGuard';
 import ClientLayout from "@/components/layout/ClientLayout";
 
@@ -42,11 +43,13 @@ export default function RootLayout({
         <AuthProvider>
           <LanguageProvider>
             <CartProvider>
-              <MaintenanceGuard>
-                <ClientLayout>
-                  {children}
-                </ClientLayout>
-              </MaintenanceGuard>
+              <WishlistProvider>
+                <MaintenanceGuard>
+                  <ClientLayout>
+                    {children}
+                  </ClientLayout>
+                </MaintenanceGuard>
+              </WishlistProvider>
             </CartProvider>
           </LanguageProvider>
         </AuthProvider>

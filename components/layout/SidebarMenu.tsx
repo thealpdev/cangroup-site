@@ -99,9 +99,9 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
                                     <HelpCircle className="w-5 h-5" />
                                     <span>Yardım ve İletişim</span>
                                 </Link>
-                                <Link href="/stores" className="flex items-center gap-4 text-stone-300 hover:text-white transition-colors">
-                                    <MapPin className="w-5 h-5" />
-                                    <span>Mağazalar</span>
+                                <Link href="/help" className="flex items-center gap-4 text-stone-300 hover:text-white transition-colors">
+                                    <HelpCircle className="w-5 h-5" />
+                                    <span>Yardım ve İletişim</span>
                                 </Link>
                             </div>
                         </div>
