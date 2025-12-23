@@ -95,11 +95,6 @@ export default function Footer() {
                     <p className="text-xs text-stone-500">
                         &copy; {new Date().getFullYear()} CANGROUP. Alle Rechte vorbehalten.
                     </p>
-                    <div className="flex gap-6 items-center">
-                        <Link href="/admin" className="text-[10px] text-stone-700 hover:text-[#C8102E] transition-colors uppercase font-bold tracking-widest opacity-50 hover:opacity-100">
-                            Admin
-                        </Link>
-                    </div>
                 </div>
             </div>
         </footer>

@@ -2,8 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { X, ChevronRight, ShoppingBag, Heart, User, HelpCircle, MapPin } from 'lucide-react';
-import { useCart } from "@/lib/cart-context";
+import { X, ChevronRight, Heart, User, HelpCircle } from 'lucide-react';
 
 interface SidebarMenuProps {
     isOpen: boolean;
@@ -11,9 +10,9 @@ interface SidebarMenuProps {
 }
 
 const MENU_ITEMS = [
-    { label: "ANASAYFA", href: "/" },
-    { label: "ÜRÜNLER", href: "/products" },
-    { label: "KATEGORİLER", href: "/categories" },
+    { label: "Anasayfa", href: "/" },
+    { label: "Ürünler", href: "/products" },
+    { label: "Koleksiyonlar", href: "/categories" },
 ];
 
 const SECONDARY_LINKS = [
@@ -32,7 +31,7 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="fixed inset-0 bg-black/50 z-[60] backdrop-blur-sm"
+                        className="fixed inset-0 bg-black/60 z-[60] backdrop-blur-sm"
                     />
 
                     {/* Drawer */}
@@ -41,45 +40,50 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
                         animate={{ x: 0 }}
                         exit={{ x: "-100%" }}
                         transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                        className="fixed inset-y-0 left-0 w-full md:w-[400px] bg-black text-white z-[70] shadow-2xl flex flex-col"
+                        className="fixed inset-y-0 left-0 w-full md:w-[450px] bg-[#0a0a0a] text-white z-[70] shadow-2xl flex flex-col"
                     >
                         {/* Header */}
-                        <div className="flex items-center justify-between p-6 border-b border-white/10">
-                            <Link href="/" className="text-2xl font-serif tracking-tight font-bold">
-                                CANGROUP
+                        <div className="flex items-center justify-between p-8 md:p-10 border-b border-white/5">
+                            <Link href="/" className="text-2xl font-serif tracking-tighter" onClick={onClose}>
+                                CAN<span className="text-[#C8102E]">GROUP</span>
                             </Link>
-                            <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-                                <X className="w-6 h-6" />
+                            <button
+                                onClick={onClose}
+                                className="group p-2 -mr-2 text-stone-400 hover:text-white transition-colors"
+                            >
+                                <X className="w-6 h-6 transition-transform group-hover:rotate-90" />
                             </button>
                         </div>
 
                         {/* Content */}
-                        <div className="flex-1 overflow-y-auto py-8 px-6 space-y-12">
+                        <div className="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar py-10 px-8 md:px-12 space-y-12">
                             {/* Primary Navigation */}
-                            <nav className="space-y-8">
+                            <nav className="space-y-6">
                                 {MENU_ITEMS.map((item) => (
                                     <Link
                                         key={item.label}
                                         href={item.href}
                                         onClick={onClose}
-                                        className="flex items-center justify-between group"
+                                        className="block group"
                                     >
-                                        <span className="text-4xl md:text-5xl font-serif font-bold text-white group-hover:text-[#C8102E] transition-colors duration-300">
-                                            {item.label}
-                                        </span>
-                                        <ChevronRight className="w-6 h-6 text-[#C8102E] opacity-0 -translate-x-8 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-4xl md:text-5xl font-light tracking-wide text-stone-300 group-hover:text-white transition-colors duration-500">
+                                                {item.label}
+                                            </span>
+                                            <ChevronRight className="w-6 h-6 text-[#C8102E] opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500" />
+                                        </div>
                                     </Link>
                                 ))}
                             </nav>
 
                             {/* Secondary Navigation */}
-                            <nav className="space-y-4 pt-4 border-t border-white/10">
+                            <nav className="space-y-4 pt-6 border-t border-white/5">
                                 {SECONDARY_LINKS.map(link => (
                                     <Link
                                         key={link.label}
                                         href={link.href}
                                         onClick={onClose}
-                                        className="block text-xl text-stone-400 hover:text-white transition-colors font-medium tracking-wide"
+                                        className="block text-lg text-stone-500 hover:text-white transition-colors tracking-wider"
                                     >
                                         {link.label}
                                     </Link>
@@ -87,44 +91,48 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
                             </nav>
 
                             {/* Utility Links */}
-                            <div className="pt-8 space-y-6">
-                                <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-stone-600">Hesap & Destek</h4>
+                            <div className="pt-6 space-y-6">
                                 <div className="space-y-4">
-                                    <Link href="/wishlist" className="flex items-center gap-4 text-stone-300 hover:text-[#C8102E] transition-colors group">
-                                        <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
-                                            <Heart className="w-5 h-5" />
-                                        </div>
-                                        <span className="font-medium">Favori Listesi</span>
+                                    <Link href="/wishlist" onClick={onClose} className="flex items-center gap-4 text-stone-400 hover:text-[#C8102E] transition-colors group">
+                                        <Heart className="w-5 h-5" />
+                                        <span className="font-light tracking-wider">Favori Listesi</span>
                                     </Link>
-                                    <Link href="/account" className="flex items-center gap-4 text-stone-300 hover:text-[#C8102E] transition-colors group">
-                                        <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
-                                            <User className="w-5 h-5" />
-                                        </div>
-                                        <span className="font-medium">Hesabım</span>
-                                    </Link>
-                                    <Link href="/help" className="flex items-center gap-4 text-stone-300 hover:text-[#C8102E] transition-colors group">
-                                        <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
-                                            <HelpCircle className="w-5 h-5" />
-                                        </div>
-                                        <span className="font-medium">Yardım ve İletişim</span>
+                                    <Link href="/help" onClick={onClose} className="flex items-center gap-4 text-stone-400 hover:text-white transition-colors group">
+                                        <HelpCircle className="w-5 h-5" />
+                                        <span className="font-light tracking-wider">Yardım & İletişim</span>
                                     </Link>
                                 </div>
                             </div>
                         </div>
 
                         {/* Footer Button */}
-                        <div className="p-6 border-t border-white/10">
+                        <div className="p-8 border-t border-white/5 bg-[#0a0a0a]">
                             <Link
                                 href="/cart"
                                 onClick={onClose}
-                                className="flex items-center justify-center w-full bg-[#C8102E] text-white font-bold py-4 rounded text-sm tracking-widest hover:bg-[#a00d25] transition-colors uppercase"
+                                className="flex items-center justify-between w-full p-4 border border-stone-800 hover:border-[#C8102E] hover:bg-[#C8102E]/5 rounded-lg group transition-all duration-300"
                             >
-                                Teklif Listem
+                                <span className="font-medium tracking-widest text-sm uppercase text-white">Teklif Listem</span>
+                                <ChevronRight className="w-4 h-4 text-[#C8102E] transform group-hover:translate-x-1 transition-transform" />
                             </Link>
                         </div>
                     </motion.div>
                 </>
             )}
+
+            {/* Global Styles for Scrollbar Hiding inside this component scope if possible, 
+                but tailwind 'no-scrollbar' class usually needs plugin or custom css. 
+                We will use inline style for specific override or standard css-in-js approach 
+            */}
+            <style jsx global>{`
+                .no-scrollbar::-webkit-scrollbar {
+                    display: none;
+                }
+                .no-scrollbar {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+            `}</style>
         </AnimatePresence>
     );
 }
