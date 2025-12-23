@@ -16,9 +16,10 @@ export default function SettingsForm() {
     const [loading, setLoading] = useState(false);
 
     // State for multiple sections
+    // State for multiple sections
     const [general, setGeneral] = useState({ logo: '', contactPhone: '', maintenanceMode: false });
-    // Hero section moved to separate manager
-    const [legacy, setLegacy] = useState({ title: '', quote: '', bgImage: '' });
+
+    // Collections: 0=Left Large, 1=Top Right, 2=Bottom Right
     const [collections, setCollections] = useState([
         { title: '', subtitle: '', image: '', link: '' },
         { title: '', subtitle: '', image: '', link: '' },
@@ -34,7 +35,6 @@ export default function SettingsForm() {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     if (data.general) setGeneral(prev => ({ ...prev, ...data.general }));
-                    if (data.legacy) setLegacy(data.legacy);
                     if (data.collections) setCollections(data.collections);
                 }
             } catch (error) {
@@ -49,7 +49,6 @@ export default function SettingsForm() {
             setLoading(true);
             await setDoc(doc(db, "settings", "home"), {
                 general,
-                legacy,
                 collections,
                 updatedAt: new Date().toISOString()
             }, { merge: true });
@@ -66,173 +65,244 @@ export default function SettingsForm() {
         <div className="space-y-6 max-w-5xl">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight">Site İçerik Yönetimi</h2>
-                    <p className="text-stone-500">Anasayfa görsellerini ve yazılarını buradan yönetin.</p>
+                    <h2 className="text-2xl font-bold tracking-tight">Site Vitrin Yönetimi</h2>
+                    <p className="text-stone-500">Anasayfa koleksiyon alanlarını ve genel site ayarlarını buradan yönetin.</p>
                 </div>
                 <Button onClick={handleSave} disabled={loading} className="bg-[#C8102E] hover:bg-[#A00C24]">
                     {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-                    Tüm Değişiklikleri Kaydet
+                    Kaydet
                 </Button>
             </div>
 
             <Tabs defaultValue="collections" className="space-y-4">
-                <TabsList>
-                    <TabsTrigger value="collections" className="gap-2"><ShoppingBag className="w-4 h-4" /> Vitrin / Koleksiyonlar</TabsTrigger>
-                    <TabsTrigger value="legacy" className="gap-2"><BookOpen className="w-4 h-4" /> Hikaye (Legacy)</TabsTrigger>
-                    <TabsTrigger value="general" className="gap-2"><LayoutTemplate className="w-4 h-4" /> Genel / Logo</TabsTrigger>
+                <TabsList className="bg-white border border-stone-200 p-1 h-auto">
+                    <TabsTrigger value="collections" className="gap-2 px-6 py-3 data-[state=active]:bg-stone-900 data-[state=active]:text-white">
+                        <ShoppingBag className="w-4 h-4" /> Koleksiyonlar (Vitrin)
+                    </TabsTrigger>
+                    <TabsTrigger value="general" className="gap-2 px-6 py-3 data-[state=active]:bg-stone-900 data-[state=active]:text-white">
+                        <Wrench className="w-4 h-4" /> Site Ayarları & Bakım
+                    </TabsTrigger>
                 </TabsList>
 
                 {/* COLLECTIONS SECTION */}
-                <TabsContent value="collections">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Koleksiyon Vitrini</CardTitle>
-                            <CardDescription>Anasayfadaki 3'lü vitrin alanı.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-6">
-                            {collections.map((col, index) => (
-                                <div key={index} className="p-4 border rounded-xl space-y-4 bg-stone-50">
-                                    <h4 className="font-bold text-sm uppercase text-[#C8102E]">Kutu {index + 1}</h4>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="space-y-2">
-                                            <Label>Başlık</Label>
-                                            <Input value={col.title} onChange={e => {
-                                                const newCols = [...collections];
-                                                newCols[index].title = e.target.value;
-                                                setCollections(newCols);
-                                            }} placeholder="Örn: Butcher's Choice" />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <Label>Alt Başlık / Etiket</Label>
-                                            <Input value={col.subtitle} onChange={e => {
-                                                const newCols = [...collections];
-                                                newCols[index].subtitle = e.target.value;
-                                                setCollections(newCols);
-                                            }} placeholder="Örn: Professional Series" />
-                                        </div>
-                                    </div>
+                <TabsContent value="collections" className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* LEFT LARGE BOX (Index 0) */}
+                        <Card className="md:col-span-2 border-l-4 border-l-[#C8102E] shadow-sm">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <LayoutTemplate className="w-5 h-5 text-[#C8102E]" />
+                                    Sol Büyük Vitrin (Ana Koleksiyon)
+                                </CardTitle>
+                                <CardDescription>Anasayfada solda duran büyük görsel alanı.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="grid md:grid-cols-2 gap-6">
+                                <div className="space-y-4">
                                     <div className="space-y-2">
-                                        <Label>Kapak Görseli</Label>
+                                        <Label>Görsel</Label>
                                         <ImageUpload
-                                            value={col.image ? [col.image] : []}
+                                            value={collections[0]?.image ? [collections[0].image] : []}
                                             onChange={(url) => {
                                                 const newCols = [...collections];
-                                                newCols[index].image = url;
+                                                if (!newCols[0]) newCols[0] = { title: '', subtitle: '', image: '', link: '' };
+                                                newCols[0].image = url;
                                                 setCollections(newCols);
                                             }}
                                             onRemove={() => {
                                                 const newCols = [...collections];
-                                                newCols[index].image = '';
+                                                if (newCols[0]) newCols[0].image = '';
                                                 setCollections(newCols);
                                             }}
                                         />
                                     </div>
+                                </div>
+                                <div className="space-y-4">
                                     <div className="space-y-2">
-                                        <Label>Link Adresi</Label>
-                                        <Input value={col.link} onChange={e => {
-                                            const newCols = [...collections];
-                                            newCols[index].link = e.target.value;
-                                            setCollections(newCols);
-                                        }} placeholder="/catalog?category=Butcher" />
+                                        <Label>Başlık (H1)</Label>
+                                        <Input
+                                            value={collections[0]?.title || ''}
+                                            onChange={e => {
+                                                const newCols = [...collections];
+                                                if (!newCols[0]) newCols[0] = { title: '', subtitle: '', image: '', link: '' };
+                                                newCols[0].title = e.target.value;
+                                                setCollections(newCols);
+                                            }}
+                                            placeholder="Örn: Şef Bıçakları"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Üst Etiket (Küçük)</Label>
+                                        <Input
+                                            value={collections[0]?.subtitle || ''}
+                                            onChange={e => {
+                                                const newCols = [...collections];
+                                                if (!newCols[0]) newCols[0] = { title: '', subtitle: '', image: '', link: '' };
+                                                newCols[0].subtitle = e.target.value;
+                                                setCollections(newCols);
+                                            }}
+                                            placeholder="Örn: Şefin Tercihi"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Link (URL)</Label>
+                                        <Input
+                                            value={collections[0]?.link || ''}
+                                            onChange={e => {
+                                                const newCols = [...collections];
+                                                if (!newCols[0]) newCols[0] = { title: '', subtitle: '', image: '', link: '' };
+                                                newCols[0].link = e.target.value;
+                                                setCollections(newCols);
+                                            }}
+                                            placeholder="/products?category=Chef"
+                                        />
                                     </div>
                                 </div>
-                            ))}
-                        </CardContent>
-                    </Card>
-                </TabsContent>
+                            </CardContent>
+                        </Card>
 
-                {/* LEGACY / STORY SECTION */}
-                <TabsContent value="legacy">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Hikaye Alanı (Parallax)</CardTitle>
-                            <CardDescription>Kayarken arkada sabit duran fotoğraflı alan.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="space-y-2">
-                                <Label>Üst Etiket</Label>
-                                <Input value={legacy.title} onChange={e => setLegacy({ ...legacy, title: e.target.value })} placeholder="The Legacy" />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Büyük Söz (Quote)</Label>
-                                <Textarea className="min-h-[100px]" value={legacy.quote} onChange={e => setLegacy({ ...legacy, quote: e.target.value })} placeholder='"We don&apos;t just sell knives..."' />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Arkaplan Fotoğrafı</Label>
+                        {/* RIGHT TOP (Index 1) */}
+                        <Card className="shadow-sm">
+                            <CardHeader>
+                                <CardTitle className="text-sm uppercase tracking-wide">Sağ Üst Vitrin</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
                                 <ImageUpload
-                                    value={legacy.bgImage ? [legacy.bgImage] : []}
-                                    onChange={(url) => setLegacy({ ...legacy, bgImage: url })}
-                                    onRemove={() => setLegacy({ ...legacy, bgImage: '' })}
+                                    value={collections[1]?.image ? [collections[1].image] : []}
+                                    onChange={(url) => {
+                                        const newCols = [...collections];
+                                        if (!newCols[1]) newCols[1] = { title: '', subtitle: '', image: '', link: '' };
+                                        newCols[1].image = url;
+                                        setCollections(newCols);
+                                    }}
+                                    onRemove={() => { /* handle remove */ }}
                                 />
-                            </div>
-                        </CardContent>
-                    </Card>
+                                <Input
+                                    value={collections[1]?.title || ''}
+                                    onChange={e => {
+                                        const newCols = [...collections];
+                                        if (!newCols[1]) newCols[1] = { title: '', subtitle: '', image: '', link: '' };
+                                        newCols[1].title = e.target.value;
+                                        setCollections(newCols);
+                                    }}
+                                    placeholder="Başlık: Santoku Serisi"
+                                />
+                                <Input
+                                    value={collections[1]?.subtitle || ''}
+                                    onChange={e => {
+                                        const newCols = [...collections];
+                                        if (!newCols[1]) newCols[1] = { title: '', subtitle: '', image: '', link: '' };
+                                        newCols[1].subtitle = e.target.value;
+                                        setCollections(newCols);
+                                    }}
+                                    placeholder="Alt Başlık: Japon Hassasiyeti"
+                                />
+                                <Input
+                                    value={collections[1]?.link || ''}
+                                    onChange={e => {
+                                        const newCols = [...collections];
+                                        if (!newCols[1]) newCols[1] = { title: '', subtitle: '', image: '', link: '' };
+                                        newCols[1].link = e.target.value;
+                                        setCollections(newCols);
+                                    }}
+                                    placeholder="Link"
+                                />
+                            </CardContent>
+                        </Card>
+
+                        {/* RIGHT BOTTOM (Index 2) */}
+                        <Card className="shadow-sm">
+                            <CardHeader>
+                                <CardTitle className="text-sm uppercase tracking-wide">Sağ Alt Vitrin</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <ImageUpload
+                                    value={collections[2]?.image ? [collections[2].image] : []}
+                                    onChange={(url) => {
+                                        const newCols = [...collections];
+                                        if (!newCols[2]) newCols[2] = { title: '', subtitle: '', image: '', link: '' };
+                                        newCols[2].image = url;
+                                        setCollections(newCols);
+                                    }}
+                                    onRemove={() => { /* handle remove */ }}
+                                />
+                                <Input
+                                    value={collections[2]?.title || ''}
+                                    onChange={e => {
+                                        const newCols = [...collections];
+                                        if (!newCols[2]) newCols[2] = { title: '', subtitle: '', image: '', link: '' };
+                                        newCols[2].title = e.target.value;
+                                        setCollections(newCols);
+                                    }}
+                                    placeholder="Başlık: Bıçak Setleri"
+                                />
+                                <Input
+                                    value={collections[2]?.subtitle || ''}
+                                    onChange={e => {
+                                        const newCols = [...collections];
+                                        if (!newCols[2]) newCols[2] = { title: '', subtitle: '', image: '', link: '' };
+                                        newCols[2].subtitle = e.target.value;
+                                        setCollections(newCols);
+                                    }}
+                                    placeholder="Alt Başlık: Profesyonel"
+                                />
+                                <Input
+                                    value={collections[2]?.link || ''}
+                                    onChange={e => {
+                                        const newCols = [...collections];
+                                        if (!newCols[2]) newCols[2] = { title: '', subtitle: '', image: '', link: '' };
+                                        newCols[2].link = e.target.value;
+                                        setCollections(newCols);
+                                    }}
+                                    placeholder="Link"
+                                />
+                            </CardContent>
+                        </Card>
+                    </div>
                 </TabsContent>
 
                 {/* GENERAL SECTION */}
                 <TabsContent value="general">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Genel Ayarlar</CardTitle>
-                            <CardDescription>Logo ve iletişim bilgileri.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="space-y-2">
-                                <Label>Site Logosu</Label>
-                                <ImageUpload
-                                    value={general.logo ? [general.logo] : []}
-                                    onChange={(url) => setGeneral({ ...general, logo: url })}
-                                    onRemove={() => setGeneral({ ...general, logo: '' })}
-                                />
-                            </div>
-                        </CardContent>
-                    </Card>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Site Kimliği</CardTitle>
+                                <CardDescription>Logo ve temel bilgiler.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label>Site Logosu</Label>
+                                    <ImageUpload
+                                        value={general.logo ? [general.logo] : []}
+                                        onChange={(url) => setGeneral({ ...general, logo: url })}
+                                        onRemove={() => setGeneral({ ...general, logo: '' })}
+                                    />
+                                </div>
+                            </CardContent>
+                        </Card>
 
-                    <Card className="border-red-100 bg-red-50/50 mt-4">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-[#C8102E]">
-                                <Wrench className="w-5 h-5" />
-                                Bakım Modu (Maintenance Mode)
-                            </CardTitle>
-                            <CardDescription>
-                                Siteyi bakıma alırsanız, <b>Yönetici olmayan</b> herkes "Bakımdayız" sayfasını görür.
-                                Siz (Admin) siteyi görmeye devam edersiniz.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="flex items-center justify-between p-4 bg-white rounded-lg border border-red-100 shadow-sm">
-                                <div>
-                                    <h4 className="font-bold text-stone-900">Site Erişimi</h4>
-                                    <p className="text-xs text-stone-500">
-                                        {general.maintenanceMode ? "Şu an site BAKIMDA." : "Site YAYINDA."}
-                                    </p>
+                        <Card className={`border-2 ${general.maintenanceMode ? 'border-red-500 bg-red-50' : 'border-stone-100'}`}>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <Wrench className="w-5 h-5" />
+                                    Bakım Modu
+                                </CardTitle>
+                                <CardDescription>Siteyi geçici olarak kapatıp açın.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <span className="font-bold text-sm">
+                                        Durum: {general.maintenanceMode ? <span className="text-red-600">KAPALI (Bakımda)</span> : <span className="text-green-600">AÇIK (Yayında)</span>}
+                                    </span>
+                                    <Button
+                                        variant={general.maintenanceMode ? "destructive" : "default"}
+                                        onClick={() => setGeneral(prev => ({ ...prev, maintenanceMode: !prev.maintenanceMode }))}
+                                    >
+                                        {general.maintenanceMode ? "SİTEYİ AÇ" : "BAKIMA AL"}
+                                    </Button>
                                 </div>
-                                <Button
-                                    type="button"
-                                    variant={general.maintenanceMode ? "destructive" : "outline"}
-                                    onClick={() => setGeneral({ ...general, maintenanceMode: !general.maintenanceMode })}
-                                    className="gap-2"
-                                >
-                                    {general.maintenanceMode ? (
-                                        <>
-                                            <ShieldAlert className="w-4 h-4" />
-                                            Bakım Modunu KAPAT
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Wrench className="w-4 h-4" />
-                                            Bakım Moduna AL
-                                        </>
-                                    )}
-                                </Button>
-                            </div>
-                            {general.maintenanceMode && (
-                                <div className="text-xs text-red-600 font-medium animate-pulse">
-                                    ⚠️ Dikkat: Site şu an ziyaretçilere kapalı.
-                                </div>
-                            )}
-                        </CardContent>
-                    </Card>
+                            </CardContent>
+                        </Card>
+                    </div>
                 </TabsContent>
             </Tabs>
         </div >
