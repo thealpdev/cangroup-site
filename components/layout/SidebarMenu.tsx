@@ -19,7 +19,6 @@ const MENU_ITEMS = [
 const SECONDARY_LINKS = [
     { label: "Hakkımızda", href: "/about" },
     { label: "İletişim", href: "/contact" },
-    { label: "Mağazalar", href: "/stores" },
 ];
 
 export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {

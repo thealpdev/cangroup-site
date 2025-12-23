@@ -1,17 +1,56 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Package, Users, Activity, ExternalLink } from "lucide-react";
+import { Package, Users, Activity, ExternalLink, Loader2 } from "lucide-react";
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 export default function DashboardOverview({ userEmail }: { userEmail?: string | null }) {
+    const [stats, setStats] = useState([
+        { label: "Toplam Ürün", value: "...", icon: Package, color: "text-blue-500", bg: "bg-blue-50" },
+        { label: "Aktif Markalar", value: "...", icon: Users, color: "text-purple-500", bg: "bg-purple-50" },
+        { label: "Sistem Durumu", value: "...", icon: Activity, color: "text-green-500", bg: "bg-green-50" },
+    ]);
+    const [loading, setLoading] = useState(true);
 
-    // In a real app, these could be fetched from DB info passed as props
-    const stats = [
-        { label: "Toplam Ürün", value: "124", icon: Package, color: "text-blue-500", bg: "bg-blue-50" },
-        { label: "Aktif Markalar", value: "3", icon: Users, color: "text-purple-500", bg: "bg-purple-50" },
-        { label: "Sistem Durumu", value: "Aktif", icon: Activity, color: "text-green-500", bg: "bg-green-50" },
-    ];
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                // 1. Fetch Products for Count & Brands
+                const querySnapshot = await getDocs(collection(db, "products"));
+                const totalProducts = querySnapshot.size;
+
+                const brands = new Set();
+                querySnapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.brand) brands.add(data.brand);
+                });
+                const totalBrands = brands.size;
+
+                // 2. Fetch Maintenance Status
+                let status = "Aktif";
+                const settingsRef = doc(db, "settings", "home");
+                const settingsSnap = await getDoc(settingsRef);
+                if (settingsSnap.exists() && settingsSnap.data().general?.maintenanceMode) {
+                    status = "Bakımda";
+                }
+
+                setStats([
+                    { label: "Toplam Ürün", value: totalProducts.toString(), icon: Package, color: "text-blue-500", bg: "bg-blue-50" },
+                    { label: "Aktif Markalar", value: totalBrands.toString(), icon: Users, color: "text-purple-500", bg: "bg-purple-50" },
+                    { label: "Sistem Durumu", value: status, icon: Activity, color: status === "Bakımda" ? "text-red-500" : "text-green-500", bg: status === "Bakımda" ? "bg-red-50" : "bg-green-50" },
+                ]);
+            } catch (error) {
+                console.error("Error fetching dashboard stats:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchStats();
+    }, []);
 
     return (
         <div className="space-y-6">
@@ -40,7 +79,9 @@ export default function DashboardOverview({ userEmail }: { userEmail?: string | 
                                 </div>
                                 <div>
                                     <p className="text-sm text-stone-500 font-medium">{stat.label}</p>
-                                    <h3 className="text-2xl font-bold text-stone-900">{stat.value}</h3>
+                                    <h3 className="text-2xl font-bold text-stone-900">
+                                        {loading ? <Loader2 className="w-5 h-5 animate-spin inline" /> : stat.value}
+                                    </h3>
                                 </div>
                             </CardContent>
                         </Card>

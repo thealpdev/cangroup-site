@@ -26,6 +26,21 @@ export default function CartDrawer() {
         window.open(url, '_blank');
     };
 
+    const handleEmailQuote = () => {
+        const subject = "Angebotsanfrage: CanGroup";
+        let body = "Hallo CanGroup,\n\nIch möchte ein unverbindliches Angebot für folgende Produkte anfordern:\n\n";
+
+        items.forEach((item, i) => {
+            body += `${i + 1}. ${item.name} (${item.brand})\n`;
+            body += `   Code: ${item.productCode}\n`;
+            body += `   Menge: ${item.quantity}x\n\n`;
+        });
+
+        body += "Bitte kontaktieren Sie mich.\n\nMit freundlichen Grüßen";
+
+        window.open(`mailto:info@canmarkt.de?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+    };
+
     return (
         <>
             {/* Backdrop */}
@@ -115,6 +130,7 @@ export default function CartDrawer() {
                         <Button
                             variant="outline"
                             className="w-full border-stone-300 text-stone-600 hover:bg-white hover:text-[#0a0a0a]"
+                            onClick={handleEmailQuote}
                         >
                             <Send className="w-4 h-4 mr-2" />
                             Per Email anfragen

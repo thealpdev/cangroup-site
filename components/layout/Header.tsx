@@ -2,19 +2,23 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, ShoppingBag, Menu, X, ChevronDown, Instagram, Facebook } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Search, ShoppingBag, Menu, X, ChevronDown, Instagram, Facebook, User } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { cn } from '@/lib/utils';
 import { useLanguage } from "@/lib/language-context";
 import { useCart } from "@/lib/cart-context";
+import { useAuth } from "@/lib/auth-context";
 import SidebarMenu from "@/components/layout/SidebarMenu";
+import AuthModal from "@/components/auth/AuthModal";
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
     const [scrolled, setScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isAuthOpen, setIsAuthOpen] = useState(false);
     const [logo, setLogo] = useState("");
 
     useEffect(() => {
@@ -39,6 +43,7 @@ export default function Header() {
     return (
         <>
             <SidebarMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+            <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
 
             <motion.header
                 initial={{ y: -100 }}
@@ -99,14 +104,115 @@ export default function Header() {
                     {/* Right: Actions */}
                     <div className="flex items-center justify-end gap-6 flex-1">
                         <div className="hidden md:block">
-                            <LanguageSwitcher scrolled={scrolled} />
+                            <SearchButton scrolled={scrolled} />
                         </div>
+                        <UserButton scrolled={scrolled} onAuthOpen={() => setIsAuthOpen(true)} />
                         <CartButton scrolled={scrolled} />
                     </div>
 
                 </div>
             </motion.header>
         </>
+    );
+}
+
+function UserButton({ scrolled, onAuthOpen }: { scrolled: boolean; onAuthOpen: () => void }) {
+    const { user } = useAuth();
+    const router = useRouter();
+
+    const handleClick = () => {
+        if (user) {
+            router.push('/account');
+        } else {
+            onAuthOpen();
+        }
+    };
+
+    return (
+        <button
+            onClick={handleClick}
+            className={cn(
+                "group flex items-center gap-3 transition-colors duration-300",
+                scrolled ? "text-stone-900" : "text-white"
+            )}
+        >
+            <div className={cn(
+                "p-2 rounded-full transition-all duration-300 relative",
+                scrolled
+                    ? "bg-stone-100 group-hover:bg-[#C8102E] group-hover:text-white"
+                    : "bg-white/10 group-hover:bg-white group-hover:text-stone-900"
+            )}>
+                <User className="w-5 h-5" />
+                {user && (
+                    <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white" />
+                )}
+            </div>
+            {/* Optional label */}
+            <span className={cn(
+                "hidden lg:block text-xs font-bold uppercase tracking-widest transition-colors",
+                scrolled ? "group-hover:text-[#C8102E]" : "group-hover:text-white/80"
+            )}>
+                {user ? (user.displayName?.split(' ')[0] || 'Hesabım') : 'Giriş'}
+            </span>
+        </button>
+    );
+}
+
+function SearchButton({ scrolled }: { scrolled: boolean }) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [query, setQuery] = useState("");
+    const inputRef = useRef<HTMLInputElement>(null);
+    const router = useRouter();
+
+    useEffect(() => {
+        if (isOpen && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [isOpen]);
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (query.trim()) {
+            router.push(`/products?search=${encodeURIComponent(query.trim())}`);
+            setIsOpen(false);
+            setQuery("");
+        }
+    };
+
+    return (
+        <div className="relative flex items-center">
+            <div className={cn(
+                "overflow-hidden transition-all duration-300 flex items-center",
+                isOpen ? "w-40 md:w-56 opacity-100 mr-3" : "w-0 opacity-0 mr-0"
+            )}>
+                <form onSubmit={handleSearch} className="w-full">
+                    <input
+                        ref={inputRef}
+                        type="text"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        placeholder="Suchen..."
+                        className={cn(
+                            "w-full bg-transparent border-b text-sm py-1 outline-none placeholder:text-stone-400",
+                            scrolled
+                                ? "border-stone-300 text-stone-900 focus:border-[#C8102E]"
+                                : "border-white/30 text-white focus:border-white"
+                        )}
+                        onBlur={() => !query && setIsOpen(false)}
+                    />
+                </form>
+            </div>
+
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className={cn(
+                    "group flex items-center justify-center transition-colors duration-300",
+                    scrolled ? "text-stone-900" : "text-white"
+                )}
+            >
+                <Search className="w-5 h-5 group-hover:text-[#C8102E] transition-colors" />
+            </button>
+        </div>
     );
 }
 

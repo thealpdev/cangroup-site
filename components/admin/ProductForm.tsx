@@ -16,10 +16,10 @@ import {
     SelectTrigger,
     SelectValue
 } from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import ImageUpload from '@/components/admin/ImageUpload';
-import { Loader2, Save, Tag, Coins, Hash, Ruler } from 'lucide-react';
+import { Loader2, Save, Tag, Coins, Hash, Ruler, Box, Star, Percent } from 'lucide-react';
 
 const BRANDS = [
     { id: 'canadam', name: 'Canadam' },
@@ -48,7 +48,10 @@ interface ProductFormData {
     category: string;
     price: string;
     currency: string;
-    images: string[];
+    stock: string;
+    isNew: boolean;
+    isSale: boolean;
+    salePrice: string;
 }
 
 interface ProductFormProps {
@@ -69,7 +72,7 @@ export default function ProductForm({ initialData, onSuccess }: ProductFormProps
         specs_de: '', specs_tr: '', specs_en: '',
         brand: 'canadam', category: '',
         price: '', currency: 'EUR',
-        images: []
+        stock: '10', isNew: true, isSale: false, salePrice: ''
     });
 
     useEffect(() => {
@@ -97,7 +100,10 @@ export default function ProductForm({ initialData, onSuccess }: ProductFormProps
                 category: initialData.category || '',
                 price: initialData.price ? String(initialData.price) : '',
                 currency: initialData.currency || 'EUR',
-                images: initialData.images || (initialData.image ? [initialData.image] : [])
+                stock: initialData.stock ? String(initialData.stock) : '10',
+                isNew: initialData.isNew ?? false,
+                isSale: initialData.isSale ?? false,
+                salePrice: initialData.salePrice ? String(initialData.salePrice) : ''
             });
             if (initialData.images) setImages(initialData.images);
             else if (initialData.image) setImages([initialData.image]);
@@ -114,26 +120,24 @@ export default function ProductForm({ initialData, onSuccess }: ProductFormProps
         try {
             setLoading(true);
             if (images.length === 0) { alert("En az bir görsel yüklemelisiniz."); return; }
-            if (!formData.name_tr) { alert("Türkçe ürün adı zorunludur."); return; }
 
             const dataToSave = {
                 ...formData,
                 images: images,
+                image: images[0], // Backwards compat
                 price: parseFloat(formData.price) || 0,
+                stock: parseInt(formData.stock) || 0,
+                salePrice: parseFloat(formData.salePrice) || 0,
                 updatedAt: serverTimestamp(),
             };
 
             if (initialData && initialData.id) {
-                // Update existing
                 await updateDoc(doc(db, "products", initialData.id), dataToSave);
-                alert("Ürün güncellendi! ✅");
             } else {
-                // Create new
                 await addDoc(collection(db, "products"), {
                     ...dataToSave,
                     createdAt: serverTimestamp(),
                 });
-                alert("Ürün başarıyla oluşturuldu! ✅");
             }
 
             if (onSuccess) onSuccess();
@@ -148,177 +152,175 @@ export default function ProductForm({ initialData, onSuccess }: ProductFormProps
     };
 
     return (
-        <form onSubmit={onSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <form onSubmit={onSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-24">
 
-            {/* Left Column: Content */}
+            {/* Left Column */}
             <div className="lg:col-span-2 space-y-6">
 
-                {/* 1. Images & Identity */}
-                <div className="grid md:grid-cols-2 gap-6">
-                    <Card className="rounded-2xl border-none shadow-sm md:col-span-2">
-                        <CardHeader className="pb-4">
-                            <CardTitle className="text-lg font-bold uppercase tracking-tight flex items-center gap-2">
-                                <Tag className="w-5 h-5 text-[#C8102E]" />
-                                Ürün Görselleri
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <ImageUpload
-                                value={images}
-                                onChange={(url) => setImages(prev => [...prev, url])}
-                                onRemove={(url) => setImages(prev => prev.filter(c => c !== url))}
-                                disabled={loading}
-                            />
-                        </CardContent>
-                    </Card>
-
-                    <Card className="rounded-2xl border-none shadow-sm md:col-span-2">
-                        <CardHeader className="pb-4">
-                            <CardTitle className="text-lg font-bold uppercase tracking-tight flex items-center gap-2">
-                                <Hash className="w-5 h-5 text-[#C8102E]" />
-                                Kimlik Kodları
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="grid grid-cols-2 gap-4">
+                {/* Images */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-lg">
+                            <Tag className="w-5 h-5 text-[#C8102E]" />
+                            Görseller & Kimlik
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        <ImageUpload
+                            images={images}
+                            onImagesChange={setImages}
+                            maxImages={5}
+                        />
+                        <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <Label>Ürün Kodu (SKU)</Label>
                                 <Input
                                     name="productCode"
                                     value={formData.productCode}
                                     onChange={handleInputChange}
-                                    className="rounded-xl h-11 focus-visible:ring-[#C8102E]"
-                                    placeholder="Örn: CN-KITCHEN-001"
+                                    placeholder="Örn: CN-100"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label>Alternatif No / EAN</Label>
+                                <Label>Barkod / Numara</Label>
                                 <Input
                                     name="productNumber"
                                     value={formData.productNumber}
                                     onChange={handleInputChange}
-                                    className="rounded-xl h-11 focus-visible:ring-[#C8102E]"
-                                    placeholder="Örn: 8690000000"
+                                    placeholder="869..."
                                 />
                             </div>
-                        </CardContent>
-                    </Card>
-                </div>
+                        </div>
+                    </CardContent>
+                </Card>
 
-                {/* 2. Localized Content & Technical Details */}
-                <Card className="rounded-2xl border-none shadow-sm">
+                {/* Names & Branding */}
+                <Card>
                     <CardHeader>
-                        <CardTitle className="text-lg font-bold uppercase tracking-tight">Ürün İçeriği</CardTitle>
-                        <CardDescription>Ürün bilgilerini 3 dilde giriniz.</CardDescription>
+                        <CardTitle className="flex items-center gap-2 text-lg">
+                            <Hash className="w-5 h-5 text-[#C8102E]" />
+                            Detaylar
+                        </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-8">
-                        {/* TR */}
-                        <div className="space-y-4 bg-stone-50/50 p-4 rounded-xl border border-stone-100">
-                            <div className="flex items-center gap-2 pb-2 border-b border-stone-200">
-                                <span className="text-xl shadow-sm rounded overflow-hidden">🇹🇷</span>
-                                <h3 className="font-bold text-stone-900">Türkçe (Varsayılan)</h3>
+                    <CardContent className="space-y-6">
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label>Marka</Label>
+                                <Select value={formData.brand} onValueChange={v => setFormData(p => ({ ...p, brand: v }))}>
+                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                        {BRANDS.map(b => <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>)}
+                                    </SelectContent>
+                                </Select>
                             </div>
-                            <div className="grid gap-4">
-                                <Input name="name_tr" value={formData.name_tr} onChange={handleInputChange} className="rounded-xl h-11 border-stone-200" placeholder="Ürün Adı" required />
-                                <Textarea name="description_tr" value={formData.description_tr} onChange={handleInputChange} className="rounded-xl min-h-[80px] border-stone-200" placeholder="Kısa Açıklama" />
-                                <Textarea name="specs_tr" value={formData.specs_tr} onChange={handleInputChange} className="rounded-xl min-h-[100px] font-mono text-xs border-stone-200" placeholder="• Paslanmaz Çelik &#10;• Bulaşık Makinesine Uygun &#10;• 2 Yıl Garanti" />
-                            </div>
-                        </div>
-
-                        {/* DE */}
-                        <div className="space-y-4 p-4">
-                            <div className="flex items-center gap-2 pb-2 border-b border-stone-100">
-                                <span className="text-xl shadow-sm rounded overflow-hidden">🇩🇪</span>
-                                <h3 className="font-bold text-stone-900">Almanca</h3>
-                            </div>
-                            <div className="grid gap-4">
-                                <Input name="name_de" value={formData.name_de} onChange={handleInputChange} className="rounded-xl h-11" placeholder="German Product Name" />
-                                <Textarea name="description_de" value={formData.description_de} onChange={handleInputChange} className="rounded-xl min-h-[80px]" placeholder="Beschreibung" />
-                                <Textarea name="specs_de" value={formData.specs_de} onChange={handleInputChange} className="rounded-xl min-h-[100px] font-mono text-xs" placeholder="• Rostfreier Stahl..." />
+                            <div className="space-y-2">
+                                <Label>Kategori</Label>
+                                <Select value={formData.category} onValueChange={v => setFormData(p => ({ ...p, category: v }))}>
+                                    <SelectTrigger><SelectValue placeholder="Seçiniz" /></SelectTrigger>
+                                    <SelectContent>
+                                        {categories.map(c => <SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>)}
+                                    </SelectContent>
+                                </Select>
                             </div>
                         </div>
 
-                        {/* EN */}
-                        <div className="space-y-4 p-4">
-                            <div className="flex items-center gap-2 pb-2 border-b border-stone-100">
-                                <span className="text-xl shadow-sm rounded overflow-hidden">🇬🇧</span>
-                                <h3 className="font-bold text-stone-900">İngilizce</h3>
-                            </div>
-                            <div className="grid gap-4">
-                                <Input name="name_en" value={formData.name_en} onChange={handleInputChange} className="rounded-xl h-11" placeholder="English Product Name" />
-                                <Textarea name="description_en" value={formData.description_en} onChange={handleInputChange} className="rounded-xl min-h-[80px]" placeholder="Description" />
-                                <Textarea name="specs_en" value={formData.specs_en} onChange={handleInputChange} className="rounded-xl min-h-[100px] font-mono text-xs" placeholder="• Stainless Steel..." />
-                            </div>
+                        <Separator />
+
+                        <div className="space-y-4">
+                            <Label className="font-bold text-[#C8102E]">Ürün Adı (3 Dil)</Label>
+                            <Input name="name_tr" placeholder="Türkçe Ad" value={formData.name_tr} onChange={handleInputChange} />
+                            <Input name="name_de" placeholder="Almanca Ad" value={formData.name_de} onChange={handleInputChange} />
+                            <Input name="name_en" placeholder="İngilizce Ad" value={formData.name_en} onChange={handleInputChange} />
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Descriptions */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-lg">
+                            <Ruler className="w-5 h-5 text-[#C8102E]" />
+                            Açıklama & Özellikler
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="grid gap-3">
+                            <Textarea name="description_tr" placeholder="Türkçe Açıklama" rows={2} value={formData.description_tr} onChange={handleInputChange} />
+                            <Textarea name="description_de" placeholder="Almanca Açıklama" rows={2} value={formData.description_de} onChange={handleInputChange} />
+                        </div>
+                        <Separator />
+                        <div className="grid gap-3">
+                            <Input name="specs_tr" placeholder="Türkçe Teknik Özellik (20cm, Çelik vb)" value={formData.specs_tr} onChange={handleInputChange} />
+                            <Input name="specs_de" placeholder="Almanca Teknik Özellik" value={formData.specs_de} onChange={handleInputChange} />
                         </div>
                     </CardContent>
                 </Card>
             </div>
 
-            {/* Right Column: Settings & Price */}
+            {/* Right Column */}
             <div className="space-y-6">
-                <Card className="rounded-2xl border-none shadow-lg sticky top-8 bg-stone-900 text-white">
+
+                {/* Save Button */}
+                <Button type="submit" disabled={loading} className="w-full h-12 text-lg bg-[#C8102E] hover:bg-[#a00d25]">
+                    {loading && <Loader2 className="w-5 h-5 mr-2 animate-spin" />}
+                    {!loading && <Save className="w-5 h-5 mr-2" />}
+                    Kaydet & Yayınla
+                </Button>
+
+                {/* Stock & Status */}
+                <Card className="border-l-4 border-l-blue-500">
                     <CardHeader>
-                        <CardTitle className="text-lg font-bold uppercase tracking-tight text-white">Yayın Ayarları</CardTitle>
+                        <CardTitle className="flex items-center gap-2 text-lg">
+                            <Box className="w-5 h-5 text-blue-500" />
+                            Stok & Durum
+                        </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-6">
-
                         <div className="space-y-2">
-                            <Label className="text-stone-300">Marka</Label>
-                            <Select
-                                value={formData.brand}
-                                onValueChange={(val) => setFormData(prev => ({ ...prev, brand: val }))}
-                            >
-                                <SelectTrigger className="rounded-xl bg-white/10 border-white/10 text-white focus:ring-offset-stone-900 focus:ring-white/20 h-12">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {BRANDS.map(b => <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>)}
-                                </SelectContent>
-                            </Select>
+                            <Label>Stok Adedi</Label>
+                            <Input
+                                type="number"
+                                name="stock"
+                                value={formData.stock}
+                                onChange={handleInputChange}
+                                className="font-mono text-lg"
+                            />
                         </div>
 
-                        <div className="space-y-2">
-                            <Label className="text-stone-300">Kategori</Label>
-                            <Select
-                                value={formData.category}
-                                onValueChange={(val) => setFormData(prev => ({ ...prev, category: val }))}
-                            >
-                                <SelectTrigger className="rounded-xl bg-white/10 border-white/10 text-white focus:ring-offset-stone-900 focus:ring-white/20 h-12">
-                                    <SelectValue placeholder="Seçiniz..." />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {categories.map(c => <SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>)}
-                                </SelectContent>
-                            </Select>
-                            <div className="flex items-center gap-2 mt-1">
-                                <Tag className="w-3 h-3 text-stone-500" />
-                                <span className="text-[10px] text-stone-500">Listede yoksa önce kategori ekleyin.</span>
+                        <div className="flex items-center justify-between p-3 bg-stone-50 rounded-lg">
+                            <div className="flex items-center gap-2">
+                                <Star className={`w-5 h-5 ${formData.isNew ? "text-yellow-500 fill-yellow-500" : "text-stone-300"}`} />
+                                <Label htmlFor="isNew" className="cursor-pointer font-bold">Yeni Ürün?</Label>
                             </div>
+                            <input
+                                id="isNew"
+                                type="checkbox"
+                                className="w-5 h-5 accent-[#C8102E]"
+                                checked={formData.isNew}
+                                onChange={e => setFormData(p => ({ ...p, isNew: e.target.checked }))}
+                            />
                         </div>
+                    </CardContent>
+                </Card>
 
-                        <Separator className="bg-white/10" />
-
-                        <div className="grid grid-cols-5 gap-3">
-                            <div className="col-span-3 space-y-2">
-                                <Label className="text-stone-300 flex items-center gap-2">
-                                    <Coins className="w-4 h-4" /> Fiyat
-                                </Label>
-                                <Input
-                                    name="price"
-                                    value={formData.price}
-                                    onChange={handleInputChange}
-                                    className="rounded-xl bg-white/10 border-white/10 text-white h-12 focus-visible:ring-white/20 placeholder:text-stone-600"
-                                    placeholder="0.00"
-                                />
+                {/* Pricing */}
+                <Card className="border-l-4 border-l-green-500">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-lg">
+                            <Coins className="w-5 h-5 text-green-500" />
+                            Fiyatlandırma
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="space-y-2">
+                                <Label>Fiyat</Label>
+                                <Input type="number" name="price" value={formData.price} onChange={handleInputChange} />
                             </div>
-                            <div className="col-span-2 space-y-2">
-                                <Label className="text-stone-300">Birim</Label>
-                                <Select
-                                    value={formData.currency}
-                                    onValueChange={(val) => setFormData(prev => ({ ...prev, currency: val }))}
-                                >
-                                    <SelectTrigger className="rounded-xl bg-white/10 border-white/10 text-white focus:ring-offset-stone-900 focus:ring-white/20 h-12">
-                                        <SelectValue />
-                                    </SelectTrigger>
+                            <div className="space-y-2">
+                                <Label>Birim</Label>
+                                <Select value={formData.currency} onValueChange={v => setFormData(p => ({ ...p, currency: v }))}>
+                                    <SelectTrigger><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         {CURRENCIES.map(c => <SelectItem key={c.id} value={c.id}>{c.symbol}</SelectItem>)}
                                     </SelectContent>
@@ -326,20 +328,43 @@ export default function ProductForm({ initialData, onSuccess }: ProductFormProps
                             </div>
                         </div>
 
-                        <Button
-                            type="submit"
-                            className="w-full bg-[#C8102E] hover:bg-[#A00C24] text-white font-bold uppercase tracking-widest h-14 rounded-xl transition-all shadow-lg text-sm mt-4"
-                            disabled={loading}
-                        >
-                            {loading ? <Loader2 className="animate-spin" /> : (
-                                <span className="flex items-center gap-2">
-                                    <Save className="w-4 h-4" /> Ürünü Yayınla
-                                </span>
-                            )}
-                        </Button>
+                        <Separator />
+
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <Percent className="w-5 h-5 text-red-500" />
+                                <Label htmlFor="isSale" className="cursor-pointer font-bold">İndirim Var mı?</Label>
+                            </div>
+                            <input
+                                id="isSale"
+                                type="checkbox"
+                                className="w-5 h-5 accent-red-600"
+                                checked={formData.isSale}
+                                onChange={e => setFormData(p => ({ ...p, isSale: e.target.checked }))}
+                            />
+                        </div>
+
+                        {formData.isSale && (
+                            <div className="animate-in fade-in slide-in-from-top-2 p-3 bg-red-50 rounded-lg border border-red-100">
+                                <Label className="text-red-700 font-bold mb-1 block">İndirimli Satış Fiyatı</Label>
+                                <Input
+                                    type="number"
+                                    name="salePrice"
+                                    value={formData.salePrice}
+                                    onChange={handleInputChange}
+                                    className="bg-white border-red-200 text-red-600 font-bold"
+                                />
+                                {Number(formData.price) > 0 && Number(formData.salePrice) > 0 && (
+                                    <p className="text-center text-xs font-bold text-red-600 mt-2">
+                                        %{Math.round(((Number(formData.price) - Number(formData.salePrice)) / Number(formData.price)) * 100)} İNDİRİM
+                                    </p>
+                                )}
+                            </div>
+                        )}
                     </CardContent>
                 </Card>
             </div>
         </form>
     );
 }
+

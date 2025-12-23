@@ -11,8 +11,24 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" }); // Define serif font
 
 export const metadata: Metadata = {
-  title: "CanMarkt | Premium Kalite & Tazelik",
-  description: "En taze ürünler ve premium hizmet kalitesiyle CanMarkt hizmetinizde.",
+  title: {
+    default: "CanMarkt | Premium Mutfak & Bıçak Dünyası",
+    template: "%s | CanMarkt"
+  },
+  description: "Profesyonel şef bıçakları, Japon santoku bıçakları ve mutfak ekipmanlarında kalite ve güvenin adresi. En taze ürünler ve premium hizmet.",
+  keywords: ["şef bıçağı", "chef knife", "santoku", "damascus", "bıçak seti", "profesyonel mutfak", "canmarkt", "cangroup"],
+  openGraph: {
+    title: "CanMarkt | Premium Mutfak & Bıçak Dünyası",
+    description: "Profesyonel mutfak deneyimi için en iyi bıçak koleksiyonları.",
+    url: "https://canmarkt.de",
+    siteName: "CanMarkt",
+    locale: "tr_TR",
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  }
 };
 
 export default function RootLayout({
