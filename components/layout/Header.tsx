@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { Search, ShoppingBag, Menu, X, ChevronDown, Instagram, Facebook, User } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
@@ -40,6 +41,10 @@ export default function Header() {
         };
     }, []);
 
+    const pathname = usePathname();
+    const isHome = pathname === '/';
+    const isScrolledState = scrolled || !isHome;
+
     return (
         <>
             <SidebarMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
@@ -51,7 +56,7 @@ export default function Header() {
                 transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                 className={cn(
                     "fixed top-0 z-50 w-full transition-all duration-500",
-                    scrolled
+                    isScrolledState
                         ? "bg-white/90 backdrop-blur-md h-20 border-b border-stone-100 shadow-sm"
                         : "bg-transparent h-28 border-b border-white/10"
                 )}
@@ -66,7 +71,7 @@ export default function Header() {
                         >
                             <div className={cn(
                                 "relative w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 border",
-                                scrolled
+                                isScrolledState
                                     ? "border-stone-200 bg-stone-50 text-stone-900 group-hover:bg-[#C8102E] group-hover:border-[#C8102E] group-hover:text-white"
                                     : "border-white/20 bg-white/10 text-white group-hover:bg-white group-hover:text-stone-900"
                             )}>
@@ -74,7 +79,7 @@ export default function Header() {
                             </div>
                             <span className={cn(
                                 "hidden md:inline text-xs font-bold uppercase tracking-[0.2em] transition-colors duration-300",
-                                scrolled ? "text-stone-900 group-hover:text-[#C8102E]" : "text-white group-hover:text-white/80"
+                                isScrolledState ? "text-stone-900 group-hover:text-[#C8102E]" : "text-white group-hover:text-white/80"
                             )}>
                                 Menü
                             </span>
@@ -88,14 +93,14 @@ export default function Header() {
                                 {/* Logo Text */}
                                 <span className={cn(
                                     "font-serif text-3xl font-black tracking-tight transition-colors duration-500",
-                                    scrolled ? "text-[#C8102E]" : "text-white"
+                                    isScrolledState ? "text-[#C8102E]" : "text-white"
                                 )}>
-                                    CAN<span className={cn("font-light", scrolled ? "text-stone-900" : "text-white/90")}>GROUP</span>
+                                    CAN<span className={cn("font-light", isScrolledState ? "text-stone-900" : "text-white/90")}>GROUP</span>
                                 </span>
                                 {/* Decorative line */}
                                 <span className={cn(
                                     "w-0 h-[1px] bg-current transition-all duration-500 group-hover:w-full mt-1",
-                                    scrolled ? "text-[#C8102E]" : "text-white"
+                                    isScrolledState ? "text-[#C8102E]" : "text-white"
                                 )}></span>
                             </div>
                         </Link>
@@ -104,10 +109,10 @@ export default function Header() {
                     {/* Right: Actions */}
                     <div className="flex items-center justify-end gap-6 flex-1">
                         <div className="hidden md:block">
-                            <SearchButton scrolled={scrolled} />
+                            <SearchButton scrolled={isScrolledState} />
                         </div>
-                        <UserButton scrolled={scrolled} onAuthOpen={() => setIsAuthOpen(true)} />
-                        <CartButton scrolled={scrolled} />
+                        <UserButton scrolled={isScrolledState} onAuthOpen={() => setIsAuthOpen(true)} />
+                        <CartButton scrolled={isScrolledState} />
                     </div>
 
                 </div>

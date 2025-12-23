@@ -21,9 +21,13 @@ export default function Footer() {
                                 <Mail className="w-4 h-4 text-[#C8102E] group-hover:scale-110 transition-transform" />
                                 <span className="text-sm">info@cangroup.de</span>
                             </a>
-                            <a href="tel:+49123456789" className="flex items-center gap-3 text-stone-400 hover:text-white transition-colors group">
+                            <a href="https://wa.me/4917620438754" className="flex items-center gap-3 text-stone-400 hover:text-white transition-colors group">
                                 <Phone className="w-4 h-4 text-[#C8102E] group-hover:scale-110 transition-transform" />
-                                <span className="text-sm">+49 (0) 123 456 789</span>
+                                <span className="text-sm">WhatsApp: +49 176 20438754</span>
+                            </a>
+                            <a href="tel:+4960424056139" className="flex items-center gap-3 text-stone-400 hover:text-white transition-colors group">
+                                <Phone className="w-4 h-4 text-[#C8102E] group-hover:scale-110 transition-transform" />
+                                <span className="text-sm">Ofis: 06042 4056139</span>
                             </a>
                         </div>
                     </div>
@@ -91,8 +95,10 @@ export default function Footer() {
                     <p className="text-xs text-stone-500">
                         &copy; {new Date().getFullYear()} CANGROUP. Alle Rechte vorbehalten.
                     </p>
-                    <div className="flex gap-6">
-                        {/* Payment Icons could go here */}
+                    <div className="flex gap-6 items-center">
+                        <Link href="/admin" className="text-[10px] text-stone-700 hover:text-[#C8102E] transition-colors uppercase font-bold tracking-widest opacity-50 hover:opacity-100">
+                            Admin
+                        </Link>
                     </div>
                 </div>
             </div>

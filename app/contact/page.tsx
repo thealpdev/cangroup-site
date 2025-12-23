@@ -60,9 +60,12 @@ export default function ContactPage() {
                                             <Phone className="w-5 h-5" />
                                         </div>
                                         <div>
-                                            <span className="block text-sm font-bold uppercase tracking-wider text-stone-400 mb-1">Telefon</span>
+                                            <span className="block text-sm font-bold uppercase tracking-wider text-stone-400 mb-1">Telefon / WhatsApp</span>
                                             <p className="text-lg text-[#0a0a0a] font-medium">
-                                                +49 (0) 178 4057295
+                                                <span className="text-stone-500 text-sm">Ofis:</span> 06042 4056139
+                                            </p>
+                                            <p className="text-lg text-[#0a0a0a] font-medium">
+                                                <span className="text-stone-500 text-sm">WhatsApp:</span> +49 0176 20438754
                                             </p>
                                             <p className="text-sm text-stone-500 mt-1">Mo-Fr: 09:00 - 18:00 Uhr</p>
                                         </div>

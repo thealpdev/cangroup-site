@@ -46,7 +46,7 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
                         {/* Header */}
                         <div className="flex items-center justify-between p-6 border-b border-white/10">
                             <Link href="/" className="text-2xl font-serif tracking-tight font-bold">
-                                CAN GROUP
+                                CANGROUP
                             </Link>
                             <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
                                 <X className="w-6 h-6" />
@@ -55,30 +55,31 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
 
                         {/* Content */}
                         <div className="flex-1 overflow-y-auto py-8 px-6 space-y-12">
-
                             {/* Primary Navigation */}
-                            <nav className="space-y-6">
+                            <nav className="space-y-8">
                                 {MENU_ITEMS.map((item) => (
                                     <Link
                                         key={item.label}
                                         href={item.href}
                                         onClick={onClose}
-                                        className="flex items-center justify-between text-2xl font-bold tracking-wide group hover:text-[#C8102E] transition-colors"
+                                        className="flex items-center justify-between group"
                                     >
-                                        {item.label}
-                                        <ChevronRight className="w-5 h-5 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                                        <span className="text-4xl md:text-5xl font-serif font-bold text-white group-hover:text-[#C8102E] transition-colors duration-300">
+                                            {item.label}
+                                        </span>
+                                        <ChevronRight className="w-6 h-6 text-[#C8102E] opacity-0 -translate-x-8 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                                     </Link>
                                 ))}
                             </nav>
 
                             {/* Secondary Navigation */}
-                            <nav className="space-y-4">
+                            <nav className="space-y-4 pt-4 border-t border-white/10">
                                 {SECONDARY_LINKS.map(link => (
                                     <Link
                                         key={link.label}
                                         href={link.href}
                                         onClick={onClose}
-                                        className="block text-lg text-stone-300 hover:text-white transition-colors font-medium"
+                                        className="block text-xl text-stone-400 hover:text-white transition-colors font-medium tracking-wide"
                                     >
                                         {link.label}
                                     </Link>
@@ -86,23 +87,28 @@ export default function SidebarMenu({ isOpen, onClose }: SidebarMenuProps) {
                             </nav>
 
                             {/* Utility Links */}
-                            <div className="pt-8 border-t border-white/10 space-y-4">
-                                <Link href="/wishlist" className="flex items-center gap-4 text-stone-300 hover:text-white transition-colors">
-                                    <Heart className="w-5 h-5" />
-                                    <span>Favori Listesi</span>
-                                </Link>
-                                <Link href="/account" className="flex items-center gap-4 text-stone-300 hover:text-white transition-colors">
-                                    <User className="w-5 h-5" />
-                                    <span>Hesabım</span>
-                                </Link>
-                                <Link href="/help" className="flex items-center gap-4 text-stone-300 hover:text-white transition-colors">
-                                    <HelpCircle className="w-5 h-5" />
-                                    <span>Yardım ve İletişim</span>
-                                </Link>
-                                <Link href="/help" className="flex items-center gap-4 text-stone-300 hover:text-white transition-colors">
-                                    <HelpCircle className="w-5 h-5" />
-                                    <span>Yardım ve İletişim</span>
-                                </Link>
+                            <div className="pt-8 space-y-6">
+                                <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-stone-600">Hesap & Destek</h4>
+                                <div className="space-y-4">
+                                    <Link href="/wishlist" className="flex items-center gap-4 text-stone-300 hover:text-[#C8102E] transition-colors group">
+                                        <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                                            <Heart className="w-5 h-5" />
+                                        </div>
+                                        <span className="font-medium">Favori Listesi</span>
+                                    </Link>
+                                    <Link href="/account" className="flex items-center gap-4 text-stone-300 hover:text-[#C8102E] transition-colors group">
+                                        <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                                            <User className="w-5 h-5" />
+                                        </div>
+                                        <span className="font-medium">Hesabım</span>
+                                    </Link>
+                                    <Link href="/help" className="flex items-center gap-4 text-stone-300 hover:text-[#C8102E] transition-colors group">
+                                        <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                                            <HelpCircle className="w-5 h-5" />
+                                        </div>
+                                        <span className="font-medium">Yardım ve İletişim</span>
+                                    </Link>
+                                </div>
                             </div>
                         </div>
 

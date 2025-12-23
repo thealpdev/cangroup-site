@@ -79,8 +79,8 @@ export default function HelpPage() {
                                         <Phone className="w-5 h-5" />
                                     </div>
                                     <div>
-                                        <span className="font-bold text-stone-900 block">Telefon</span>
-                                        <span className="text-sm text-stone-500">+49 (0) 178 4057295</span>
+                                        <span className="font-bold text-stone-900 block">WhatsApp / Telefon</span>
+                                        <span className="text-sm text-stone-500">+49 0176 20438754</span>
                                     </div>
                                 </div>
 
