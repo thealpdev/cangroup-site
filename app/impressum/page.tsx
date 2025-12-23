@@ -27,8 +27,12 @@ export default function ImpressumPage() {
                         CANGROUP
                     </p>
                     <p className="text-sm text-stone-500 mt-8">
-                        (Dies ist ein Platzhalter-Impressum. Bitte ergänzen Sie fehlende rechtliche Angaben wie Rechtsform, Vertretungsberechtigte, Registereintrag und Umsatzsteuer-ID.)
+                        (Dies ist ein Platzhalter-Impressum. Bitte prüfen Sie die Angaben auf Vollständigkeit gemäß § 5 TMG.)
                     </p>
+
+                    <h3 className="mt-8 font-bold">Streitbeilegung</h3>
+                    <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer" className="text-[#C8102E] underline">https://ec.europa.eu/consumers/odr/</a>.<br /> Unsere E-Mail-Adresse finden Sie oben im Impressum.</p>
+                    <p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
                 </div>
             </main>
             <Footer />
