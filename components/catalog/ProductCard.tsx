@@ -3,12 +3,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { useLanguage } from '@/lib/language-context';
+import { useLocale } from 'next-intl';
+import { getLocalizedProductName } from '@/lib/product-utils';
 
 interface Product {
     id: string;
-    name_de: string; name_tr: string; name_en: string;
-    description_de: string; description_tr: string; description_en: string;
+    name_de: string; name_tr: string; name_en: string; name_fr?: string;
+    description_de: string; description_tr: string; description_en: string; description_fr?: string;
     category: string;
     brand: string;
     productCode?: string;
@@ -23,12 +24,8 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, index = 0 }: ProductCardProps) {
-    const { language, t } = useLanguage();
-
-    // Helper to secure data access
-    const getName = () => {
-        return (product as any)[`name_${language}`] || product.name_de || product.name_en || "Product";
-    };
+    const locale = useLocale();
+    const productName = getLocalizedProductName(product, locale);
 
     return (
         <Link href={`/products/${product.id}`} className="block">
@@ -55,7 +52,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
                         {product.images?.[0] ? (
                             <Image
                                 src={product.images[0]}
-                                alt={getName()}
+                                alt={productName}
                                 fill
                                 className="object-contain mix-blend-multiply"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -70,7 +67,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
                     {/* Minimal Overlay */}
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500 flex items-center justify-center opacity-0 group-hover:opacity-100">
                         <span className="text-stone-900 text-xs font-bold uppercase tracking-[0.2em] transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                            {t('details')}
+                            Details
                         </span>
                     </div>
                 </div>
@@ -82,7 +79,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
                     </div>
 
                     <h3 className="font-serif text-xl italic text-stone-900 group-hover:text-[#C8102E] transition-colors duration-300 line-clamp-2 min-h-[3.5rem] flex items-center justify-center">
-                        {getName()}
+                        {productName}
                     </h3>
 
                     {product.price && (

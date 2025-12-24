@@ -41,9 +41,9 @@ const CURRENCIES = [
 interface ProductFormData {
     productCode: string;
     productNumber: string;
-    name_de: string; name_tr: string; name_en: string;
-    description_de: string; description_tr: string; description_en: string;
-    specs_de: string; specs_tr: string; specs_en: string;
+    name_de: string; name_tr: string; name_en: string; name_fr: string;
+    description_de: string; description_tr: string; description_en: string; description_fr: string;
+    specs_de: string; specs_tr: string; specs_en: string; specs_fr: string;
     brand: string;
     category: string;
     price: string;
@@ -67,9 +67,9 @@ export default function ProductForm({ initialData, onSuccess }: ProductFormProps
 
     const [formData, setFormData] = useState<ProductFormData>({
         productCode: '', productNumber: '',
-        name_de: '', name_tr: '', name_en: '',
-        description_de: '', description_tr: '', description_en: '',
-        specs_de: '', specs_tr: '', specs_en: '',
+        name_de: '', name_tr: '', name_en: '', name_fr: '',
+        description_de: '', description_tr: '', description_en: '', description_fr: '',
+        specs_de: '', specs_tr: '', specs_en: '', specs_fr: '',
         brand: 'canadam', category: '',
         price: '', currency: 'EUR',
         stock: '10', isNew: true, isSale: false, salePrice: ''
@@ -90,12 +90,15 @@ export default function ProductForm({ initialData, onSuccess }: ProductFormProps
                 name_de: initialData.name_de || '',
                 name_tr: initialData.name_tr || '',
                 name_en: initialData.name_en || '',
+                name_fr: initialData.name_fr || '',
                 description_de: initialData.description_de || '',
                 description_tr: initialData.description_tr || '',
                 description_en: initialData.description_en || '',
+                description_fr: initialData.description_fr || '',
                 specs_de: initialData.specs_de || '',
                 specs_tr: initialData.specs_tr || '',
                 specs_en: initialData.specs_en || '',
+                specs_fr: initialData.specs_fr || '',
                 brand: initialData.brand ? initialData.brand.toLowerCase() : 'canadam',
                 category: initialData.category || '',
                 price: initialData.price ? String(initialData.price) : '',
