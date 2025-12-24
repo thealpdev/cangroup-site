@@ -77,16 +77,16 @@ export default function Partners() {
 
                                     {/* Logo */}
                                     <div className="relative w-full h-full flex items-center justify-center">
-                                        {partner.logo ? (
+                                        {partner.imageUrl ? (
                                             <img
-                                                src={partner.logo}
+                                                src={partner.imageUrl}
                                                 alt={partner.name || 'Partner'}
                                                 className="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110"
                                                 loading="lazy"
                                                 crossOrigin="anonymous"
                                                 onLoad={() => console.log('✅ Logo loaded:', partner.name)}
                                                 onError={(e) => {
-                                                    console.error('❌ Logo failed:', partner.name, partner.logo);
+                                                    console.error('❌ Logo failed:', partner.name, partner.imageUrl);
                                                     e.currentTarget.style.display = 'none';
                                                 }}
                                             />
