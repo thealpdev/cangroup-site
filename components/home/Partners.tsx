@@ -15,22 +15,23 @@ export default function Partners() {
         const q = query(collection(db, "partners"), orderBy("order", "asc"));
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            console.log('Partners loaded:', items); // Debug
             setPartners(items);
         });
         return () => unsubscribe();
     }, []);
 
-    // Fallback demo partners if none exist
-    const displayPartners = partners.length > 0 ? partners : [
-        { id: '1', name: 'Victorinox', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Victorinox_logo.svg/2560px-Victorinox_logo.svg.png' },
-        { id: '2', name: 'Zwilling', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/ZWILLING_Logo.svg/2560px-ZWILLING_Logo.svg.png' },
-        { id: '3', name: 'Wüsthof', logo: 'https://www.wuesthof.com/on/demandware.static/-/Library-Sites-wusthof-shared-library/default/dw5f0e5c5e/logo.svg' },
-        { id: '4', name: 'Dick', logo: 'https://www.dick.de/themes/custom/dick/logo.svg' },
-        { id: '5', name: 'Solingen', logo: 'https://via.placeholder.com/200x80/f5f5f5/666666?text=Solingen' },
-        { id: '6', name: 'Canadam', logo: 'https://via.placeholder.com/200x80/f5f5f5/C8102E?text=Canadam' }
+    // ALWAYS show demo partners for testing
+    const demoPartners = [
+        { id: 'demo1', name: 'Victorinox', logo: 'https://companieslogo.com/img/orig/WIEF_BIG.D-48eeb943.png?t=1720244494' },
+        { id: 'demo2', name: 'Zwilling', logo: 'https://companieslogo.com/img/orig/ZWIL_BIG-e0a6e0e6.png?t=1720244494' },
+        { id: 'demo3', name: 'Wüsthof', logo: 'https://upload.wikimedia.org/wikipedia/commons/3/3a/W%C3%BCsthof_logo.svg' },
+        { id: 'demo4', name: 'Dick', logo: 'https://www.friedr-dick.com/themes/custom/dick/logo.svg' },
+        { id: 'demo5', name: 'Solingen', logo: 'https://via.placeholder.com/200x80/f5f5f5/666666?text=Solingen' },
+        { id: 'demo6', name: 'Canadam', logo: 'https://via.placeholder.com/200x80/C8102E/ffffff?text=CANADAM' }
     ];
 
-    if (displayPartners.length === 0) return null;
+    const displayPartners = partners.length > 0 ? partners : demoPartners;
 
     return (
         <section className="relative py-24 bg-gradient-to-b from-stone-50 to-white overflow-hidden">
@@ -77,7 +78,7 @@ export default function Partners() {
                                     {/* Subtle gradient overlay on hover */}
                                     <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-stone-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                                    {/* Logo using native img tag */}
+                                    {/* Logo using native img tag with error handling */}
                                     <div className="relative w-full h-full flex items-center justify-center">
                                         {partner.logo ? (
                                             <img
@@ -85,19 +86,26 @@ export default function Partners() {
                                                 alt={partner.name || 'Partner'}
                                                 className="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110"
                                                 loading="lazy"
+                                                onError={(e) => {
+                                                    console.error('Logo failed to load:', partner.logo);
+                                                    e.currentTarget.style.display = 'none';
+                                                    const fallback = e.currentTarget.parentElement?.querySelector('.fallback-text');
+                                                    if (fallback) fallback.classList.remove('hidden');
+                                                }}
                                             />
-                                        ) : (
-                                            <div className="text-center">
-                                                <div className="w-16 h-16 mx-auto mb-2 bg-stone-100 rounded-full flex items-center justify-center">
-                                                    <span className="text-2xl font-bold text-stone-400">
-                                                        {partner.name?.[0] || '?'}
-                                                    </span>
-                                                </div>
-                                                <p className="text-sm font-semibold text-stone-600">
-                                                    {partner.name || 'Partner'}
-                                                </p>
+                                        ) : null}
+
+                                        {/* Fallback if logo fails */}
+                                        <div className={`fallback-text text-center ${partner.logo ? 'hidden' : ''}`}>
+                                            <div className="w-16 h-16 mx-auto mb-2 bg-stone-100 rounded-full flex items-center justify-center">
+                                                <span className="text-2xl font-bold text-stone-400">
+                                                    {partner.name?.[0] || '?'}
+                                                </span>
                                             </div>
-                                        )}
+                                            <p className="text-sm font-semibold text-stone-600">
+                                                {partner.name || 'Partner'}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
 
