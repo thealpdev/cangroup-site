@@ -71,7 +71,60 @@ export default function HeroPremium() {
     };
 
     if (loading) return <div className="h-screen bg-black" />;
-    if (slides.length === 0) return null;
+
+    // If no slides, show demo slide
+    if (slides.length === 0) {
+        const demoSlide = {
+            id: 'demo',
+            title_de: 'Professionelle Messer',
+            title_tr: 'Profesyonel B çaklar',
+            title_en: 'Professional Knives',
+            title_fr: 'Couteaux Professionnels',
+            subtitle_de: 'PREMIUM QUALITÄT',
+            subtitle_tr: 'PREMIUM KALİTE',
+            subtitle_en: 'PREMIUM QUALITY',
+            subtitle_fr: 'QUALITÉ PREMIUM',
+            cta_de: 'Jetzt Entdecken',
+            cta_tr: 'Şimdi Keşfet',
+            cta_en: 'Discover Now',
+            cta_fr: 'Découvrir',
+            image: "https://images.unsplash.com/photo-1556910103-1c02745a30bf?q=80&w=2070",
+            link: "/products"
+        };
+        const title = demoSlide[`title_${locale}` as keyof typeof demoSlide] || demoSlide.title_de;
+        const subtitle = demoSlide[`subtitle_${locale}` as keyof typeof demoSlide] || demoSlide.subtitle_de;
+        const cta = demoSlide[`cta_${locale}` as keyof typeof demoSlide] || demoSlide.cta_de;
+
+        return (
+            <section className="relative h-screen w-full overflow-hidden bg-[#050505]">
+                <div className="absolute inset-0 z-0">
+                    <Image
+                        src={demoSlide.image}
+                        alt={String(title)}
+                        fill
+                        className="object-cover"
+                        priority
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/50" />
+                </div>
+                <div className="relative z-10 h-full container mx-auto px-6 flex flex-col justify-center items-center text-center">
+                    <p className="text-[#C8102E] font-bold tracking-[0.3em] uppercase mb-6 text-sm md:text-base drop-shadow-lg">
+                        {subtitle}
+                    </p>
+                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-10 leading-tight drop-shadow-2xl">
+                        {title}
+                    </h1>
+                    <Link
+                        href={demoSlide.link}
+                        className="inline-flex items-center gap-4 bg-white text-[#0a0a0a] px-10 py-4 text-xs font-bold uppercase tracking-widest hover:bg-[#C8102E] hover:text-white transition-all duration-300 group shadow-xl"
+                    >
+                        {cta}
+                        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                </div>
+            </section>
+        );
+    }
 
     const slide = slides[current] || slides[0];
 
