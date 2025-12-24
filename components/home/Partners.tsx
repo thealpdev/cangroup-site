@@ -1,86 +1,80 @@
 "use client";
 
-import { useTranslations } from 'next-intl';
-
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { useTranslations } from 'next-intl';
+import { Award } from 'lucide-react';
 
 export default function Partners() {
+    const [partners, setPartners] = useState<any[]>([]);
     const t = useTranslations('Homepage');
 
-    // Defines the shape of a Partner object
-    interface Partner {
-        id: string;
-        imageUrl: string;
-        name?: string;
-        order?: number;
-    }
-
-    const [partners, setPartners] = useState<Partner[]>([]);
-
     useEffect(() => {
-        // Fetch all (simple query, sort client side to avoid index issues for now)
-        const q = query(collection(db, "partners"));
-
+        const q = query(collection(db, "partners"), orderBy("order", "asc"));
         const unsubscribe = onSnapshot(q, (snapshot) => {
-            const items = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            })) as Partner[];
-            // Sort by order: undefined/0 goes to end (999)
-            setPartners(items.sort((a, b) => (a.order || 999) - (b.order || 999)));
+            const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setPartners(items);
         });
-
         return () => unsubscribe();
     }, []);
 
     if (partners.length === 0) return null;
 
     return (
-        <section className="py-24 bg-stone-50/50 border-b border-stone-100">
+        <section className="py-20 bg-gradient-to-b from-white to-stone-50">
             <div className="container mx-auto px-4">
-                <div className="text-center mb-16">
-                    <span className="text-xs font-bold uppercase tracking-[0.3em] text-[#C8102E] mb-2 block">{t('partnersSubtitle')}</span>
-                    <h2 className="text-3xl md:text-4xl font-serif text-stone-900">{t('partnersTitle')}</h2>
-                </div>
+                {/* Header */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="text-center mb-16"
+                >
+                    <div className="inline-flex items-center gap-2 mb-4">
+                        <Award className="w-5 h-5 text-[#C8102E]" />
+                        <span className="text-[#C8102E] font-bold tracking-[0.2em] uppercase text-xs">
+                            {t('partnersSubtitle')}
+                        </span>
+                    </div>
+                    <h2 className="text-3xl md:text-4xl font-serif text-stone-900">
+                        {t('partnersTitle')}
+                    </h2>
+                </motion.div>
 
-                {/* Logo Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                    {partners.map((partner, index) => (
-                        <Link
+                {/* Partners Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 max-w-6xl mx-auto">
+                    {partners.map((partner, i) => (
+                        <motion.div
                             key={partner.id}
-                            href={`/products?search=${encodeURIComponent(partner.name || '')}`}
-                            className="group block"
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.1, duration: 0.5 }}
+                            className="group"
                         >
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.1 }}
-                                whileHover={{ y: -5 }}
-                                className="relative h-32 bg-white rounded-xl border border-stone-100 shadow-sm flex items-center justify-center p-6 transition-all duration-300 group-hover:shadow-[0_0_30px_rgba(200,16,46,0.1)] group-hover:border-[#C8102E]/20"
-                            >
-                                {/* Glow Effect */}
-                                <div className="absolute inset-0 bg-gradient-to-tr from-[#C8102E]/0 via-[#C8102E]/0 to-[#C8102E]/0 group-hover:via-[#C8102E]/5 transition-all duration-500 rounded-xl" />
+                            <div className="relative aspect-square bg-white rounded-2xl border border-stone-200 hover:border-stone-300 hover:shadow-md transition-all duration-300 p-6 flex items-center justify-center overflow-hidden">
+                                {/* Subtle hover effect */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-stone-50/0 to-stone-100/0 group-hover:from-stone-50/50 group-hover:to-stone-100/30 transition-all duration-500" />
 
-                                <div className={cn(
-                                    "relative w-full h-full transition-all duration-300 opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0",
-                                    partner.order === 1 ? "scale-110" : "scale-100"
-                                )}>
+                                <div className="relative w-full h-full">
                                     <Image
-                                        src={partner.imageUrl}
-                                        alt={partner.name || 'Partner'}
+                                        src={partner.logo}
+                                        alt={partner.name}
                                         fill
-                                        className="object-contain"
+                                        className="object-contain grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110"
                                     />
                                 </div>
-                            </motion.div>
-                        </Link>
+                            </div>
+                            {partner.name && (
+                                <p className="text-center text-xs text-stone-500 mt-2 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                                    {partner.name}
+                                </p>
+                            )}
+                        </motion.div>
                     ))}
                 </div>
             </div>
