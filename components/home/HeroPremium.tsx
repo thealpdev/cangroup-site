@@ -1,5 +1,4 @@
 "use client";
-// HeroPremium Component - Fixed & Verified
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
@@ -9,7 +8,7 @@ import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 export default function HeroPremium() {
     const [current, setCurrent] = useState(0);
@@ -17,6 +16,7 @@ export default function HeroPremium() {
     const [loading, setLoading] = useState(true);
 
     const t = useTranslations('Homepage');
+    const locale = useLocale();
 
     useEffect(() => {
         const q = query(collection(db, "hero"), orderBy("order", "asc"));
@@ -25,15 +25,24 @@ export default function HeroPremium() {
             if (items.length > 0) {
                 setSlides(items);
             } else {
-                // Fallback demo slide translated
+                // Fallback demo slide
                 setSlides([
                     {
                         id: 'demo',
-                        title: t('heroTitle'),
-                        subtitle: t('heroSubtitle'),
+                        title_de: t('heroTitle'),
+                        subtitle_de: t('heroSubtitle'),
+                        cta_de: t('heroCta'),
+                        title_tr: t('heroTitle'),
+                        subtitle_tr: t('heroSubtitle'),
+                        cta_tr: t('heroCta'),
+                        title_en: t('heroTitle'),
+                        subtitle_en: t('heroSubtitle'),
+                        cta_en: t('heroCta'),
+                        title_fr: t('heroTitle'),
+                        subtitle_fr: t('heroSubtitle'),
+                        cta_fr: t('heroCta'),
                         image: "https://images.unsplash.com/photo-1556910103-1c02745a30bf?q=80&w=2070",
-                        link: "/products",
-                        cta: t('heroCta')
+                        link: "/products"
                     }
                 ]);
             }
@@ -62,17 +71,21 @@ export default function HeroPremium() {
     };
 
     if (loading) return <div className="h-screen bg-black" />;
-
-    // Safety check
     if (slides.length === 0) return null;
+
     const slide = slides[current] || slides[0];
+
+    // Get localized content with fallback to German
+    const title = slide[`title_${locale}`] || slide.title_de || slide.title || '';
+    const subtitle = slide[`subtitle_${locale}`] || slide.subtitle_de || slide.subtitle || '';
+    const cta = slide[`cta_${locale}`] || slide.cta_de || slide.cta || t('heroCta');
 
     return (
         <section className="relative h-screen w-full overflow-hidden bg-[#050505]">
             {/* Background Image Slider */}
             <AnimatePresence mode="wait">
                 <motion.div
-                    key={slide.id + current} // Force re-render key
+                    key={slide.id + current}
                     initial={{ opacity: 0, scale: 1.1 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0 }}
@@ -81,24 +94,24 @@ export default function HeroPremium() {
                 >
                     <Image
                         src={slide.image}
-                        alt={slide.title || "Hero"}
+                        alt={title || "Hero"}
                         fill
                         className="object-cover"
                         priority
                         unoptimized
                     />
-                    {/* Ken Burns Effect Layer */}
                     <motion.div
                         initial={{ scale: 1 }}
                         animate={{ scale: 1.05 }}
                         transition={{ duration: 20, ease: "linear" }}
                         className="absolute inset-0 bg-transparent"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30" />
+                    {/* Enhanced gradient for better text readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/50" />
                 </motion.div>
             </AnimatePresence>
 
-            {/* Content Content - Centered */}
+            {/* Content */}
             <div className="relative z-10 h-full container mx-auto px-6 flex flex-col justify-center items-center text-center">
                 <motion.div
                     key={`text-${current}`}
@@ -107,24 +120,24 @@ export default function HeroPremium() {
                     transition={{ duration: 0.8, delay: 0.3 }}
                     className="max-w-4xl"
                 >
-                    {slide.subtitle && (
-                        <p className="text-[#C8102E] font-bold tracking-[0.3em] uppercase mb-6 text-sm md:text-base">
-                            {slide.subtitle}
+                    {subtitle && (
+                        <p className="text-[#C8102E] font-bold tracking-[0.3em] uppercase mb-6 text-sm md:text-base drop-shadow-lg">
+                            {subtitle}
                         </p>
                     )}
 
-                    {slide.title && (
-                        <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-10 leading-tight">
-                            {slide.title}
+                    {title && (
+                        <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-10 leading-tight drop-shadow-2xl">
+                            {title}
                         </h1>
                     )}
 
                     {slide.link && (
                         <Link
                             href={slide.link}
-                            className="inline-flex items-center gap-4 bg-white text-[#0a0a0a] px-10 py-4 text-xs font-bold uppercase tracking-widest hover:bg-[#C8102E] hover:text-white transition-all duration-300 group"
+                            className="inline-flex items-center gap-4 bg-white text-[#0a0a0a] px-10 py-4 text-xs font-bold uppercase tracking-widest hover:bg-[#C8102E] hover:text-white transition-all duration-300 group shadow-xl"
                         >
-                            {slide.cta || "İncele"}
+                            {cta}
                             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                         </Link>
                     )}
