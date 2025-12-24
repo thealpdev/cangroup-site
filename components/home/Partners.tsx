@@ -15,6 +15,7 @@ export default function Partners() {
         const q = query(collection(db, "partners"), orderBy("order", "asc"));
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            console.log('🔍 Partners from Firebase:', items);
             setPartners(items);
         });
         return () => unsubscribe();
@@ -76,6 +77,12 @@ export default function Partners() {
                                                 alt={partner.name || 'Partner'}
                                                 className="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110"
                                                 loading="lazy"
+                                                crossOrigin="anonymous"
+                                                onLoad={() => console.log('✅ Logo loaded:', partner.name)}
+                                                onError={(e) => {
+                                                    console.error('❌ Logo failed:', partner.name, partner.logo);
+                                                    e.currentTarget.style.display = 'none';
+                                                }}
                                             />
                                         ) : (
                                             <div className="text-center">
