@@ -11,12 +11,18 @@ export default function Partners() {
     const [partners, setPartners] = useState<any[]>([]);
     const t = useTranslations('Homepage');
 
+    console.log('🚀 Partners component mounted!');
+
     useEffect(() => {
+        console.log('⚡ Partners useEffect running...');
         const q = query(collection(db, "partners"), orderBy("order", "asc"));
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             console.log('🔍 Partners from Firebase:', items);
+            console.log('📊 Partner count:', items.length);
             setPartners(items);
+        }, (error) => {
+            console.error('❌ Firebase error:', error);
         });
         return () => unsubscribe();
     }, []);
