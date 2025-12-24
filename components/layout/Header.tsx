@@ -81,7 +81,7 @@ export default function Header() {
                                 "hidden md:inline text-xs font-bold uppercase tracking-[0.2em] transition-colors duration-300",
                                 isScrolledState ? "text-stone-900 group-hover:text-[#C8102E]" : "text-white group-hover:text-white/80"
                             )}>
-                                {t('products')} {/* Using 'products' as generic menu label or add 'menu' key */}
+                                {t('menuLabel')}
                             </span>
                         </button>
                     </div>

@@ -37,7 +37,13 @@ interface SiteConfig {
 export default function SettingsForm() {
     const t = useTranslations('Admin');
     const [loading, setLoading] = useState(false);
-    const [general, setGeneral] = useState({ logo: '', contactPhone: '', maintenanceMode: false });
+    const [general, setGeneral] = useState({
+        logo: '',
+        contactPhone: '',
+        maintenanceMode: false,
+        aboutImage1: '',
+        aboutImage2: ''
+    });
 
     // Collections: 0=Left Large, 1=Top Right, 2=Bottom Right
     const [config, setConfig] = useState<SiteConfig>({
@@ -256,6 +262,38 @@ export default function SettingsForm() {
                                         value={general.logo ? [general.logo] : []}
                                         onChange={(url) => setGeneral({ ...general, logo: url })}
                                         onRemove={() => setGeneral({ ...general, logo: '' })}
+                                    />
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Hakkımızda / About Us - Resim 1</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label>İlk Resim (About Image 1)</Label>
+                                    <ImageUpload
+                                        value={general.aboutImage1 ? [general.aboutImage1] : []}
+                                        onChange={(url) => setGeneral({ ...general, aboutImage1: url })}
+                                        onRemove={() => setGeneral({ ...general, aboutImage1: '' })}
+                                    />
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Hakkımızda / About Us - Resim 2</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label>İkinci Resim (About Image 2)</Label>
+                                    <ImageUpload
+                                        value={general.aboutImage2 ? [general.aboutImage2] : []}
+                                        onChange={(url) => setGeneral({ ...general, aboutImage2: url })}
+                                        onRemove={() => setGeneral({ ...general, aboutImage2: '' })}
                                     />
                                 </div>
                             </CardContent>

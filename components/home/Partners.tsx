@@ -58,12 +58,14 @@ export default function Partners() {
                     </p>
                 </motion.div>
 
-                {/* Horizontal Scroll Logo Container */}
-                <div className="relative max-w-7xl mx-auto">
-                    <div className="flex gap-8 overflow-x-auto pb-8 scrollbar-hide">
+                {/* Horizontal Auto-Scroll Logo Container */}
+                <div className="relative max-w-7xl mx-auto overflow-hidden">
+                    {/* Infinite scroll container */}
+                    <div className="flex gap-8 animate-scroll">
+                        {/* First set of partners */}
                         {partners.map((partner, i) => (
                             <motion.div
-                                key={partner.id}
+                                key={`first-${partner.id}`}
                                 initial={{ opacity: 0, x: 20 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
@@ -113,6 +115,35 @@ export default function Partners() {
                                 )}
                             </motion.div>
                         ))}
+
+                        {/* Duplicate set for seamless loop */}
+                        {partners.map((partner, i) => (
+                            <div
+                                key={`second-${partner.id}`}
+                                className="group flex-shrink-0"
+                                style={{ minWidth: '280px', width: '280px' }}
+                            >
+                                <div className="relative h-40 bg-white rounded-2xl border-2 border-stone-100 hover:border-[#C8102E]/20 hover:shadow-xl transition-all duration-500 p-8 flex items-center justify-center overflow-hidden">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-stone-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                    <div className="relative w-full h-full flex items-center justify-center">
+                                        {partner.imageUrl && (
+                                            <img
+                                                src={partner.imageUrl}
+                                                alt={partner.name || 'Partner'}
+                                                className="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110"
+                                                loading="lazy"
+                                                crossOrigin="anonymous"
+                                            />
+                                        )}
+                                    </div>
+                                </div>
+                                {partner.name && (
+                                    <p className="text-center text-sm text-stone-500 mt-3 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        {partner.name}
+                                    </p>
+                                )}
+                            </div>
+                        ))}
                     </div>
                 </div>
 
@@ -125,12 +156,19 @@ export default function Partners() {
             </div>
 
             <style jsx>{`
-                .scrollbar-hide::-webkit-scrollbar {
-                    display: none;
+                @keyframes scroll {
+                    0% {
+                        transform: translateX(0);
+                    }
+                    100% {
+                        transform: translateX(calc(-280px * ${partners.length} - 2rem * ${partners.length}));
+                    }
                 }
-                .scrollbar-hide {
-                    -ms-overflow-style: none;
-                    scrollbar-width: none;
+                .animate-scroll {
+                    animation: scroll 30s linear infinite;
+                }
+                .animate-scroll:hover {
+                    animation-play-state: paused;
                 }
             `}</style>
         </section>

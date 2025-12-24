@@ -9,7 +9,8 @@
         "offerList": "Angebot",
         "account": "Konto",
         "help": "Hilfe",
-        "menu": "Menü"
+        "menu": "Menü",
+        "menuLabel": "Menü"
     },
     "Metadata": {
         "title": "CanMarkt | Premium Messer & Küchenwelt",

@@ -9,7 +9,8 @@
         "offerList": "Liste d'offres",
         "account": "Compte",
         "help": "Aide",
-        "menu": "Menu"
+        "menu": "Menu",
+        "menuLabel": "Menu"
     },
     "Metadata": {
         "title": "CanMarkt | Monde de la Cuisine & Couteaux Premium",
