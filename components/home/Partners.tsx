@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useTranslations } from 'next-intl';
-import { Award } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 export default function Partners() {
     const [partners, setPartners] = useState<any[]>([]);
@@ -21,11 +21,22 @@ export default function Partners() {
         return () => unsubscribe();
     }, []);
 
-    if (partners.length === 0) return null;
+    // Fallback demo partners if none exist
+    const displayPartners = partners.length > 0 ? partners : [
+        { id: '1', name: 'Victorinox', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Victorinox_logo.svg/2560px-Victorinox_logo.svg.png' },
+        { id: '2', name: 'Zwilling', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/ZWILLING_Logo.svg/2560px-ZWILLING_Logo.svg.png' },
+        { id: '3', name: 'Wüsthof', logo: 'https://www.wuesthof.com/on/demandware.static/-/Library-Sites-wusthof-shared-library/default/dw5f0e5c5e/logo.svg' },
+        { id: '4', name: 'Dick', logo: 'https://www.dick.de/themes/custom/dick/logo.svg' }
+    ];
+
+    if (displayPartners.length === 0) return null;
 
     return (
-        <section className="py-20 bg-gradient-to-b from-white to-stone-50">
-            <div className="container mx-auto px-4">
+        <section className="relative py-24 bg-gradient-to-b from-stone-50 to-white overflow-hidden">
+            {/* Decorative Elements */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(200,16,46,0.03),transparent_60%)]" />
+
+            <div className="container mx-auto px-4 relative">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -34,48 +45,77 @@ export default function Partners() {
                     transition={{ duration: 0.6 }}
                     className="text-center mb-16"
                 >
-                    <div className="inline-flex items-center gap-2 mb-4">
-                        <Award className="w-5 h-5 text-[#C8102E]" />
-                        <span className="text-[#C8102E] font-bold tracking-[0.2em] uppercase text-xs">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm mb-4 border border-stone-200">
+                        <Sparkles className="w-4 h-4 text-[#C8102E]" />
+                        <span className="text-[#C8102E] font-bold tracking-[0.15em] uppercase text-xs">
                             {t('partnersSubtitle')}
                         </span>
                     </div>
-                    <h2 className="text-3xl md:text-4xl font-serif text-stone-900">
+                    <h2 className="text-3xl md:text-5xl font-serif text-stone-900 mb-3">
                         {t('partnersTitle')}
                     </h2>
+                    <p className="text-stone-600 max-w-2xl mx-auto">
+                        Weltklasse-Marken, denen Profis vertrauen
+                    </p>
                 </motion.div>
 
-                {/* Partners Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 max-w-6xl mx-auto">
-                    {partners.map((partner, i) => (
-                        <motion.div
-                            key={partner.id}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: i * 0.1, duration: 0.5 }}
-                            className="group"
-                        >
-                            <div className="relative aspect-square bg-white rounded-2xl border border-stone-200 hover:border-stone-300 hover:shadow-md transition-all duration-300 p-6 flex items-center justify-center overflow-hidden">
-                                {/* Subtle hover effect */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-stone-50/0 to-stone-100/0 group-hover:from-stone-50/50 group-hover:to-stone-100/30 transition-all duration-500" />
+                {/* Premium Logo Grid */}
+                <div className="max-w-7xl mx-auto">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                        {displayPartners.map((partner, i) => (
+                            <motion.div
+                                key={partner.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.1, duration: 0.5 }}
+                                className="group"
+                            >
+                                <div className="relative aspect-[4/3] bg-white rounded-2xl border-2 border-stone-100 hover:border-[#C8102E]/20 hover:shadow-xl transition-all duration-500 p-8 flex items-center justify-center overflow-hidden">
+                                    {/* Subtle gradient overlay on hover */}
+                                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-stone-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                                <div className="relative w-full h-full">
-                                    <Image
-                                        src={partner.logo}
-                                        alt={partner.name}
-                                        fill
-                                        className="object-contain grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110"
-                                    />
+                                    {/* Logo */}
+                                    <div className="relative w-full h-full flex items-center justify-center">
+                                        {partner.logo ? (
+                                            <Image
+                                                src={partner.logo}
+                                                alt={partner.name || 'Partner'}
+                                                fill
+                                                className="object-contain filter grayscale hover:grayscale-0 transition-all duration-500 p-4 group-hover:scale-110"
+                                                unoptimized
+                                            />
+                                        ) : (
+                                            <div className="text-center">
+                                                <div className="w-16 h-16 mx-auto mb-2 bg-stone-100 rounded-full flex items-center justify-center">
+                                                    <span className="text-2xl font-bold text-stone-400">
+                                                        {partner.name?.[0] || '?'}
+                                                    </span>
+                                                </div>
+                                                <p className="text-sm font-semibold text-stone-600">
+                                                    {partner.name || 'Partner'}
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                            {partner.name && (
-                                <p className="text-center text-xs text-stone-500 mt-2 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                                    {partner.name}
-                                </p>
-                            )}
-                        </motion.div>
-                    ))}
+
+                                {/* Partner name on hover */}
+                                {partner.name && partner.logo && (
+                                    <p className="text-center text-sm text-stone-500 mt-3 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        {partner.name}
+                                    </p>
+                                )}
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Bottom accent */}
+                <div className="mt-16 text-center">
+                    <p className="text-xs text-stone-400 uppercase tracking-wider">
+                        Und viele weitere Premium-Partner
+                    </p>
                 </div>
             </div>
         </section>
