@@ -11,6 +11,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
+import SnowEffect from '@/components/effects/SnowEffect';
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" }); // Define serif font
@@ -66,6 +67,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} className={`${inter.variable} ${playfair.variable}`}>
       <body className="antialiased font-sans bg-white text-stone-900 selection:bg-[#C8102E] selection:text-white">
+        <SnowEffect />
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
             <LanguageProvider>
