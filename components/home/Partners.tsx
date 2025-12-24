@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -26,7 +25,9 @@ export default function Partners() {
         { id: '1', name: 'Victorinox', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Victorinox_logo.svg/2560px-Victorinox_logo.svg.png' },
         { id: '2', name: 'Zwilling', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/ZWILLING_Logo.svg/2560px-ZWILLING_Logo.svg.png' },
         { id: '3', name: 'Wüsthof', logo: 'https://www.wuesthof.com/on/demandware.static/-/Library-Sites-wusthof-shared-library/default/dw5f0e5c5e/logo.svg' },
-        { id: '4', name: 'Dick', logo: 'https://www.dick.de/themes/custom/dick/logo.svg' }
+        { id: '4', name: 'Dick', logo: 'https://www.dick.de/themes/custom/dick/logo.svg' },
+        { id: '5', name: 'Solingen', logo: 'https://via.placeholder.com/200x80/f5f5f5/666666?text=Solingen' },
+        { id: '6', name: 'Canadam', logo: 'https://via.placeholder.com/200x80/f5f5f5/C8102E?text=Canadam' }
     ];
 
     if (displayPartners.length === 0) return null;
@@ -59,31 +60,31 @@ export default function Partners() {
                     </p>
                 </motion.div>
 
-                {/* Premium Logo Grid */}
-                <div className="max-w-7xl mx-auto">
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                {/* Horizontal Scroll Logo Container */}
+                <div className="relative max-w-7xl mx-auto">
+                    <div className="flex gap-8 overflow-x-auto pb-8 scrollbar-hide">
                         {displayPartners.map((partner, i) => (
                             <motion.div
                                 key={partner.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
+                                initial={{ opacity: 0, x: 20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: i * 0.1, duration: 0.5 }}
-                                className="group"
+                                className="group flex-shrink-0"
+                                style={{ minWidth: '280px', width: '280px' }}
                             >
-                                <div className="relative aspect-[4/3] bg-white rounded-2xl border-2 border-stone-100 hover:border-[#C8102E]/20 hover:shadow-xl transition-all duration-500 p-8 flex items-center justify-center overflow-hidden">
+                                <div className="relative h-40 bg-white rounded-2xl border-2 border-stone-100 hover:border-[#C8102E]/20 hover:shadow-xl transition-all duration-500 p-8 flex items-center justify-center overflow-hidden">
                                     {/* Subtle gradient overlay on hover */}
                                     <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-stone-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                                    {/* Logo */}
+                                    {/* Logo using native img tag */}
                                     <div className="relative w-full h-full flex items-center justify-center">
                                         {partner.logo ? (
-                                            <Image
+                                            <img
                                                 src={partner.logo}
                                                 alt={partner.name || 'Partner'}
-                                                fill
-                                                className="object-contain filter grayscale hover:grayscale-0 transition-all duration-500 p-4 group-hover:scale-110"
-                                                unoptimized
+                                                className="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110"
+                                                loading="lazy"
                                             />
                                         ) : (
                                             <div className="text-center">
@@ -100,8 +101,8 @@ export default function Partners() {
                                     </div>
                                 </div>
 
-                                {/* Partner name on hover */}
-                                {partner.name && partner.logo && (
+                                {/* Partner name */}
+                                {partner.name && (
                                     <p className="text-center text-sm text-stone-500 mt-3 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                         {partner.name}
                                     </p>
@@ -112,12 +113,22 @@ export default function Partners() {
                 </div>
 
                 {/* Bottom accent */}
-                <div className="mt-16 text-center">
+                <div className="mt-12 text-center">
                     <p className="text-xs text-stone-400 uppercase tracking-wider">
                         Und viele weitere Premium-Partner
                     </p>
                 </div>
             </div>
+
+            <style jsx>{`
+                .scrollbar-hide::-webkit-scrollbar {
+                    display: none;
+                }
+                .scrollbar-hide {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+            `}</style>
         </section>
     );
 }
