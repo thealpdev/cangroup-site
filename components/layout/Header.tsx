@@ -57,7 +57,7 @@ export default function Header() {
                 className={cn(
                     "fixed top-0 z-50 w-full transition-all duration-500",
                     isScrolledState
-                        ? "bg-white/90 backdrop-blur-md h-20 border-b border-stone-100 shadow-sm"
+                        ? "frost-glass ice-glow h-20 border-b border-white/20 shadow-lg"
                         : "bg-transparent h-28 border-b border-white/10"
                 )}
             >
