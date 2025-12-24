@@ -21,8 +21,8 @@ export default function Partners() {
         return () => unsubscribe();
     }, []);
 
-    // Eğer partner yoksa bölümü gösterme
-    if (partners.length === 0) return null;
+    // Debug: Always show section to see what's happening
+    // if (partners.length === 0) return null;
 
     return (
         <section className="relative py-24 bg-gradient-to-b from-stone-50 to-white overflow-hidden">
