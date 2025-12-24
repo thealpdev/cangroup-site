@@ -7,27 +7,28 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 export default function CategoryShowcase() {
     const t = useTranslations('Homepage');
+    const locale = useLocale();
 
     const DEFAULT_COLLECTIONS = [
         {
-            title: t('collectionChef'),
-            subtitle: t('subtitleChef'),
+            title_de: "Professionelle Messer", title_tr: t('collectionChef'), title_en: "Professional Knives", title_fr: "Couteaux Professionnels",
+            subtitle_de: "Für Profis", subtitle_tr: t('subtitleChef'), subtitle_en: "For Professionals", subtitle_fr: "Pour les Professionnels",
             image: "https://images.unsplash.com/photo-1593642632823-8f7853670961?q=80&w=2070",
             link: "/products?category=Chef"
         },
         {
-            title: t('collectionSantoku'),
-            subtitle: t('subtitleSantoku'),
+            title_de: "Santoku Serie", title_tr: t('collectionSantoku'), title_en: "Santoku Series", title_fr: "Série Santoku",
+            subtitle_de: "Japanische Präzision", subtitle_tr: t('subtitleSantoku'), subtitle_en: "Japanese Precision", subtitle_fr: "Précision Japonaise",
             image: "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?q=80&w=1974",
             link: "/products?category=Santoku"
         },
         {
-            title: t('collectionSets'),
-            subtitle: t('subtitleSets'),
+            title_de: "Messer Sets", title_tr: t('collectionSets'), title_en: "Knife Sets", title_fr: "Ensembles de Couteaux",
+            subtitle_de: "Professioneller Start", subtitle_tr: t('subtitleSets'), subtitle_en: "Professional Start", subtitle_fr: "Début Professionnel",
             image: "https://images.unsplash.com/photo-1664302152998-4a4e515907d7?q=80&w=1976",
             link: "/products?category=Set"
         }
@@ -35,49 +36,31 @@ export default function CategoryShowcase() {
 
     const [collections, setCollections] = useState(DEFAULT_COLLECTIONS);
 
-    // Update state when language changes or defaults load
     useEffect(() => {
-        setCollections(DEFAULT_COLLECTIONS);
-    }, [t]);
-
-    useEffect(() => {
-        const docRef = doc(db, "settings", "home");
+        const docRef = doc(db, "settings", "global");
         const unsubscribe = onSnapshot(docRef, (docSnap) => {
             if (docSnap.exists() && docSnap.data().collections?.length === 3) {
-                // If firestore has data, use it (Note: Firestore data might not be localized unless structure supports it)
-                // For now, we prefer local defaults for translation if firestore is empty or loopback
-                const dbCols = docSnap.data().collections;
-                // Only override if they have content. 
-                // Detailed logic omitted for brevity, assuming DB overrides everything if present.
-                setCollections(dbCols);
+                setCollections(docSnap.data().collections);
+            } else {
+                setCollections(DEFAULT_COLLECTIONS);
             }
         });
         return () => unsubscribe();
     }, []);
 
-    const leftBox = {
-        ...collections[0],
-        image: collections[0]?.image || DEFAULT_COLLECTIONS[0].image,
-        title: collections[0]?.title || DEFAULT_COLLECTIONS[0].title,
-        subtitle: collections[0]?.subtitle || DEFAULT_COLLECTIONS[0].subtitle,
-        link: collections[0]?.link || DEFAULT_COLLECTIONS[0].link
+    // Get localized content with fallback to German
+    const getLocalizedCollection = (collection: any) => {
+        return {
+            title: collection[`title_${locale}`] || collection.title_de || collection.title || '',
+            subtitle: collection[`subtitle_${locale}`] || collection.subtitle_de || collection.subtitle || '',
+            image: collection.image,
+            link: collection.link
+        };
     };
 
-    const topRight = {
-        ...collections[1],
-        image: collections[1]?.image || DEFAULT_COLLECTIONS[1].image,
-        title: collections[1]?.title || DEFAULT_COLLECTIONS[1].title,
-        subtitle: collections[1]?.subtitle || DEFAULT_COLLECTIONS[1].subtitle,
-        link: collections[1]?.link || DEFAULT_COLLECTIONS[1].link
-    };
-
-    const bottomRight = {
-        ...collections[2],
-        image: collections[2]?.image || DEFAULT_COLLECTIONS[2].image,
-        title: collections[2]?.title || DEFAULT_COLLECTIONS[2].title,
-        subtitle: collections[2]?.subtitle || DEFAULT_COLLECTIONS[2].subtitle,
-        link: collections[2]?.link || DEFAULT_COLLECTIONS[2].link
-    };
+    const leftBox = getLocalizedCollection(collections[0]);
+    const topRight = getLocalizedCollection(collections[1]);
+    const bottomRight = getLocalizedCollection(collections[2]);
 
     return (
         <section className="py-24 bg-white">
@@ -115,7 +98,7 @@ export default function CategoryShowcase() {
                         <div className="absolute bottom-12 left-8 md:left-12">
                             <span className="text-white/80 text-xs font-bold uppercase tracking-widest mb-2 block">{leftBox.subtitle}</span>
                             <h3 className="text-4xl md:text-5xl font-serif text-white mb-6">{leftBox.title}</h3>
-                            <div className="inline-flex items-center gap-3 text-white border-b border-whitepb-1 group-hover:border-[#C8102E] transition-colors">
+                            <div className="inline-flex items-center gap-3 text-white border-b border-white pb-1 group-hover:border-[#C8102E] transition-colors">
                                 <span className="text-sm font-bold uppercase tracking-wider">{t('discoverCollection')}</span>
                                 <ArrowRight className="w-4 h-4" />
                             </div>
