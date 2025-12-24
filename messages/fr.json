@@ -39,6 +39,7 @@
         "unsubscribeText": "Vous pouvez vous désinscrire à tout moment.",
         "partnersTitle": "Partenaires de Confiance",
         "partnersSubtitle": "Nos Marques",
+        "partnersDesc": "Marques de classe mondiale en qui les professionnels ont confiance",
         "storyTitle": "L'Excellence en Cuisine",
         "storySubtitle": "Pas un choix, un standard.",
         "readStory": "Notre Histoire",
@@ -70,6 +71,7 @@
         "noImage": "PAS D'IMAGE"
     },
     "Footer": {
+        "brandDesc": "Votre partenaire fiable pour des outils de coupe de haute qualité. Nous combinons la tradition de Solingen avec une portée mondiale.",
         "rights": "Tous droits réservés.",
         "menu": "Menu",
         "legal": "Légal",

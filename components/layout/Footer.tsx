@@ -26,7 +26,7 @@ export default function Footer() {
                             </span>
                         </Link>
                         <p className="text-stone-400 text-sm leading-relaxed max-w-sm">
-                            Ihr verlässlicher Partner für hochwertiges Schneidwerkzeug. Wir verbinden Solinger Tradition mit globaler Reichweite.
+                            {t('brandDesc')}
                         </p>
 
                         {/* Contact Info */}

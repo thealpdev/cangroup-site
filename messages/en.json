@@ -38,7 +38,8 @@
         "subscribeBtn": "Sign Up",
         "unsubscribeText": "You can unsubscribe at any time.",
         "partnersTitle": "Trusted Partners",
-        "partnersSubtitle": "Our Brands",
+        "partnersSubtitle": "OUR BRANDS",
+        "partnersDesc": "World-class brands trusted by professionals",
         "storyTitle": "Perfection in the Kitchen",
         "storySubtitle": "Not a choice, a standard.",
         "readStory": "Read Our Story",
@@ -70,6 +71,7 @@
         "noImage": "NO IMG"
     },
     "Footer": {
+        "brandDesc": "Your reliable partner for high-quality cutting tools. We combine Solingen tradition with global reach.",
         "rights": "All rights reserved.",
         "menu": "Menu",
         "legal": "Legal",

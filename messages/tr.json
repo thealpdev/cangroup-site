@@ -39,6 +39,7 @@
         "unsubscribeText": "İstediğiniz zaman abonelikten çıkabilirsiniz.",
         "partnersTitle": "Güvenilir İş Ortakları",
         "partnersSubtitle": "Markalarımız",
+        "partnersDesc": "Profesyonellerin güvendiği dünya çapında markalar",
         "storyTitle": "Mutfakta Mükemmellik",
         "storySubtitle": "Bir Seçim Değil, Standarttır.",
         "readStory": "Hikayemizi Oku",
@@ -70,6 +71,7 @@
         "noImage": "RESİM YOK"
     },
     "Footer": {
+        "brandDesc": "Yüksek kaliteli kesici araçlar için güvenilir ortağınız. Solingen geleneğini küresel ulaşımla birleştiriyoruz.",
         "rights": "Tüm hakları saklıdır.",
         "menu": "Menü",
         "legal": "Yasal",

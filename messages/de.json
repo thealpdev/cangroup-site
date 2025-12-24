@@ -38,7 +38,8 @@
         "subscribeBtn": "Registrieren",
         "unsubscribeText": "Sie können sich jederzeit abmelden.",
         "partnersTitle": "Zuverlässige Partner",
-        "partnersSubtitle": "Unsere Marken",
+        "partnersSubtitle": "UNSERE MARKEN",
+        "partnersDesc": "Weltklasse-Marken, denen Profis vertrauen",
         "storyTitle": "Perfektion in der Küche",
         "storySubtitle": "Keine Wahl, sondern Standard.",
         "readStory": "Unsere Geschichte",
@@ -70,6 +71,7 @@
         "noImage": "KEIN BILD"
     },
     "Footer": {
+        "brandDesc": "Ihr verlässlicher Partner für hochwertiges Schneidwerkzeug. Wir verbinden Solinger Tradition mit globaler Reichweite.",
         "rights": "Alle Rechte vorbehalten.",
         "menu": "Menü",
         "legal": "Rechtliches",

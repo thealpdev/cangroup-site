@@ -54,7 +54,7 @@ export default function Partners() {
                         {t('partnersTitle')}
                     </h2>
                     <p className="text-stone-600 max-w-2xl mx-auto">
-                        Weltklasse-Marken, denen Profis vertrauen
+                        {t('partnersDesc')}
                     </p>
                 </motion.div>
 
