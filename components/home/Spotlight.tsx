@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Button } from '@/components/ui/button';
+import { getLocalizedProductName } from '@/lib/product-utils';
 
 export default function Spotlight() {
     const [products, setProducts] = useState<any[]>([]);
@@ -49,7 +50,7 @@ export default function Spotlight() {
                 {/* 6 Cards Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 mb-8">
                     {products.map((item, i) => {
-                        const displayName = item[`name_${locale}`] || item.name_de || item.name_en || 'Product';
+                        const displayName = getLocalizedProductName(item, locale);
                         const currencySymbol = item.currency === 'TRY' ? '₺' : item.currency === 'USD' ? '$' : '€';
 
                         return (
